@@ -1,0 +1,30 @@
++-------+-----------------+--------+-------------+-----+-------+-------------+-------+--------+
+|   ID  |       Name      | Gender |   Birthday  | Age | Alive |    Death    | Child | Spouse |
++-------+-----------------+--------+-------------+-----+-------+-------------+-------+--------+
+|  @I1@ |  Alice /Trout/  |   F    |  2 DEC 1970 |  49 |  True |      NA     |  @F2@ |  @F1@  |
+|  @I2@ | George /Salmon/ |   M    | 10 MAR 1964 |  56 |  True |      NA     |   NA  |  @F1@  |
+|  @I3@ |  John /Salmon/  |   M    | 12 MAY 1997 |  23 |  True |      NA     |  @F1@ |   NA   |
+|  @I4@ |  Irwin /Trout/  |   M    | 25 DEC 1948 |  71 |  True |      NA     |   NA  |  @F2@  |
+|  @I5@ |    Gina /Koi/   |   F    | 31 DEC 1949 |  70 | False | 14 FEB 2015 |   NA  |  @F2@  |
+|  @I6@ | Jessica /Trout/ |   F    |  3 JUN 1975 |  45 |  True |      NA     |  @F2@ |  @F4@  |
+|  @I7@ |  Rachel /Trout/ |   F    | 10 FEB 1973 |  47 |  True |      NA     |  @F2@ |  @F5@  |
+|  @I8@ |  Forrest /Tuna/ |   M    | 17 OCT 1965 |  54 |  True |      NA     |   NA  |  @F5@  |
+|  @I9@ |   Bret /Trout/  |   M    | 28 JUL 1971 |  49 | False | 29 JUL 1971 |  @F2@ |   NA   |
+| @I10@ | Noah /Goldfish/ |   M    | 12 JUL 1971 |  49 |  True |      NA     |   NA  |  @F6@  |
+| @I11@ |   Troy /Beta/   |   M    | 19 OCT 1971 |  48 | False | 23 NOV 2000 |   NA  |  @F4@  |
+| @I12@ | Chad /Goldfish/ |   M    | 13 DEC 2000 |  19 |  True |      NA     |  @F6@ |   NA   |
+| @I13@ |  Trusha /Squid/ |   F    |  1 DEC 1971 |  48 |  True |      NA     |   NA  |  @F6@  |
+| @I14@ | Anna /Goldfish/ |   F    |  5 OCT 2000 |  19 |  True |      NA     |  @F3@ |   NA   |
+| @I15@ |    Rod /Tuna/   |   M    |  5 FEB 2019 |  1  |  True |      NA     |  @F5@ |   NA   |
+| @I16@ | Hailey /Salmon/ |   F    |  1 AUG 1998 |  22 |  True |      NA     |  @F1@ |   NA   |
++-------+-----------------+--------+-------------+-----+-------+-------------+-------+--------+
++------+-------------+-------------+------------+-----------------+---------+-----------------+----------------------------------+
+|  ID  |   Married   |   Divorced  | Husband ID |   Husband Name  | Wife ID |    Wife Name    |             Children             |
++------+-------------+-------------+------------+-----------------+---------+-----------------+----------------------------------+
+| @F1@ | 14 MAY 1994 |      NA     |    @I2@    | George /Salmon/ |   @I1@  |  Alice /Trout/  |        ['@I3@', '@I16@']         |
+| @F2@ |             |      NA     |    @I4@    |  Irwin /Trout/  |   @I5@  |    Gina /Koi/   | ['@I1@', '@I6@', '@I7@', '@I9@'] |
+| @F3@ |  1 AUG 2005 |      NA     |   @I10@    | Noah /Goldfish/ |   @I6@  | Jessica /Trout/ |            ['@I14@']             |
+| @F4@ |  8 JAN 1999 |      NA     |   @I11@    |   Troy /Beta/   |   @I6@  | Jessica /Trout/ |                []                |
+| @F5@ | 16 SEP 2006 |      NA     |    @I8@    |  Forrest /Tuna/ |   @I7@  |  Rachel /Trout/ |            ['@I15@']             |
+| @F6@ | 31 JUL 2003 | 31 JUL 2005 |   @I10@    | Noah /Goldfish/ |  @I13@  |  Trusha /Squid/ |            ['@I12@']             |
++------+-------------+-------------+------------+-----------------+---------+-----------------+----------------------------------+

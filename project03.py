@@ -17,6 +17,14 @@ MONTHS = {  'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4,
 individuals = []
 families = []
 
+# Custom compare function to sort by ID
+def compare(s):
+    currentId = s[0]
+    # Strip all non-numeric characters from the ID
+    numericFilter = list(filter(str.isdigit, currentId))
+    numericString = "".join(numericFilter)
+    return int(numericString)
+
 def addRecord(record, type):
     #print(record)
     if type == 'INDI':
@@ -140,12 +148,16 @@ def main():
     # Table of Individuals
     individualsTable = PrettyTable()
     individualsTable.field_names = ['ID', 'Name', 'Gender', 'Birthday', 'Age', 'Alive', 'Death', 'Child', 'Spouse']
+    # Sort the list of individuals by ID
+    individuals.sort(key=compare)
     for ind in individuals:
         individualsTable.add_row(ind)
 
     # Table of Families
     familiesTable = PrettyTable()
     familiesTable.field_names = ['ID', 'Married', 'Divorced', 'Husband ID', 'Husband Name', 'Wife ID', 'Wife Name', 'Children']
+    # Sort the list of families by ID
+    individuals.sort(key=compare)
     for family in families:
         familiesTable.add_row(family)
 
