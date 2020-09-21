@@ -1,7 +1,5 @@
 from prettytable import PrettyTable
 from datetime import date
-from individual import Individual
-from family import Family
 
 GEDCOM_FILE = 'cs555project03.ged'
 #GEDCOM_FILE = 'test.ged'
@@ -22,14 +20,8 @@ families = []
 def addRecord(record, type):
     #print(record)
     if type == 'INDI':
-        # ind = Individual(record['id'], record['name'], record['gender'],
-        #                 record['birthday'], record['age'], record['death'],
-        #                 record['child'], record['spouse'])
         individuals.append(list(record.values()))
     else:
-        # fam = Family(record['id'], record['married'], record['divorced'],
-        #             record['husbandId'], record['husbandName'], record['wifeId'],
-        #             record['wifeName'], record['children'])
         families.append(list(record.values()))
 
 def getName(indId):
