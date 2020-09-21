@@ -4,6 +4,7 @@ from individual import Individual
 from family import Family
 
 GEDCOM_FILE = 'cs555project03.ged'
+#GEDCOM_FILE = 'test.ged'
 VALID_TAGS = ['INDI', 'NAME', 'SEX', 'BIRT', 'DEAT',
               'FAMC', 'FAMS', 'FAM', 'MARR', 'HUSB', 'WIFE', 
               'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
@@ -31,6 +32,14 @@ def addRecord(record, type):
         #             record['wifeName'], record['children'])
         families.append(list(record.values()))
 
+def getName(indId):
+    # Search for the name of the individual with indID
+    for ind in individuals:
+        if ind[0] == indId:
+            return ind[1]
+    # Return None if the indId does not exist
+    return None
+
 def computeAge(d):
     today = date.today()
     age = today.year - d.year - ((today.month, today.day) < (d.month, d.day))
@@ -43,7 +52,6 @@ def processFile(file):
 
     ind = {}
     fam = {}
-    # [dateTag, date]
     currentDate = ''
     for line in lines:    
         line = line.replace('\n','')
@@ -74,11 +82,11 @@ def processFile(file):
                     'birthday': '',
                     'age': '',
                     'alive': True,
-                    'death': '',
+                    'death': 'NA',
                     'child': 'NA',
                     'spouse': 'NA'
                 }
-                
+
                 ind['id'] = fields[1]
             else:
                 # Skip if the current record is empty
@@ -125,9 +133,15 @@ def processFile(file):
                     currentDate = ''
                 elif tag == 'FAMC': ind['child'] = args
                 elif tag == 'FAMS': ind['spouse'] = args
-                elif tag == 'HUSB': fam['husbandId'] = args
-                elif tag == 'WIFE': fam['wifeId'] = args
+                elif tag == 'HUSB': 
+                    fam['husbandId'] = args
+                    fam['husbandName'] = getName(args)
+                elif tag == 'WIFE': 
+                    fam['wifeId'] = args
+                    fam['wifeName'] = getName(args)
                 elif tag == 'CHIL': fam['children'].append(args)
+    addRecord(ind, "INDI")
+    addRecord(fam, "FAM")
 
 def main():
     processFile(GEDCOM_FILE)
