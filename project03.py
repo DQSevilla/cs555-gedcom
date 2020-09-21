@@ -78,6 +78,7 @@ def processFile(file):
                     'child': 'NA',
                     'spouse': 'NA'
                 }
+                
                 ind['id'] = fields[1]
             else:
                 # Skip if the current record is empty
