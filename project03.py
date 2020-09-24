@@ -1,5 +1,7 @@
 from prettytable import PrettyTable
 from datetime import date
+import datetime
+import time
 
 GEDCOM_FILE = 'cs555project03.ged'
 #GEDCOM_FILE = 'test.ged'
@@ -17,6 +19,9 @@ MONTHS = {  'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4,
 individuals = []
 families = []
 
+individualsDict = {}
+familiesDict = {}
+
 # Custom compare function to sort by ID
 def compare(s):
     currentId = s[0]
@@ -26,11 +31,12 @@ def compare(s):
     return int(numericString)
 
 def addRecord(record, type):
-    #print(record)
     if type == 'INDI':
         individuals.append(list(record.values()))
+        individualsDict[record['id']] = record
     else:
         families.append(list(record.values()))
+        familiesDict[record['id']] = record
 
 def getName(indId):
     # Search for the name of the individual with indID
@@ -143,6 +149,47 @@ def processFile(file):
     addRecord(ind, "INDI")
     addRecord(fam, "FAM")
 
+def gedcomDateToUnixTimestamp(date):
+    dateArray = date.split(' ')
+    month = MONTHS[dateArray[1]]
+    day = dateArray[0]
+    year = dateArray[2]
+    timeString = '{0}/{1}/{2}'.format(day,month,year)
+    return time.mktime(datetime.datetime.strptime(timeString, '%d/%m/%Y').timetuple())
+
+def verifyMarriageBeforeDivorce(family):
+    #Check if they're divorced at all
+    if not family['divorced'] == 'NA':
+        divorcedDate = gedcomDateToUnixTimestamp(family['divorced'])
+        marriageDate = gedcomDateToUnixTimestamp(family['married'])
+
+        #Check that the Unix timestamp of their divorce is after the one of their marriage
+        return divorcedDate > marriageDate
+    #If they're not, we're done
+    else:
+        return True
+
+def verifyMarriageBeforeDeath(family):
+    #Get IDs of both parties in the couple
+    wife = individualsDict[family['wifeId']]
+    husband = individualsDict[family['husbandId']]
+
+    #Get the marriage date
+    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+
+    #Check if they are dead, and if they are, if they died before wedding
+    if not wife['alive']:
+        wifeDeathDate = gedcomDateToUnixTimestamp(wife['death'])
+        if wifeDeathDate < marriageDate:
+            return False
+    if not husband['alive']:
+        husbandDeathDate = gedcomDateToUnixTimestamp(husband['death'])
+        if husbandDeathDate < marriageDate:
+            return False
+
+    #If neither failed, we passed, return true
+    return True
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -163,6 +210,12 @@ def main():
 
     print(individualsTable)
     print(familiesTable)
+
+    for family in familiesDict:
+        if not verifyMarriageBeforeDivorce(familiesDict[family]):
+            print('Family {0} fails marriage before divorce check'.format(family))
+        if not verifyMarriageBeforeDeath(familiesDict[family]):
+            print('Family {0} fails marriage before death check'.format(family))
 
 if __name__ == '__main__':
     main()
