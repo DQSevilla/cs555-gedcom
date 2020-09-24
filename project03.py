@@ -15,7 +15,8 @@ FAM_TAGS = ['HUSB', 'WIFE','CHIL', 'DIV', 'DATE']
 MONTHS = {  'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 
             'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
             'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC':12
-        }
+}
+
 individuals = []
 families = []
 
@@ -155,7 +156,7 @@ def gedcomDateToUnixTimestamp(date):
     day = dateArray[0]
     year = dateArray[2]
     timeString = '{0}/{1}/{2}'.format(day,month,year)
-    return time.mktime(datetime.datetime.strptime(timeString, '%d/%m/%Y').timetuple())
+    return time.mktime(datetime.datetime.strptime(timeString, '%d/%m/%Y').timetuple()) 
 
 def verifyMarriageBeforeDivorce(family):
     #Check if they're divorced at all
