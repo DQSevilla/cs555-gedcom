@@ -1,7 +1,7 @@
 from prettytable import PrettyTable
 from datetime import date
 
-GEDCOM_FILE = 'cs555project01.ged'
+GEDCOM_FILE = 'cs555project03.ged'
 #GEDCOM_FILE = 'test.ged'
 VALID_TAGS = ['INDI', 'NAME', 'SEX', 'BIRT', 'DEAT',
               'FAMC', 'FAMS', 'FAM', 'MARR', 'HUSB', 'WIFE', 
