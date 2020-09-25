@@ -22,6 +22,42 @@ examplePersonDead = {
     'spouse': '@F2@'
 }
 
+examplePersonDead150 = {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '1 JAN 1970',
+    'age': 150,
+    'alive': False,
+    'death': '26 NOV 2119',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
+examplePersonAliveOver150 = {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '1 JAN 1000',
+    'age': 151,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
+examplePersonDeadOver150 = {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '1 JAN 1970',
+    'age': 154,
+    'alive': False,
+    'death': '30 NOV 2119',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
 exampleFamilyTogether = {
     'id': '@F1@',
     'married': '14 MAY 1994',
