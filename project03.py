@@ -191,6 +191,22 @@ def verifyMarriageBeforeDeath(family):
     #If neither failed, we passed, return true
     return True
 
+def verifyBirthBeforeDeath(person):
+    #Get IDs of the individual in question parties in the couple
+    individual = individualsDict[person]
+
+    #Get the birth date
+    personBirthDate = gedcomDateToUnixTimestamp(person['born'])
+
+    #Check if they are dead, and if they are, if they died before their birth
+    if not person['alive']:
+        personDeathDate = gedcomDateToUnixTimestamp(person['death'])
+        if personDeathDate < personBirthDate:
+            return False
+
+    #If neither failed, we passed, return true
+    return True
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
