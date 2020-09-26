@@ -193,14 +193,14 @@ def verifyMarriageBeforeDeath(family):
 
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
-    individual = individualsDict[person]
+    individual = individualsDict[person['id']]
 
     #Get the birth date
-    personBirthDate = gedcomDateToUnixTimestamp(person['born'])
+    personBirthDate = gedcomDateToUnixTimestamp(individual['birthday'])
 
     #Check if they are dead, and if they are, if they died before their birth
-    if not person['alive']:
-        personDeathDate = gedcomDateToUnixTimestamp(person['death'])
+    if not individual['alive']:
+        personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
         if personDeathDate < personBirthDate:
             return False
 
