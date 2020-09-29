@@ -1,6 +1,5 @@
 from prettytable import PrettyTable
-from datetime import date
-import datetime
+from datetime import date, datetime
 import time
 
 GEDCOM_FILE = 'cs555project03.ged'
@@ -156,7 +155,7 @@ def gedcomDateToUnixTimestamp(date):
     day = dateArray[0]
     year = dateArray[2]
     timeString = '{0}/{1}/{2}'.format(day,month,year)
-    return time.mktime(datetime.datetime.strptime(timeString, '%d/%m/%Y').timetuple())
+    return time.mktime(datetime.strptime(timeString, '%d/%m/%Y').timetuple())
 
 def verifyMarriageBeforeDivorce(family):
     #Check if they're divorced at all
@@ -191,6 +190,16 @@ def verifyMarriageBeforeDeath(family):
     #If neither failed, we passed, return true
     return True
 
+def verifyDeathBefore150YearsOld(person):
+    bday_unix = gedcomDateToUnixTimestamp(person['birthday'])
+    if person['death'] == 'NA':
+        age = time.time() - bday_unix
+    else:
+        death_unix = gedcomDateToUnixTimestamp(person['death'])
+        age = death_unix - bday_unix
+    years_in_seconds = 150 * 365 * 24 * 60 * 60
+    return age <= years_in_seconds
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -217,6 +226,10 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+
+    for _, individual in individualsDict.items():
+        if not verifyDeathBefore150YearsOld(individual):
+            print(f"ERR: Individual {id} is over 150 years old")
 
 if __name__ == '__main__':
     main()
