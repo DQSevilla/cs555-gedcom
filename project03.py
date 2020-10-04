@@ -240,7 +240,10 @@ def verifyDeathBefore150YearsOld(person):
     return age <= years_in_seconds
 
 # User Story 01: Date is before the current date
-def verifyDateBeforeCurrentDate(date):
+def verifyDateBeforeCurrentDate(dateString):
+    if dateString == 'NA':
+        return True
+
     compareDate = convertDate(date)
     today = date.today()
     if compareDate >= today:
@@ -273,10 +276,18 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        if not verifyDateBeforeCurrentDate(family['married']):
+            print(f"Family {family} has a marriage date that is after, or equal to, the current date")
+        if not verifyDateBeforeCurrentDate(family['divorced']):
+            print(f"Family {family} has a divorced date that is after, or equal to, the current date")
 
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
+        if not verifyDateBeforeCurrentDate(individual['birthday']):
+            print(f"ERR: Individual {id} has a birthday that is after, or equal to, the current date")
+        if not verifyDateBeforeCurrentDate(individual['death']):
+            print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
 
 if __name__ == '__main__':
     main()
