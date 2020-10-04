@@ -42,6 +42,12 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+class TestForBigamy(unittest.TestCase):
+    def testMarriedPerson(self):
+        self.assertFalse(noBigamy(examples.examplePersonMarried))
+    def testNonMarriedPerson(self):
+        self.assertTrue(noBigamy(examples.examplePersonNonMarried))
+        
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
