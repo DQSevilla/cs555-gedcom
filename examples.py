@@ -148,3 +148,50 @@ exampleImproperFamilyWithWidow = {
     'wifeName': 'Gina /Koi/',
     'children': ['@I1@', '@I6@', '@I8@', '@I10@']
 }
+exampleAgeUnder14One = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '2 DEC 2015',
+    'age': 4,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleAgeUnder14Two = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '15 Nov 2010',
+    'age': 10,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleAgeOver14One= {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '31 DEC 1949',
+    'age': 70,
+    'alive': False,
+    'death': '14 FEB 2015',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
+exampleAgeOver14Two= {
+    'id': '@I5@', 
+    'name': 'Gina /Koi/', 
+    'gender': 'F', 
+    'birthday': '14 FEB 2000', 
+    'age': 20, 
+    'alive': True, 
+    'death': 'NA', 
+    'child': 'NA', 
+    'spouse': '@F2@'
+}
