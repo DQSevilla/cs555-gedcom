@@ -87,7 +87,7 @@ class MarriageGendersTestCase(unittest.TestCase):
             '@I4@': examples.exampleHusbandIncorrectGender,
             '@I5@': examples.exampleIndividualInvalidGender
         }
-        
+
     def test_married_both_male(self):
         self.assertFalse(project03.ensureMarriageGenderRoles(
             MarriageGendersTestCase.families['@F1@'],
@@ -120,7 +120,7 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
         self.families = {
             '@F1@': examples.exampleFamilyTogether,
             '@F2@': examples.exampleFamilyBetweenSiblings
-            
+
         }
 
         self.individuals = {
@@ -129,7 +129,7 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
             '@I3@': examples.examplePersonSameParent1,
             '@I4@': examples.examplePersonSameParent2,
         }
-        
+
     def test_not_between_siblings(self):
         self.assertTrue(project03.verifyMarriageNotSiblings(
             self.families['@F1@'],
