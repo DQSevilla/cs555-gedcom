@@ -42,6 +42,19 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+class BirthdayBeforeMarriageTestCase(unittest.TestCase):
+    def testBirthdayBeforeMarriage(self):
+        self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayBeforeMarriage))
+
+    def testBirthdayAfterMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayAfterMarriage))
+
+    def testBirthdayEqualMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayEqualMarriage))
+
+    def testBirthDayNA(self):
+        self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayNA))
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
