@@ -148,3 +148,118 @@ exampleImproperFamilyWithWidow = {
     'wifeName': 'Gina /Koi/',
     'children': ['@I1@', '@I6@', '@I8@', '@I10@']
 }
+
+exampleFamilyGay = {
+    'id': '@F1@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I2@',
+    'husbandName': 'James /Boucher/',
+    'wifeId': '@I1@',
+    'wifeName': 'Asad /Kahn/',
+    'children': []
+}
+
+exampleFamilyLesbian = {
+    'id': '@F2@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I4@',
+    'husbandName': 'Paula /Lloyd/',
+    'wifeId': '@I3@',
+    'wifeName': 'Abigail /Garcia/',
+    'children': []
+}
+
+exampleFamilyBothGendersIncorrect = {
+    'id': '@F3@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'Abigail /Garcia/',
+    'wifeId': '@I2@',
+    'wifeName': 'James /Boucher/',
+    'children': []
+}
+
+exampleFamilyInvalidGenders = {
+    'id': '@F4@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I5@',
+    'husbandName': 'e /e/',
+    'wifeId': '@I5@',
+    'wifeName': 'e /e/',
+    'children': []
+}
+
+exampleFamilyCorrect = {
+    'id': '@F5@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I2@',
+    'husbandName': 'James /Boucher/',
+    'wifeId': '@I3@',
+    'wifeName': 'Abigail /Garcia/',
+    'children': []
+}
+
+exampleWifeIncorrectGender = {
+    'id': '@I1@',
+    'name': 'Asad /Kahn/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleHusbandCorrectGender = {
+    'id': '@I2@',
+    'name': 'James /Boucher/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleWifeCorrectGender = {
+    'id': '@I3@',
+    'name': 'Abigail /Garcia/',
+    'gender': 'F',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleHusbandIncorrectGender = {
+    'id': '@I4@',
+    'name': 'Paula /Lloyd/',
+    'gender': 'F',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleIndividualInvalidGender = {
+    'id': '@I5@',
+    'name': 'e /e/',
+    'gender': '-',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
