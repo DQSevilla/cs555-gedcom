@@ -235,6 +235,24 @@ def verifyDeathBefore150YearsOld(person):
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
 
+def verifyBirthAfterParentsMarriage(family):
+    """
+    children should be born after marriage of parents
+    and not more than 9 months after divorce
+    """
+    # get marriage date
+    # if children, for all children, get birth date and check. print.
+    marriage_date = gedcomDateToUnixTimestamp(family['married'])
+    for child_id in family['children']:
+        child = individualsDict[child_id]
+        birthday = gedcomDateToUnixTimestamp(child['birthday'])
+        if birthday < marriage_date:
+            print(f"ERR: Child {child_id} born before parents marriage")
+        if family['divorced'] != 'NA':
+            divorce_date = gedcomDateToUnixTimestamp(family['divorced'])
+            if birthday > (divorce_date + 2764800):  # 9 mo. after divorce
+                print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -261,6 +279,7 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        verifyBirthAfterParentsMarriage(familiesDict[family])
 
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
