@@ -203,6 +203,7 @@ def verifyBirthBeforeDeath(person):
         personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
         if personDeathDate < personBirthDate:
             pass
+
 def verifyDivorceBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
     individual = individualsDict[person]
@@ -232,6 +233,22 @@ def verifyDeathBefore150YearsOld(person):
         age = death_unix - bday_unix
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
+
+# User Story 02: Birth before marriage
+def verifyBirthBeforeMarriage(person):
+    # We will consider an unmarried individual to always have a marriage date before their birth date
+    spouse = person['spouse'] 
+    if spouse == 'NA':
+        return True
+    # Individuals should not have a birthday greater than or equal to their marriage date
+    birthFields = person['birthday'].split()
+    birthDay = date(int(birthFields[2]), MONTHS[birthFields[1]], int(birthFields[0]))
+
+    marriedFields = familiesDict[spouse]['married'].split()
+    marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
+    if birthDay >= marriedDate:
+        return False
+    return True
 
 def main():
     processFile(GEDCOM_FILE)
@@ -263,6 +280,8 @@ def main():
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
+        if not verifyBirthBeforeMarriage(individual):
+            print(f"ERR: Individual {id} has a birthday after their marriage date")
 
 if __name__ == '__main__':
     main()
