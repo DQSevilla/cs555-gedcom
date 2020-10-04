@@ -51,6 +51,10 @@ def computeAge(d):
     age = today.year - d.year - ((today.month, today.day) < (d.month, d.day))
     return age
 
+def convertDate(dateString):
+    dateFields = dateString.split()
+    return date(int(dateFields[2]), MONTHS[dateFields[1]], int(dateFields[0]))
+
 def processFile(file):
     lines = []
     with open(file, 'r') as f:
@@ -235,8 +239,9 @@ def verifyDeathBefore150YearsOld(person):
 
 # User Story 01: Date is before the current date
 def verifyDateBeforeCurrentDate(date):
+    compareDate = convertDate(date)
     today = date.today()
-    if date >= today:
+    if compareDate >= today:
         return False
     return True
 
