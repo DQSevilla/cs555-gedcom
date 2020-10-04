@@ -233,6 +233,13 @@ def verifyDeathBefore150YearsOld(person):
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
 
+# User Story 01: Date is before the current date
+def verifyDateBeforeCurrentDate(date):
+    today = date.today()
+    if date >= today:
+        return False
+    return True
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
