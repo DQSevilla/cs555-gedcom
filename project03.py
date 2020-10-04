@@ -232,7 +232,12 @@ def verifyDeathBefore150YearsOld(person):
         age = death_unix - bday_unix
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
-
+def noBigamy(person):
+    #if the person does not have a spouse
+    if person['spouse'] == "NA":
+        return True
+    else:
+        return False
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
