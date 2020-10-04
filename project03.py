@@ -254,18 +254,20 @@ def verifyBirthAfterParentsMarriage(family):
     children should be born after marriage of parents
     and not more than 9 months after divorce
     """
-    # get marriage date
-    # if children, for all children, get birth date and check. print.
+    errors = False
     marriage_date = gedcomDateToUnixTimestamp(family['married'])
     for child_id in family['children']:
         child = individualsDict[child_id]
         birthday = gedcomDateToUnixTimestamp(child['birthday'])
         if birthday < marriage_date:
+            errors = True
             print(f"ERR: Child {child_id} born before parents marriage")
         if family['divorced'] != 'NA':
             divorce_date = gedcomDateToUnixTimestamp(family['divorced'])
             if birthday > (divorce_date + 2764800):  # 9 mo. after divorce
+                errors = True
                 print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
+    return errors
 
 def main():
     processFile(GEDCOM_FILE)

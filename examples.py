@@ -195,3 +195,27 @@ examplePersonSameParent2 = {
     'child': '@F3@',
     'spouse': '@F1@'
 }
+
+exampleBirthBeforeMarriageFamily = {
+    'id': '@F9@',
+    'married': '14 MAY 1994',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'Anthony /Gabario/',
+    'wifeId': '@I4@',
+    'wifeName': 'Serafina /Russo/',
+    'children': ['@I14@'],
+}
+
+# TODO: delet
+exampleChildBornBeforeMarriage = {
+    'id': '@I9@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA',
+}
