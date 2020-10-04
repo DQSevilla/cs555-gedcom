@@ -148,3 +148,27 @@ exampleImproperFamilyWithWidow = {
     'wifeName': 'Gina /Koi/',
     'children': ['@I1@', '@I6@', '@I8@', '@I10@']
 }
+
+examplePersonMarried = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+examplePersonNonMarried = {
+    'id': '@I10@',
+    'name': 'Bret /Trout/',
+    'gender': 'M',
+    'birthday': '28 JUL 1971',
+    'age': 49,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': 'NA'
+}
