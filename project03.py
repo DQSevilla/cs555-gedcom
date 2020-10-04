@@ -202,6 +202,8 @@ def verifyBirthBeforeDeath(person):
     if not individual['alive']:
         personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
         if personDeathDate < personBirthDate:
+            # TODO: Noah: Fix this definition
+            pass
 
 def verifyDivorceBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
