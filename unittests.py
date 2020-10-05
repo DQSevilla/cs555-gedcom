@@ -61,9 +61,9 @@ class TestForBigamy(unittest.TestCase):
             '@F3@': examples.exampleFamilyDivorced #Hus ID = 7, Wife ID = 3
         }
     def testPositiveBigamy(self):
-        self.assertTrue(project03.verifyNoBigamy(self.familiesWithoutBigamy['@F1@'], self.familiesWithoutBigamy))
+        self.assertTrue(project03.verifyNoBigamy(self.familiesWithoutBigamy['@F1@'])
     def testNegativeBigamy(self):
-        self.assertFalse(project03.verifyNoBigamy(self.familiesWithBigamy['@F2@'], self.familiesWithBigamy))
+        self.assertFalse(project03.verifyNoBigamy(self.familiesWithBigamy['@F2@'])
 
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
