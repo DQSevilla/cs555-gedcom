@@ -244,7 +244,7 @@ def verifyDateBeforeCurrentDate(dateString):
     if dateString == 'NA':
         return True
 
-    compareDate = convertDate(date)
+    compareDate = convertDate(dateString)
     today = date.today()
     if compareDate >= today:
         return False
@@ -276,9 +276,9 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
-        if not verifyDateBeforeCurrentDate(family['married']):
+        if not verifyDateBeforeCurrentDate(familiesDict[family]['married']):
             print(f"Family {family} has a marriage date that is after, or equal to, the current date")
-        if not verifyDateBeforeCurrentDate(family['divorced']):
+        if not verifyDateBeforeCurrentDate(familiesDict[family]['divorced']):
             print(f"Family {family} has a divorced date that is after, or equal to, the current date")
 
     for _, individual in individualsDict.items():
