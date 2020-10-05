@@ -42,13 +42,16 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
         
-class TestMarriageBefore14(unittest.TestCase):
+class TestMarriageAfter14(unittest.TestCase):
     def testBothOver14(self):
-        self.assertTrue(marriageAfter14(examples.exampleAgeOver14One, examples.exampleAgeOver14Two))
-    def testOneOver14(self):
-        self.assertFalse(marriageAfter14(examples.exampleAgeOver14One, examples.exampleAgeUnder14One))
+        self.assertTrue(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsAfterBoth))
+    def testHusbandOver14(self):
+        self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriageHusbandOver14Years))
+    def testWifeOver14(self):
+        self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriageWifeOver14Years))
     def testBothUnder14(self):
-        self.assertFalse(marriageAfter14(examples.exampleAgeUnder14One, examples.exampleAgeUnder14Two))
+        self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsBeforeBoth))
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
