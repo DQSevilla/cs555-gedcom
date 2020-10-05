@@ -106,6 +106,42 @@ examplePersonSameBirthAndDeath = {
     'spouse': '@F2@'
 }
 
+examplePersonRecentBirth = {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '20 SEP 2020',
+    'age': 0,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
+examplePersonRecentDeath = {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '14 FEB 1940',
+    'age': 70,
+    'alive': False,
+    'death': '1 OCT 2020',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
+examplePersonNotRecentDeath = {
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '14 FEB 1940',
+    'age': 70,
+    'alive': False,
+    'death': '1 SEP 2020',
+    'child': 'NA',
+    'spouse': '@F2@'
+}
+
 exampleFamilyTogether = {
     'id': '@F1@',
     'married': '14 MAY 1994',

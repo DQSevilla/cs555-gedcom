@@ -246,8 +246,8 @@ def verifyBirthBeforeDeath(person):
     if not individual['alive']:
         personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
         if personDeathDate < personBirthDate:
-            # TODO: Noah: Fix this definition
-            pass
+            return False
+    return True
 
 def verifyDivorceBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
@@ -397,6 +397,10 @@ def main():
     for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
+        if not verifyBirthBeforeDeath(individual):
+            print(f"ERR: Individual {id} was born after they died")
+        if not verifyDivorceBeforeDeath(individual):
+            print(f"ERR: Individual {id} was born after they were divorced")
         if not verifyDateBeforeCurrentDate(individual['birthday']):
             print(f"ERR: Individual {id} has a birthday that is after, or equal to, the current date")
         if not verifyDateBeforeCurrentDate(individual['death']):
