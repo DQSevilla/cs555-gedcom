@@ -232,12 +232,24 @@ def verifyDeathBefore150YearsOld(person):
         age = death_unix - bday_unix
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
-def noBigamy(person):
-    #if the person does not have a spouse
-    if person['spouse'] == "NA":
-        return True
-    else:
-        return False
+def verifyNoBigamy(family):
+    #retrieve ID for husband and wife
+    husbandID = family['husbandId']
+    wifeID = family['wifeId']
+    #make a modified dictionary without family in question
+    modifiedDict = familiesDict
+    modifiedDict.pop(family['id'])
+
+    #check every other family
+    for fam in familiesDict:
+        #if another family's husband ID is identical
+        if (husbandID == fam['husbandId']):
+            return False
+        #if another family's wife ID is identical
+        if (wifeID == fam['wifeId']):
+            return False
+    #unique ID for both husband and wife in family
+    return True
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
