@@ -44,10 +44,10 @@ class AliveTooLongTestCase(unittest.TestCase):
 
 class DateBeforeCurrentDateTestCase(unittest.TestCase):
     def testDateBeforeCurrentDate(self):
-        self.assertTrue(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+        self.assertTrue(project03.verifyDateBeforeCurrentDate(examples.exampleDateBeforeCurrentDate))
 
     def testDateEqualCurrentDate(self):
-        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateEqualCurrentDate))
 
     def testDateAfterCurrentDate(self):
         self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
@@ -175,7 +175,7 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
         self.assertTrue(project03.verifyMarriageNotSiblings(
             self.families['@F2@'],
             self.individuals))
-            
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
