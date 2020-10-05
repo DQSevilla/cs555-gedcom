@@ -246,9 +246,7 @@ def verifyBirthBeforeMarriage(person):
 
     marriedFields = familiesDict[spouse]['married'].split()
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
-    if birthDay >= marriedDate:
-        return False
-    return True
+    return birthDay >= marriedDate
 
 def main():
     processFile(GEDCOM_FILE)
