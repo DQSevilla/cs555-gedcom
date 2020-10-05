@@ -22,6 +22,7 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(project03.verifyMarriageBeforeDeath(examples.exampleImproperFamilyWithWidow))
 
+
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyDeathBefore150YearsOld
@@ -40,6 +41,7 @@ class AliveTooLongTestCase(unittest.TestCase):
 
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
+
 
 class DateBeforeCurrentDateTestCase(unittest.TestCase):
     def testDateBeforeCurrentDate(self):
@@ -186,7 +188,7 @@ class US12TestCase(unittest.TestCase):
             examples.exampleFamilyWithWidow
         ))
 class TestMarriageAfter14(unittest.TestCase):
-    #testing US10
+     #testing US10
     def testBothOver14(self):
         self.assertTrue(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsAfterBoth))
     def testHusbandOver14(self):
@@ -195,8 +197,6 @@ class TestMarriageAfter14(unittest.TestCase):
         self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriageWifeOver14Years))
     def testBothUnder14(self):
         self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsBeforeBoth))
-
-
 #Testing US35 & US36
 class TestRecent30DayBornorDeath(unittest.TestCase):
     def test_verifyBirthAtRecent30Days(self):

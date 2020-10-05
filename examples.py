@@ -10,6 +10,7 @@ examplePersonAlive = {
     'spouse': '@F1@'
 }
 
+
 examplePersonAlive2 = {
     'id': '@I2@',
     'name': 'George /Salmon/',
@@ -71,41 +72,40 @@ examplePersonDeadOver150 = {
 }
 
 examplePersonDeadBeforeBirth = {
-    'id': '@I5@',
-    'name': 'Gina /Koi/',
-    'gender': 'F',
-    'birthday': '31 DEC 1949',
-    'age': 70,
-    'alive': False,
-    'death': '14 FEB 1940',
-    'child': 'NA',
+    'id': '@I5@', 
+    'name': 'Gina /Koi/', 
+    'gender': 'F', 
+    'birthday': '31 DEC 1949', 
+    'age': 70, 
+    'alive': False, 
+    'death': '14 FEB 1940', 
+    'child': 'NA', 
     'spouse': '@F2@'
 }
 
 examplePersonNotBirthed = {
-    'id': '@I5@',
-    'name': 'Gina /Koi/',
-    'gender': 'F',
-    'birthday': 'NA',
-    'age': 70,
-    'alive': False,
-    'death': 'NA',
-    'child': 'NA',
+    'id': '@I5@', 
+    'name': 'Gina /Koi/', 
+    'gender': 'F', 
+    'birthday': 'NA', 
+    'age': 70, 
+    'alive': False, 
+    'death': 'NA', 
+    'child': 'NA', 
     'spouse': '@F2@'
 }
 
 examplePersonSameBirthAndDeath = {
-    'id': '@I5@',
-    'name': 'Gina /Koi/',
-    'gender': 'F',
-    'birthday': '14 FEB 1940',
-    'age': 70,
-    'alive': True,
-    'death': '14 FEB 1940',
-    'child': 'NA',
+    'id': '@I5@', 
+    'name': 'Gina /Koi/', 
+    'gender': 'F', 
+    'birthday': '14 FEB 1940', 
+    'age': 70, 
+    'alive': True, 
+    'death': '14 FEB 1940', 
+    'child': 'NA', 
     'spouse': '@F2@'
 }
-
 examplePersonRecentBirth = {
     'id': '@I5@',
     'name': 'Gina /Koi/',
@@ -196,6 +196,7 @@ exampleImproperFamilyWithWidow = {
     'wifeName': 'Gina /Koi/',
     'children': ['@I1@', '@I6@', '@I8@', '@I10@']
 }
+
 
 exampleFamilyGay = {
     'id': '@F1@',
@@ -393,7 +394,6 @@ exampleBirthdayEqualMarriage = {
     'child': '@F2@',
     'spouse': '@F1@'
 }
-
 exampleMarriage14YearsAfterBoth = {
     'id': '@F1@',
     'married': '2 JAN 2020',
