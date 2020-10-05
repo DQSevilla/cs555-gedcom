@@ -271,6 +271,20 @@ def verifyDeathBefore150YearsOld(person):
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
 
+# User Story 02: Birth before marriage
+def verifyBirthBeforeMarriage(person):
+    spouse = person['spouse']
+    # We will consider an unmarried individual to always have a marriage date before their birth date
+    if spouse == 'NA':
+        return True
+    # Individuals should not have a birthday greater than or equal to their marriage date
+    birthFields = person['birthday'].split()
+    birthDay = date(int(birthFields[2]), MONTHS[birthFields[1]], int(birthFields[0]))
+
+    marriedFields = familiesDict[spouse]['married'].split()
+    marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
+    return birthDay < marriedDate
+
 def verifyBirthAfterParentsMarriage(family):
     """
     children should be born after marriage of parents
@@ -311,7 +325,7 @@ def main():
 
     print(individualsTable)
     print(familiesTable)
-
+    
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):
             print('Family {0} fails marriage before divorce check'.format(family))
@@ -329,6 +343,8 @@ def main():
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
+        if not verifyBirthBeforeMarriage(individual):
+            print(f"ERR: Individual {id} has a birthday after their marriage date")
 
 if __name__ == '__main__':
     main()

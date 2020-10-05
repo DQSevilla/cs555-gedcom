@@ -42,6 +42,15 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+class BirthdayBeforeMarriageTestCase(unittest.TestCase):
+    def testBirthdayBeforeMarriage(self):
+        self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayBeforeMarriage))
+
+    def testBirthdayAfterMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayAfterMarriage))
+
+    def testBirthdayEqualMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayEqualMarriage))
 
 class MarriageBirthComparisonTestCase(unittest.TestCase):
     def setUp(self):
@@ -67,7 +76,6 @@ class MarriageBirthComparisonTestCase(unittest.TestCase):
         }
         self.assertTrue(self.verifier(examples.exampleBirthBeforeMarriageFamily))
 
-
 class MarriageGendersTestCase(unittest.TestCase):
 
     @classmethod
@@ -87,7 +95,7 @@ class MarriageGendersTestCase(unittest.TestCase):
             '@I4@': examples.exampleHusbandIncorrectGender,
             '@I5@': examples.exampleIndividualInvalidGender
         }
-        
+
     def test_married_both_male(self):
         self.assertFalse(project03.ensureMarriageGenderRoles(
             MarriageGendersTestCase.families['@F1@'],
@@ -112,7 +120,6 @@ class MarriageGendersTestCase(unittest.TestCase):
         self.assertFalse(project03.ensureMarriageGenderRoles(
             MarriageGendersTestCase.families['@F5@'],
             MarriageGendersTestCase.individuals))
-
 
 class MarriageBetweenSiblingsTestCase(unittest.TestCase):
 
