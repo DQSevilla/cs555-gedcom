@@ -235,6 +235,28 @@ def ensureMarriageGenderRoles(family, individuals):
 
     return True
 
+def verifyNoMarriageToDescendants(person):
+    #get individuals id
+    individual = individualsDict[person['id']]
+
+    #get spouse and check if they even exist
+    personSpouse = gedcomDateToUnixTimestamp(individual['spouse'])
+    if not personSpouse:
+    	return True
+
+    #get children and make sure they are not a spouse
+    personChildren = gedcomDateToUnixTimestamp(individual['children'])
+    personDecendants = []
+    while personChildren != []:
+    	personDecendants.append(personChildren[0])
+    	personChildren = personChildren + gedcomDateToUnixTimestamp(personChildren[0]['children'])
+    	personChildren = personChildren[1:]
+
+    if personSpouse in personDecendants:
+    	return False
+
+    return True
+
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
     individual = individualsDict[person['id']]
@@ -390,6 +412,8 @@ def main():
             print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
         if not verifyBirthBeforeMarriage(individual):
             print(f"ERR: Individual {id} has a birthday after their marriage date")
+        if not verifyNoMarriageToDescendants(individuals):
+            print(f"ERR: Individual {id} has is married to one of their decendants")
 
 if __name__ == '__main__':
     main()
