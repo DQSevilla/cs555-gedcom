@@ -43,6 +43,30 @@ class AliveTooLongTestCase(unittest.TestCase):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
 
+class MarriageBirthComparisonTestCase(unittest.TestCase):
+    def setUp(self):
+        self.verifier = project03.verifyBirthAfterParentsMarriage
+
+    def test_normal_marriage(self):
+        self.assertFalse(self.verifier(examples.exampleFamilyTogether))
+
+    @unittest.skip("TODO, need test refactoring")
+    def test_birth_before_marriage(self):
+        project03.individuals = {
+            '@I4@': {
+                'id': '@I4@',
+                'name': 'Serafina /Russo/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': 'NA',
+                'spouse': 'NA'
+            }
+        }
+        self.assertTrue(self.verifier(examples.exampleBirthBeforeMarriageFamily))
+
 class MarriageGendersTestCase(unittest.TestCase):
 
     @classmethod
@@ -62,7 +86,7 @@ class MarriageGendersTestCase(unittest.TestCase):
             '@I4@': examples.exampleHusbandIncorrectGender,
             '@I5@': examples.exampleIndividualInvalidGender
         }
-        
+
     def test_married_both_male(self):
         self.assertFalse(project03.ensureMarriageGenderRoles(
             MarriageGendersTestCase.families['@F1@'],
@@ -87,7 +111,6 @@ class MarriageGendersTestCase(unittest.TestCase):
         self.assertFalse(project03.ensureMarriageGenderRoles(
             MarriageGendersTestCase.families['@F5@'],
             MarriageGendersTestCase.individuals))
-
 
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
