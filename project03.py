@@ -301,6 +301,31 @@ def verifyBirthBeforeMarriage(person):
     marriedFields = familiesDict[spouse]['married'].split()
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
     return birthDay < marriedDate
+                  
+# US35: List recent births
+def verifyBirthAtRecent30Days(person):
+    currentDateTimestamp = time.time();
+    name = person['name']
+    birthdayStamp = gedcomDateToUnixTimestamp(person['birthday']);
+    if currentDateTimestamp - birthdayStamp < 2592000:
+        print(f"Family member {name} was born on {person['birthday']}")
+        return True
+    else:
+        return False
+
+# US36: List recent deaths
+def verifyDeathAtRecent30Days(person):
+    currentDateTimestamp = time.time();
+    if not person['alive']:
+        name = person['name']
+        deathDateStamp = gedcomDateToUnixTimestamp(person['death']);
+        if currentDateTimestamp - deathDateStamp < 2592000:
+            print(f"Family member {name} was dead on {person['death']}")
+            return True
+        else:
+            return False
+    else:
+        return False
 
 def verifyBirthAfterParentsMarriage(family):
     """
