@@ -246,9 +246,7 @@ def verifyDateBeforeCurrentDate(dateString):
 
     compareDate = convertDate(dateString)
     today = date.today()
-    if compareDate >= today:
-        return False
-    return True
+    return compareDate >= today
 
 def main():
     processFile(GEDCOM_FILE)
