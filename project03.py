@@ -234,17 +234,22 @@ def verifyDeathBefore150YearsOld(person):
     return age <= years_in_seconds
   
 def verifyMarriageAfter14(family):
-    if not family['divorced'] == 'NA':
-        wife = individualsDict[family['wifeId']]
-        husband = individualsDict[family['husbandId']]
-        
-        #if both wife and husband are over 14 years of age
-        if (wife['age'] > 14 and husband['age'] > 14):
-            return True
-        else:
-            return False
-    #if there's no marriage at all
-    return True
+    #get individuals by ID
+    wife = individualsDict[family['wifeId']]
+    husband = individualsDict[family['husbandId']]
+    
+    #get their marriage date
+    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+
+    #14 years in unix = 441849600
+    years14Unix = 441849600
+    wifeBirth = gedcomDateToUnixTimestamp(wife['Birthday'])
+    husBirth = gedcomDateToUnixTimestamp(husband['Birthday'])
+    #if both wife and husband's marriage date minus their birthdays are both over 14 years unix
+    if (marriageDate - husBirth > years14Unix and marriageDate - wifeBirth > years14Unix):
+        return True
+    else:
+        return False
     
 def main():
     processFile(GEDCOM_FILE)
