@@ -194,6 +194,42 @@ def verifyMarriageBeforeDeath(family):
     #If neither failed, we passed, return true
     return True
 
+def verifyMarriageNotSiblings(family, individuals):
+
+    wife = individuals[family['wifeId']]
+    husband = individuals[family['husbandId']]
+
+    # if either don't have parent info, automatically pass
+    if wife['child'] == 'NA' or husband['child'] == 'NA':
+        return True
+
+    # if both have the same parents
+    if wife['child'] == husband['child']:
+        return False
+
+    return True
+
+def ensureMarriageGenderRoles(family, individuals):
+    """Checks if a marriage is between a male and a female.
+
+    Parameters
+    ----------
+    family : dict
+    individuals: dict
+
+    Returns
+    -------
+    bool
+        True if the marriage is valid. False otherwise.
+    """
+
+    wife = individuals[family['wifeId']]
+    husband = individuals[family['husbandId']]
+
+    if wife['gender'] != 'F' or husband['gender'] != 'M':
+        return False
+
+    return True
 
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
@@ -246,7 +282,41 @@ def verifyDateBeforeCurrentDate(dateString):
 
     compareDate = convertDate(dateString)
     today = date.today()
-    return compareDate >= today
+    return compareDate < today
+
+# User Story 02: Birth before marriage
+def verifyBirthBeforeMarriage(person):
+    spouse = person['spouse']
+    # We will consider an unmarried individual to always have a marriage date before their birth date
+    if spouse == 'NA':
+        return True
+    # Individuals should not have a birthday greater than or equal to their marriage date
+    birthFields = person['birthday'].split()
+    birthDay = date(int(birthFields[2]), MONTHS[birthFields[1]], int(birthFields[0]))
+
+    marriedFields = familiesDict[spouse]['married'].split()
+    marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
+    return birthDay < marriedDate
+
+def verifyBirthAfterParentsMarriage(family):
+    """
+    children should be born after marriage of parents
+    and not more than 9 months after divorce
+    """
+    errors = False
+    marriage_date = gedcomDateToUnixTimestamp(family['married'])
+    for child_id in family['children']:
+        child = individualsDict[child_id]
+        birthday = gedcomDateToUnixTimestamp(child['birthday'])
+        if birthday < marriage_date:
+            errors = True
+            print(f"ERR: Child {child_id} born before parents marriage")
+        if family['divorced'] != 'NA':
+            divorce_date = gedcomDateToUnixTimestamp(family['divorced'])
+            if birthday > (divorce_date + 2764800):  # 9 mo. after divorce
+                errors = True
+                print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
+    return errors
 
 def main():
     processFile(GEDCOM_FILE)
@@ -268,7 +338,7 @@ def main():
 
     print(individualsTable)
     print(familiesTable)
-
+    
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):
             print('Family {0} fails marriage before divorce check'.format(family))
@@ -278,6 +348,14 @@ def main():
             print(f"Family {family} has a marriage date that is after, or equal to, the current date")
         if not verifyDateBeforeCurrentDate(familiesDict[family]['divorced']):
             print(f"Family {family} has a divorced date that is after, or equal to, the current date")
+        verifyBirthAfterParentsMarriage(familiesDict[family])
+
+        if not ensureMarriageGenderRoles(familiesDict[family], individualsDict):
+            print('Family {0} fails proper gender role check'.format(family))
+
+        if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
+            print('Family {0} fails marriage between siblings check'.format(family))
+
 
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
@@ -286,6 +364,8 @@ def main():
             print(f"ERR: Individual {id} has a birthday that is after, or equal to, the current date")
         if not verifyDateBeforeCurrentDate(individual['death']):
             print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
+        if not verifyBirthBeforeMarriage(individual):
+            print(f"ERR: Individual {id} has a birthday after their marriage date")
 
 if __name__ == '__main__':
     main()

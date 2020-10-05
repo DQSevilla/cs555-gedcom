@@ -10,6 +10,18 @@ examplePersonAlive = {
     'spouse': '@F1@'
 }
 
+examplePersonAlive2 = {
+    'id': '@I2@',
+    'name': 'George /Salmon/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F5@',
+    'spouse': '@F1@'
+}
+
 examplePersonDead = {
     'id': '@I5@',
     'name': 'Gina /Koi/',
@@ -59,38 +71,38 @@ examplePersonDeadOver150 = {
 }
 
 examplePersonDeadBeforeBirth = {
-    'id': '@I5@', 
-    'name': 'Gina /Koi/', 
-    'gender': 'F', 
-    'birthday': '31 DEC 1949', 
-    'age': 70, 
-    'alive': False, 
-    'death': '14 FEB 1940', 
-    'child': 'NA', 
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '31 DEC 1949',
+    'age': 70,
+    'alive': False,
+    'death': '14 FEB 1940',
+    'child': 'NA',
     'spouse': '@F2@'
 }
 
 examplePersonNotBirthed = {
-    'id': '@I5@', 
-    'name': 'Gina /Koi/', 
-    'gender': 'F', 
-    'birthday': 'NA', 
-    'age': 70, 
-    'alive': False, 
-    'death': 'NA', 
-    'child': 'NA', 
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': 'NA',
+    'age': 70,
+    'alive': False,
+    'death': 'NA',
+    'child': 'NA',
     'spouse': '@F2@'
 }
 
 examplePersonSameBirthAndDeath = {
-    'id': '@I5@', 
-    'name': 'Gina /Koi/', 
-    'gender': 'F', 
-    'birthday': '14 FEB 1940', 
-    'age': 70, 
-    'alive': True, 
-    'death': '14 FEB 1940', 
-    'child': 'NA', 
+    'id': '@I5@',
+    'name': 'Gina /Koi/',
+    'gender': 'F',
+    'birthday': '14 FEB 1940',
+    'age': 70,
+    'alive': True,
+    'death': '14 FEB 1940',
+    'child': 'NA',
     'spouse': '@F2@'
 }
 
@@ -147,6 +159,192 @@ exampleImproperFamilyWithWidow = {
     'wifeId': '@I5@',
     'wifeName': 'Gina /Koi/',
     'children': ['@I1@', '@I6@', '@I8@', '@I10@']
+}
+
+exampleFamilyGay = {
+    'id': '@F1@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I2@',
+    'husbandName': 'James /Boucher/',
+    'wifeId': '@I1@',
+    'wifeName': 'Asad /Kahn/',
+    'children': []
+}
+
+exampleFamilyLesbian = {
+    'id': '@F2@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I4@',
+    'husbandName': 'Paula /Lloyd/',
+    'wifeId': '@I3@',
+    'wifeName': 'Abigail /Garcia/',
+    'children': []
+}
+
+exampleFamilyBothGendersIncorrect = {
+    'id': '@F3@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'Abigail /Garcia/',
+    'wifeId': '@I2@',
+    'wifeName': 'James /Boucher/',
+    'children': []
+}
+
+exampleFamilyInvalidGenders = {
+    'id': '@F4@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I5@',
+    'husbandName': 'e /e/',
+    'wifeId': '@I5@',
+    'wifeName': 'e /e/',
+    'children': []
+}
+
+exampleFamilyCorrect = {
+    'id': '@F5@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I2@',
+    'husbandName': 'James /Boucher/',
+    'wifeId': '@I3@',
+    'wifeName': 'Abigail /Garcia/',
+    'children': []
+}
+
+exampleWifeIncorrectGender = {
+    'id': '@I1@',
+    'name': 'Asad /Kahn/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleHusbandCorrectGender = {
+    'id': '@I2@',
+    'name': 'James /Boucher/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleWifeCorrectGender = {
+    'id': '@I3@',
+    'name': 'Abigail /Garcia/',
+    'gender': 'F',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleHusbandIncorrectGender = {
+    'id': '@I4@',
+    'name': 'Paula /Lloyd/',
+    'gender': 'F',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleIndividualInvalidGender = {
+    'id': '@I5@',
+    'name': 'e /e/',
+    'gender': '-',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleFamilyBetweenSiblings = {
+    'id': '@F1@',
+    'married': '14 MAY 1994',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'Anthony /Gabario/',
+    'wifeId': '@I4@',
+    'wifeName': 'Serafina /Russo/',
+    'children': []
+}
+
+examplePersonSameParent1 = {
+    'id': '@I3@',
+    'name': 'Anthony /Gabario/',
+    'gender': 'M',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'
+}
+
+examplePersonSameParent2 = {
+    'id': '@I4@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'
+}
+
+exampleBirthdayBeforeMarriage = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleBirthdayAfterMarriage = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '2 DEC 2020',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleBirthdayEqualMarriage = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '14 MAY 1994',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
 }
 
 exampleDateBeforeCurrentDate = '2 DEC 1970'

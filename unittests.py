@@ -51,6 +51,131 @@ class DateBeforeCurrentDateTestCase(unittest.TestCase):
 
     def testDateAfterCurrentDate(self):
         self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+
+class BirthdayBeforeMarriageTestCase(unittest.TestCase):
+    def testBirthdayBeforeMarriage(self):
+        self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayBeforeMarriage))
+
+    def testBirthdayAfterMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayAfterMarriage))
+
+    def testBirthdayEqualMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayEqualMarriage))
+
+class MarriageBirthComparisonTestCase(unittest.TestCase):
+    def setUp(self):
+        self.verifier = project03.verifyBirthAfterParentsMarriage
+
+    def test_normal_marriage(self):
+        self.assertFalse(self.verifier(examples.exampleFamilyTogether))
+
+    @unittest.skip("TODO, need test refactoring")
+    def test_birth_before_marriage(self):
+        project03.individuals = {
+            '@I4@': {
+                'id': '@I4@',
+                'name': 'Serafina /Russo/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': 'NA',
+                'spouse': 'NA'
+            }
+        }
+        self.assertTrue(self.verifier(examples.exampleBirthBeforeMarriageFamily))
+
+class MarriageGendersTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.families = {
+            '@F1@': examples.exampleFamilyGay,
+            '@F2@': examples.exampleFamilyLesbian,
+            '@F3@': examples.exampleFamilyBothGendersIncorrect,
+            '@F4@': examples.exampleFamilyCorrect,
+            '@F5@': examples.exampleFamilyInvalidGenders
+        }
+
+        cls.individuals = {
+            '@I1@': examples.exampleWifeIncorrectGender,
+            '@I2@': examples.exampleHusbandCorrectGender,
+            '@I3@': examples.exampleWifeCorrectGender,
+            '@I4@': examples.exampleHusbandIncorrectGender,
+            '@I5@': examples.exampleIndividualInvalidGender
+        }
+
+    def test_married_both_male(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F1@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_both_female(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F2@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_male_female_incorrect(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F3@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_male_famele_correct(self):
+        self.assertTrue(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F4@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_invalid_genders(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F5@'],
+            MarriageGendersTestCase.individuals))
+
+class MarriageBetweenSiblingsTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.families = {
+            '@F1@': examples.exampleFamilyTogether,
+            '@F2@': examples.exampleFamilyBetweenSiblings
+            
+        }
+
+        self.individuals = {
+            '@I1@': examples.examplePersonAlive,
+            '@I2@': examples.examplePersonAlive2,
+            '@I3@': examples.examplePersonSameParent1,
+            '@I4@': examples.examplePersonSameParent2,
+        }
+        
+    def test_not_between_siblings(self):
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F1@'],
+            self.individuals))
+
+    def test_between_siblings(self):
+        self.assertFalse(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+    def test_husband_parent_na(self):
+        self.individuals['@I3@']['child'] = 'NA'
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+    def test_wife_parent_na(self):
+        self.individuals['@I4@']['child'] = 'NA'
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+    def test_both_parents_na(self):
+        self.individuals['@I3@']['child'] = 'NA'
+        self.individuals['@I4@']['child'] = 'NA'
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+            
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
