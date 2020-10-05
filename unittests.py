@@ -127,7 +127,7 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
         self.families = {
             '@F1@': examples.exampleFamilyTogether,
             '@F2@': examples.exampleFamilyBetweenSiblings
-            
+
         }
 
         self.individuals = {
@@ -136,7 +136,7 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
             '@I3@': examples.examplePersonSameParent1,
             '@I4@': examples.examplePersonSameParent2,
         }
-        
+
     def test_not_between_siblings(self):
         self.assertTrue(project03.verifyMarriageNotSiblings(
             self.families['@F1@'],

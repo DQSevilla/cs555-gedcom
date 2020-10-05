@@ -32,9 +32,13 @@ def compare(s):
 
 def addRecord(record, type):
     if type == 'INDI':
+        if record['id'] in individualsDict:
+            print(f"ERR: Duplicate individual with id {record['id']}")
         individuals.append(list(record.values()))
         individualsDict[record['id']] = record
     else:
+        if record['id'] in familiesDict:
+            print(f"ERR: Duplicate family with id {record['id']}")
         families.append(list(record.values()))
         familiesDict[record['id']] = record
 
