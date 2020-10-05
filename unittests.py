@@ -42,6 +42,15 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+class DateBeforeCurrentDateTestCase(unittest.TestCase):
+    def testDateBeforeCurrentDate(self):
+        self.assertTrue(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+
+    def testDateEqualCurrentDate(self):
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+
+    def testDateAfterCurrentDate(self):
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
