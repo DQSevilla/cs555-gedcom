@@ -148,50 +148,46 @@ exampleImproperFamilyWithWidow = {
     'wifeName': 'Gina /Koi/',
     'children': ['@I1@', '@I6@', '@I8@', '@I10@']
 }
-exampleAgeUnder14One = {
-    'id': '@I1@',
-    'name': 'Alice /Trout/',
-    'gender': 'F',
-    'birthday': '2 DEC 2015',
-    'age': 4,
-    'alive': True,
-    'death': 'NA',
-    'child': '@F2@',
-    'spouse': '@F1@'
+exampleMarriage14YearsAfterBoth = {
+    'id': '@F1@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I13@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': []
 }
 
-exampleAgeUnder14Two = {
-    'id': '@I1@',
-    'name': 'Alice /Trout/',
-    'gender': 'F',
-    'birthday': '15 Nov 2010',
-    'age': 10,
-    'alive': True,
-    'death': 'NA',
-    'child': '@F2@',
-    'spouse': '@F1@'
+exampleMarriageHusbandOver14Years = {
+    'id': '@F1@',
+    'married': '2 JAN 2010',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I14@',
+    'wifeName': 'Anna /Goldfish/', #2000
+    'children': []
 }
 
-exampleAgeOver14One= {
-    'id': '@I5@',
-    'name': 'Gina /Koi/',
-    'gender': 'F',
-    'birthday': '31 DEC 1949',
-    'age': 70,
-    'alive': False,
-    'death': '14 FEB 2015',
-    'child': 'NA',
-    'spouse': '@F2@'
+exampleMarriageWifeOver14Years = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': []
 }
 
-exampleAgeOver14Two= {
-    'id': '@I5@', 
-    'name': 'Gina /Koi/', 
-    'gender': 'F', 
-    'birthday': '14 FEB 2000', 
-    'age': 20, 
-    'alive': True, 
-    'death': 'NA', 
-    'child': 'NA', 
-    'spouse': '@F2@'
+exampleMarriage14YearsBeforeBoth = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': []
 }
