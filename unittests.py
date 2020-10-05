@@ -22,7 +22,6 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(project03.verifyMarriageBeforeDeath(examples.exampleImproperFamilyWithWidow))
 
-
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyDeathBefore150YearsOld
@@ -41,7 +40,6 @@ class AliveTooLongTestCase(unittest.TestCase):
 
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
-
 
 class MarriageBirthComparisonTestCase(unittest.TestCase):
     def setUp(self):
@@ -66,7 +64,6 @@ class MarriageBirthComparisonTestCase(unittest.TestCase):
             }
         }
         self.assertTrue(self.verifier(examples.exampleBirthBeforeMarriageFamily))
-
 
 class MarriageGendersTestCase(unittest.TestCase):
 
@@ -113,7 +110,6 @@ class MarriageGendersTestCase(unittest.TestCase):
             MarriageGendersTestCase.families['@F5@'],
             MarriageGendersTestCase.individuals))
 
-
 class MarriageBetweenSiblingsTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -158,6 +154,17 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
         self.assertTrue(project03.verifyMarriageNotSiblings(
             self.families['@F2@'],
             self.individuals))
+
+class US12TestCase(unittest.TestCase):
+    def test_old_parent(self):
+        self.assertFalse(project03.verifyParentsNotTooOld(
+            examples.exampleFamilyWithTooYoungKid,
+        ))
+    
+    def test_not_old_parent(self):
+        self.assertTrue(project03.verifyParentsNotTooOld(
+            examples.exampleFamilyWithWidow
+        ))
 
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)

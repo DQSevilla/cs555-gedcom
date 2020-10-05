@@ -291,6 +291,21 @@ def verifyBirthAfterParentsMarriage(family):
                 print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
     return errors
 
+def verifyParentsNotTooOld(family):
+    errors = False
+    
+    motherAge = individualsDict[family['wifeId']]['age']
+    fatherAge = individualsDict[family['husbandId']]['age']
+    children  = family['children']
+
+    for child in children:
+        childAge = individualsDict[child]['age']
+        if motherAge - childAge > 60 or fatherAge - childAge > 80:
+            print(f"ERR: Child {child} has too old of a parent")
+            errors = True
+
+    return not errors
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -308,7 +323,7 @@ def main():
     individuals.sort(key=compare)
     for family in families:
         familiesTable.add_row(family)
-
+    
     print(individualsTable)
     print(familiesTable)
 
@@ -325,8 +340,9 @@ def main():
         if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
             print('Family {0} fails marriage between siblings check'.format(family))
 
+        verifyParentsNotTooOld(familiesDict[family])
 
-    for _, individual in individualsDict.items():
+    for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
 

@@ -310,3 +310,14 @@ examplePersonSameParent2 = {
     'child': '@F3@',
     'spouse': '@F1@'
 }
+
+exampleFamilyWithTooYoungKid = {
+    'id': '@F2@',
+    'married': '2 JAN 1970',
+    'divorced': 'NA',
+    'husbandId': '@I4@',
+    'husbandName': 'Irwin /Trout/',
+    'wifeId': '@I5@',
+    'wifeName': 'Gina /Koi/',
+    'children': ['@I15@']
+}
