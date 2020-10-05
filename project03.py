@@ -278,7 +278,16 @@ def verifyDeathBefore150YearsOld(person):
         age = death_unix - bday_unix
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
+  
+def verifyMarriageAfter14(family):
+    #get individuals by ID
+    wife = individualsDict[family['wifeId']]
+    husband = individualsDict[family['husbandId']]
+    
+    #get their marriage date
+    marriageDate = gedcomDateToUnixTimestamp(family['married'])
 
+<<<<<<< HEAD
 # User Story 01: Date is before the current date
 def verifyDateBeforeCurrentDate(dateString):
     if dateString == 'NA':
@@ -337,6 +346,29 @@ def verifyParentsNotTooOld(family):
 
     return not errors
 
+def verifyMarriageAfter14(family):
+    #get individuals by ID
+    wife = individualsDict[family['wifeId']]
+    husband = individualsDict[family['husbandId']]
+    
+    #get their marriage date
+    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+
+=======
+>>>>>>> 70b920b85a051fd6777c57c4d4fb57b79acb7711
+    #14 years in unix = 441849600
+    years14Unix = 441849600
+    wifeBirth = gedcomDateToUnixTimestamp(wife['birthday'])
+    husBirth = gedcomDateToUnixTimestamp(husband['birthday'])
+    #if both wife and husband's marriage date minus their birthdays are both over 14 years unix
+    if (marriageDate - husBirth > years14Unix and marriageDate - wifeBirth > years14Unix):
+        return True
+    else:
+        return False
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 70b920b85a051fd6777c57c4d4fb57b79acb7711
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -363,6 +395,7 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+<<<<<<< HEAD
         if not verifyDateBeforeCurrentDate(familiesDict[family]['married']):
             print(f"Family {family} has a marriage date that is after, or equal to, the current date")
         if not verifyDateBeforeCurrentDate(familiesDict[family]['divorced']):
@@ -376,6 +409,10 @@ def main():
             print('Family {0} fails marriage between siblings check'.format(family))
 
         verifyParentsNotTooOld(familiesDict[family])
+=======
+        if not verifyMarriageAfter14(familiesDict[family]):
+            print('Family {0} fails marriage after 14 check'.format(family))
+>>>>>>> 70b920b85a051fd6777c57c4d4fb57b79acb7711
 
     for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
