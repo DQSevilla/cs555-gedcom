@@ -243,8 +243,8 @@ def verifyMarriageAfter14(family):
 
     #14 years in unix = 441849600
     years14Unix = 441849600
-    wifeBirth = gedcomDateToUnixTimestamp(wife['Birthday'])
-    husBirth = gedcomDateToUnixTimestamp(husband['Birthday'])
+    wifeBirth = gedcomDateToUnixTimestamp(wife['birthday'])
+    husBirth = gedcomDateToUnixTimestamp(husband['birthday'])
     #if both wife and husband's marriage date minus their birthdays are both over 14 years unix
     if (marriageDate - husBirth > years14Unix and marriageDate - wifeBirth > years14Unix):
         return True
