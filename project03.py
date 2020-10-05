@@ -55,6 +55,10 @@ def computeAge(d):
     age = today.year - d.year - ((today.month, today.day) < (d.month, d.day))
     return age
 
+def convertDate(dateString):
+    dateFields = dateString.split()
+    return date(int(dateFields[2]), MONTHS[dateFields[1]], int(dateFields[0]))
+
 def processFile(file):
     lines = []
     with open(file, 'r') as f:
@@ -275,6 +279,15 @@ def verifyDeathBefore150YearsOld(person):
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
 
+# User Story 01: Date is before the current date
+def verifyDateBeforeCurrentDate(dateString):
+    if dateString == 'NA':
+        return True
+
+    compareDate = convertDate(dateString)
+    today = date.today()
+    return compareDate < today
+
 # User Story 02: Birth before marriage
 def verifyBirthBeforeMarriage(person):
     spouse = person['spouse']
@@ -335,6 +348,10 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        if not verifyDateBeforeCurrentDate(familiesDict[family]['married']):
+            print(f"Family {family} has a marriage date that is after, or equal to, the current date")
+        if not verifyDateBeforeCurrentDate(familiesDict[family]['divorced']):
+            print(f"Family {family} has a divorced date that is after, or equal to, the current date")
         verifyBirthAfterParentsMarriage(familiesDict[family])
 
         if not ensureMarriageGenderRoles(familiesDict[family], individualsDict):
@@ -347,6 +364,10 @@ def main():
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
+        if not verifyDateBeforeCurrentDate(individual['birthday']):
+            print(f"ERR: Individual {id} has a birthday that is after, or equal to, the current date")
+        if not verifyDateBeforeCurrentDate(individual['death']):
+            print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
         if not verifyBirthBeforeMarriage(individual):
             print(f"ERR: Individual {id} has a birthday after their marriage date")
 

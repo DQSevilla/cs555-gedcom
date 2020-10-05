@@ -42,6 +42,16 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+class DateBeforeCurrentDateTestCase(unittest.TestCase):
+    def testDateBeforeCurrentDate(self):
+        self.assertTrue(project03.verifyDateBeforeCurrentDate(examples.exampleDateBeforeCurrentDate))
+
+    def testDateEqualCurrentDate(self):
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateEqualCurrentDate))
+
+    def testDateAfterCurrentDate(self):
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+
 class BirthdayBeforeMarriageTestCase(unittest.TestCase):
     def testBirthdayBeforeMarriage(self):
         self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayBeforeMarriage))
