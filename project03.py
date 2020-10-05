@@ -336,7 +336,24 @@ def verifyParentsNotTooOld(family):
             errors = True
 
     return not errors
+def verifyNoBigamy(family):
+    #retrieve ID for husband and wife
+    husbandID = family['husbandId']
+    wifeID = family['wifeId']
+    #make a modified family dictionary without family in question
+    modifiedDict = familiesDict
+    modifiedDict.pop(family['id'])
 
+    #check every other family
+    for fam in familiesDict.values():
+        #if another family's husband ID is identical
+        if husbandID == fam['husbandId']:
+            return False
+        #if another family's wife ID is identical
+        if wifeID == fam['wifeId']:
+            return False
+    #unique ID for both husband and wife in family
+    return True
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
