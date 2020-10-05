@@ -186,6 +186,7 @@ class US12TestCase(unittest.TestCase):
             examples.exampleFamilyWithWidow
         ))
 class TestMarriageAfter14(unittest.TestCase):
+    #testing US10
     def testBothOver14(self):
         self.assertTrue(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsAfterBoth))
     def testHusbandOver14(self):
