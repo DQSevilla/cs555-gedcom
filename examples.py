@@ -358,6 +358,50 @@ exampleBirthdayEqualMarriage = {
     'spouse': '@F1@'
 }
 
+exampleMarriage14YearsAfterBoth = {
+    'id': '@F1@',
+    'married': '2 JAN 2020',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I13@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': []
+}
+
+exampleMarriageHusbandOver14Years = {
+    'id': '@F1@',
+    'married': '2 JAN 2010',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I14@',
+    'wifeName': 'Anna /Goldfish/', #2000
+    'children': []
+}
+
+exampleMarriageWifeOver14Years = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': []
+}
+
+exampleMarriage14YearsBeforeBoth = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': []
+}
+
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = '2 DEC 2025'
