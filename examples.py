@@ -346,15 +346,3 @@ exampleBirthdayEqualMarriage = {
     'child': '@F2@',
     'spouse': '@F1@'
 }
-
-exampleBirthdayNA = {
-    'id': '@I1@',
-    'name': 'Alice /Trout/',
-    'gender': 'F',
-    'birthday': 'NA',
-    'age': 49,
-    'alive': True,
-    'death': 'NA',
-    'child': '@F2@',
-    'spouse': '@F1@'
-}

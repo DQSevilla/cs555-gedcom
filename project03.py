@@ -273,8 +273,8 @@ def verifyDeathBefore150YearsOld(person):
 
 # User Story 02: Birth before marriage
 def verifyBirthBeforeMarriage(person):
+    spouse = person['spouse']
     # We will consider an unmarried individual to always have a marriage date before their birth date
-    spouse = person['spouse'] 
     if spouse == 'NA':
         return True
     # Individuals should not have a birthday greater than or equal to their marriage date
@@ -283,7 +283,7 @@ def verifyBirthBeforeMarriage(person):
 
     marriedFields = familiesDict[spouse]['married'].split()
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
-    return birthDay >= marriedDate
+    return birthDay < marriedDate
 
 def verifyBirthAfterParentsMarriage(family):
     """

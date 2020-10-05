@@ -52,9 +52,6 @@ class BirthdayBeforeMarriageTestCase(unittest.TestCase):
     def testBirthdayEqualMarriage(self):
         self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayEqualMarriage))
 
-    def testBirthDayNA(self):
-        self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayNA))
-
 class MarriageBirthComparisonTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyBirthAfterParentsMarriage
@@ -168,7 +165,7 @@ class MarriageBetweenSiblingsTestCase(unittest.TestCase):
         self.assertTrue(project03.verifyMarriageNotSiblings(
             self.families['@F2@'],
             self.individuals))
-            
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
