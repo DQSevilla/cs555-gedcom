@@ -185,6 +185,22 @@ class US12TestCase(unittest.TestCase):
         self.assertTrue(project03.verifyParentsNotTooOld(
             examples.exampleFamilyWithWidow
         ))
+class TestForBigamy(unittest.TestCase):
+    def setUp(self):
+        self.familiesWithoutBigamy = {
+            '@F1@': examples.exampleFamilyWithWidow, #Hus ID = 4, Wife ID = 5
+            '@F2@': examples.exampleImproperFamilyDivorced, #Hus ID = 7, Wife ID = 3
+            '@F3@': examples.exampleFamilyTogether #Hus ID = 2, Wife ID = 1
+        }
+        self.familiesWithBigamy = {
+            '@F1@': examples.exampleFamilyWithWidow, #Hus ID = 4, Wife ID = 5
+            '@F2@': examples.exampleImproperFamilyDivorced, #Hus ID = 7, Wife ID = 3
+            '@F3@': examples.exampleFamilyDivorced #Hus ID = 7, Wife ID = 3
+        }
+    def testPositiveBigamy(self):
+        self.assertTrue(project03.verifyNoBigamy(self.familiesWithoutBigamy['@F1@']))
+    def testNegativeBigamy(self):
+        self.assertFalse(project03.verifyNoBigamy(self.familiesWithBigamy['@F2@']))
 
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
