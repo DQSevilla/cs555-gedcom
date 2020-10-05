@@ -278,7 +278,7 @@ def verifyDeathBefore150YearsOld(person):
         age = death_unix - bday_unix
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
-  
+ 
 def verifyMarriageAfter14(family):
     #get individuals by ID
     wife = individualsDict[family['wifeId']]
@@ -413,6 +413,8 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        if not verifyNoBigamy(familiesDict[family]):
+            print('Family {0} fails bigamy check'.format(family))
         if not verifyMarriageAfter14(familiesDict[family]):
             print('Family {0} fails marriage after 14 check'.format(family))
         if not verifyDateBeforeCurrentDate(familiesDict[family]['married']):
@@ -430,7 +432,6 @@ def main():
         verifyParentsNotTooOld(familiesDict[family])
         if not verifyMarriageAfter14(familiesDict[family]):
             print('Family {0} fails marriage after 14 check'.format(family))
-
     for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
