@@ -32,9 +32,13 @@ def compare(s):
 
 def addRecord(record, type):
     if type == 'INDI':
+        if record['id'] in individualsDict:
+            print(f"ERR: Duplicate individual with id {record['id']}")
         individuals.append(list(record.values()))
         individualsDict[record['id']] = record
     else:
+        if record['id'] in familiesDict:
+            print(f"ERR: Duplicate family with id {record['id']}")
         families.append(list(record.values()))
         familiesDict[record['id']] = record
 
@@ -50,6 +54,10 @@ def computeAge(d):
     today = date.today()
     age = today.year - d.year - ((today.month, today.day) < (d.month, d.day))
     return age
+
+def convertDate(dateString):
+    dateFields = dateString.split()
+    return date(int(dateFields[2]), MONTHS[dateFields[1]], int(dateFields[0]))
 
 def processFile(file):
     lines = []
@@ -191,7 +199,7 @@ def verifyMarriageBeforeDeath(family):
     return True
 
 def verifyMarriageNotSiblings(family, individuals):
-    
+
     wife = individuals[family['wifeId']]
     husband = individuals[family['husbandId']]
 
@@ -218,7 +226,7 @@ def ensureMarriageGenderRoles(family, individuals):
     bool
         True if the marriage is valid. False otherwise.
     """
-    
+
     wife = individuals[family['wifeId']]
     husband = individuals[family['husbandId']]
 
@@ -271,6 +279,63 @@ def verifyDeathBefore150YearsOld(person):
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
 
+# User Story 01: Date is before the current date
+def verifyDateBeforeCurrentDate(dateString):
+    if dateString == 'NA':
+        return True
+
+    compareDate = convertDate(dateString)
+    today = date.today()
+    return compareDate < today
+
+# User Story 02: Birth before marriage
+def verifyBirthBeforeMarriage(person):
+    spouse = person['spouse']
+    # We will consider an unmarried individual to always have a marriage date before their birth date
+    if spouse == 'NA':
+        return True
+    # Individuals should not have a birthday greater than or equal to their marriage date
+    birthFields = person['birthday'].split()
+    birthDay = date(int(birthFields[2]), MONTHS[birthFields[1]], int(birthFields[0]))
+
+    marriedFields = familiesDict[spouse]['married'].split()
+    marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
+    return birthDay < marriedDate
+
+def verifyBirthAfterParentsMarriage(family):
+    """
+    children should be born after marriage of parents
+    and not more than 9 months after divorce
+    """
+    errors = False
+    marriage_date = gedcomDateToUnixTimestamp(family['married'])
+    for child_id in family['children']:
+        child = individualsDict[child_id]
+        birthday = gedcomDateToUnixTimestamp(child['birthday'])
+        if birthday < marriage_date:
+            errors = True
+            print(f"ERR: Child {child_id} born before parents marriage")
+        if family['divorced'] != 'NA':
+            divorce_date = gedcomDateToUnixTimestamp(family['divorced'])
+            if birthday > (divorce_date + 2764800):  # 9 mo. after divorce
+                errors = True
+                print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
+    return errors
+
+def verifyParentsNotTooOld(family):
+    errors = False
+    
+    motherAge = individualsDict[family['wifeId']]['age']
+    fatherAge = individualsDict[family['husbandId']]['age']
+    children  = family['children']
+
+    for child in children:
+        childAge = individualsDict[child]['age']
+        if motherAge - childAge > 60 or fatherAge - childAge > 80:
+            print(f"ERR: Child {child} has too old of a parent")
+            errors = True
+
+    return not errors
 
 def main():
     processFile(GEDCOM_FILE)
@@ -289,30 +354,42 @@ def main():
     individuals.sort(key=compare)
     for family in families:
         familiesTable.add_row(family)
-
+    
     print(individualsTable)
     print(familiesTable)
-
+    
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        if not verifyDateBeforeCurrentDate(familiesDict[family]['married']):
+            print(f"Family {family} has a marriage date that is after, or equal to, the current date")
+        if not verifyDateBeforeCurrentDate(familiesDict[family]['divorced']):
+            print(f"Family {family} has a divorced date that is after, or equal to, the current date")
+        verifyBirthAfterParentsMarriage(familiesDict[family])
 
-        if not ensureMarriageGenderRoles(familiesDict[family], invidualsDict):
+        if not ensureMarriageGenderRoles(familiesDict[family], individualsDict):
             print('Family {0} fails proper gender role check'.format(family))
 
         if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
             print('Family {0} fails marriage between siblings check'.format(family))
 
+        verifyParentsNotTooOld(familiesDict[family])
 
-    for _, individual in individualsDict.items():
+    for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
         if not verifyBirthBeforeDeath(individual):
             print(f"ERR: Individual {id} was born after they died")
         if not verifyDivorceBeforeDeath(individual):
             print(f"ERR: Individual {id} was born after they were divorced")
+        if not verifyDateBeforeCurrentDate(individual['birthday']):
+            print(f"ERR: Individual {id} has a birthday that is after, or equal to, the current date")
+        if not verifyDateBeforeCurrentDate(individual['death']):
+            print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
+        if not verifyBirthBeforeMarriage(individual):
+            print(f"ERR: Individual {id} has a birthday after their marriage date")
 
 if __name__ == '__main__':
     main()

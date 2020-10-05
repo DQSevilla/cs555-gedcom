@@ -22,7 +22,6 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(project03.verifyMarriageBeforeDeath(examples.exampleImproperFamilyWithWidow))
 
-
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyDeathBefore150YearsOld
@@ -42,6 +41,49 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+class DateBeforeCurrentDateTestCase(unittest.TestCase):
+    def testDateBeforeCurrentDate(self):
+        self.assertTrue(project03.verifyDateBeforeCurrentDate(examples.exampleDateBeforeCurrentDate))
+
+    def testDateEqualCurrentDate(self):
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateEqualCurrentDate))
+
+    def testDateAfterCurrentDate(self):
+        self.assertFalse(project03.verifyDateBeforeCurrentDate(examples.exampleDateAfterCurrentDate))
+
+class BirthdayBeforeMarriageTestCase(unittest.TestCase):
+    def testBirthdayBeforeMarriage(self):
+        self.assertTrue(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayBeforeMarriage))
+
+    def testBirthdayAfterMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayAfterMarriage))
+
+    def testBirthdayEqualMarriage(self):
+        self.assertFalse(project03.verifyBirthBeforeMarriage(examples.exampleBirthdayEqualMarriage))
+
+class MarriageBirthComparisonTestCase(unittest.TestCase):
+    def setUp(self):
+        self.verifier = project03.verifyBirthAfterParentsMarriage
+
+    def test_normal_marriage(self):
+        self.assertFalse(self.verifier(examples.exampleFamilyTogether))
+
+    @unittest.skip("TODO, need test refactoring")
+    def test_birth_before_marriage(self):
+        project03.individuals = {
+            '@I4@': {
+                'id': '@I4@',
+                'name': 'Serafina /Russo/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': 'NA',
+                'spouse': 'NA'
+            }
+        }
+        self.assertTrue(self.verifier(examples.exampleBirthBeforeMarriageFamily))
 
 class MarriageGendersTestCase(unittest.TestCase):
 
@@ -62,7 +104,7 @@ class MarriageGendersTestCase(unittest.TestCase):
             '@I4@': examples.exampleHusbandIncorrectGender,
             '@I5@': examples.exampleIndividualInvalidGender
         }
-        
+
     def test_married_both_male(self):
         self.assertFalse(project03.ensureMarriageGenderRoles(
             MarriageGendersTestCase.families['@F1@'],
@@ -88,6 +130,61 @@ class MarriageGendersTestCase(unittest.TestCase):
             MarriageGendersTestCase.families['@F5@'],
             MarriageGendersTestCase.individuals))
 
+class MarriageBetweenSiblingsTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.families = {
+            '@F1@': examples.exampleFamilyTogether,
+            '@F2@': examples.exampleFamilyBetweenSiblings
+
+        }
+
+        self.individuals = {
+            '@I1@': examples.examplePersonAlive,
+            '@I2@': examples.examplePersonAlive2,
+            '@I3@': examples.examplePersonSameParent1,
+            '@I4@': examples.examplePersonSameParent2,
+        }
+
+    def test_not_between_siblings(self):
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F1@'],
+            self.individuals))
+
+    def test_between_siblings(self):
+        self.assertFalse(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+    def test_husband_parent_na(self):
+        self.individuals['@I3@']['child'] = 'NA'
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+    def test_wife_parent_na(self):
+        self.individuals['@I4@']['child'] = 'NA'
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+    def test_both_parents_na(self):
+        self.individuals['@I3@']['child'] = 'NA'
+        self.individuals['@I4@']['child'] = 'NA'
+        self.assertTrue(project03.verifyMarriageNotSiblings(
+            self.families['@F2@'],
+            self.individuals))
+
+class US12TestCase(unittest.TestCase):
+    def test_old_parent(self):
+        self.assertFalse(project03.verifyParentsNotTooOld(
+            examples.exampleFamilyWithTooYoungKid,
+        ))
+    
+    def test_not_old_parent(self):
+        self.assertTrue(project03.verifyParentsNotTooOld(
+            examples.exampleFamilyWithWidow
+        ))
 
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
