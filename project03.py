@@ -236,17 +236,17 @@ def verifyNoBigamy(family):
     #retrieve ID for husband and wife
     husbandID = family['husbandId']
     wifeID = family['wifeId']
-    #make a modified dictionary without family in question
+    #make a modified family dictionary without family in question
     modifiedDict = familiesDict
     modifiedDict.pop(family['id'])
 
     #check every other family
-    for fam in familiesDict:
+    for fam in familiesDict.values():
         #if another family's husband ID is identical
-        if (husbandID == fam['husbandId']):
+        if husbandID == fam['husbandId']:
             return False
         #if another family's wife ID is identical
-        if (wifeID == fam['wifeId']):
+        if wifeID == fam['wifeId']:
             return False
     #unique ID for both husband and wife in family
     return True
@@ -276,6 +276,8 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        if not verifyNoBigamy(familiesDict[family]):
+            print('Family {0} fails bigamy check'.format(family))
 
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
