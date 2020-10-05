@@ -274,7 +274,8 @@ exampleIndividualInvalidGender = {
     'death': 'NA',
     'child': 'NA',
     'spouse': 'NA'
-
+}
+   
 exampleFamilyBetweenSiblings = {
     'id': '@F1@',
     'married': '14 MAY 1994',
