@@ -42,6 +42,53 @@ class AliveTooLongTestCase(unittest.TestCase):
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
 
+
+class MarriageGendersTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.families = {
+            '@F1@': examples.exampleFamilyGay,
+            '@F2@': examples.exampleFamilyLesbian,
+            '@F3@': examples.exampleFamilyBothGendersIncorrect,
+            '@F4@': examples.exampleFamilyCorrect,
+            '@F5@': examples.exampleFamilyInvalidGenders
+        }
+
+        cls.individuals = {
+            '@I1@': examples.exampleWifeIncorrectGender,
+            '@I2@': examples.exampleHusbandCorrectGender,
+            '@I3@': examples.exampleWifeCorrectGender,
+            '@I4@': examples.exampleHusbandIncorrectGender,
+            '@I5@': examples.exampleIndividualInvalidGender
+        }
+        
+    def test_married_both_male(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F1@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_both_female(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F2@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_male_female_incorrect(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F3@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_male_famele_correct(self):
+        self.assertTrue(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F4@'],
+            MarriageGendersTestCase.individuals))
+
+    def test_married_invalid_genders(self):
+        self.assertFalse(project03.ensureMarriageGenderRoles(
+            MarriageGendersTestCase.families['@F5@'],
+            MarriageGendersTestCase.individuals))
+
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()

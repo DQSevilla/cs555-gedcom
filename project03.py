@@ -205,6 +205,28 @@ def verifyMarriageNotSiblings(family, individuals):
 
     return True
 
+def ensureMarriageGenderRoles(family, individuals):
+    """Checks if a marriage is between a male and a female.
+
+    Parameters
+    ----------
+    family : dict
+    individuals: dict
+
+    Returns
+    -------
+    bool
+        True if the marriage is valid. False otherwise.
+    """
+    
+    wife = individuals[family['wifeId']]
+    husband = individuals[family['husbandId']]
+
+    if wife['gender'] != 'F' or husband['gender'] != 'M':
+        return False
+
+    return True
+
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
     individual = individualsDict[person['id']]
@@ -249,6 +271,7 @@ def verifyDeathBefore150YearsOld(person):
     years_in_seconds = 150 * 365 * 24 * 60 * 60
     return age <= years_in_seconds
 
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -275,8 +298,13 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+
+        if not ensureMarriageGenderRoles(familiesDict[family], invidualsDict):
+            print('Family {0} fails proper gender role check'.format(family))
+
         if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
             print('Family {0} fails marriage between siblings check'.format(family))
+
 
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
