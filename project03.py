@@ -307,6 +307,7 @@ def verifyBirthAtRecent30Days(person):
     currentDateTimestamp = time.time();
     name = person['name']
     birthdayStamp = gedcomDateToUnixTimestamp(person['birthday']);
+    # If the date of birth is within 30 days
     if currentDateTimestamp - birthdayStamp < 2592000:
         print(f"Family member {name} was born on {person['birthday']}")
         return True
@@ -319,6 +320,7 @@ def verifyDeathAtRecent30Days(person):
     if not person['alive']:
         name = person['name']
         deathDateStamp = gedcomDateToUnixTimestamp(person['death']);
+        # If the date of death is within 30 days
         if currentDateTimestamp - deathDateStamp < 2592000:
             print(f"Family member {name} was dead on {person['death']}")
             return True
@@ -411,6 +413,9 @@ def main():
             print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
         if not verifyBirthBeforeMarriage(individual):
             print(f"ERR: Individual {id} has a birthday after their marriage date")
+        verifyBirthAtRecent30Days(individual)
+        verifyDeathAtRecent30Days(individual)
+
 
 if __name__ == '__main__':
     main()
