@@ -284,7 +284,7 @@ def verifyBirthBeforeMarriage(person):
     marriedFields = familiesDict[spouse]['married'].split()
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
     return birthDay >= marriedDate
-    
+
 def verifyBirthAfterParentsMarriage(family):
     """
     children should be born after marriage of parents
@@ -333,7 +333,7 @@ def main():
             print('Family {0} fails marriage before death check'.format(family))
         verifyBirthAfterParentsMarriage(familiesDict[family])
 
-        if not ensureMarriageGenderRoles(familiesDict[family], invidualsDict):
+        if not ensureMarriageGenderRoles(familiesDict[family], individualsDict):
             print('Family {0} fails proper gender role check'.format(family))
 
         if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
