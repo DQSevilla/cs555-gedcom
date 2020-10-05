@@ -319,7 +319,7 @@ def main():
             print('Family {0} fails marriage before death check'.format(family))
         verifyBirthAfterParentsMarriage(familiesDict[family])
 
-        if not ensureMarriageGenderRoles(familiesDict[family], invidualsDict):
+        if not ensureMarriageGenderRoles(familiesDict[family], individualsDict):
             print('Family {0} fails proper gender role check'.format(family))
 
         if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
