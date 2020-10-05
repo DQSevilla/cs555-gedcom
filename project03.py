@@ -370,6 +370,14 @@ def verifyMarriageAfter14(family):
     #get their marriage date
     marriageDate = gedcomDateToUnixTimestamp(family['married'])
 
+def verifyMarriageAfter14(family):
+    #get individuals by ID
+    wife = individualsDict[family['wifeId']]
+    husband = individualsDict[family['husbandId']]
+    
+    #get their marriage date
+    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+
     #14 years in unix = 441849600
     years14Unix = 441849600
     wifeBirth = gedcomDateToUnixTimestamp(wife['birthday'])
@@ -420,6 +428,8 @@ def main():
             print('Family {0} fails marriage between siblings check'.format(family))
 
         verifyParentsNotTooOld(familiesDict[family])
+        if not verifyMarriageAfter14(familiesDict[family]):
+            print('Family {0} fails marriage after 14 check'.format(family))
 
     for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
