@@ -190,6 +190,42 @@ def verifyMarriageBeforeDeath(family):
     #If neither failed, we passed, return true
     return True
 
+def verifyMarriageNotSiblings(family, individuals):
+
+    wife = individuals[family['wifeId']]
+    husband = individuals[family['husbandId']]
+
+    # if either don't have parent info, automatically pass
+    if wife['child'] == 'NA' or husband['child'] == 'NA':
+        return True
+
+    # if both have the same parents
+    if wife['child'] == husband['child']:
+        return False
+
+    return True
+
+def ensureMarriageGenderRoles(family, individuals):
+    """Checks if a marriage is between a male and a female.
+
+    Parameters
+    ----------
+    family : dict
+    individuals: dict
+
+    Returns
+    -------
+    bool
+        True if the marriage is valid. False otherwise.
+    """
+
+    wife = individuals[family['wifeId']]
+    husband = individuals[family['husbandId']]
+
+    if wife['gender'] != 'F' or husband['gender'] != 'M':
+        return False
+
+    return True
 
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
@@ -202,6 +238,7 @@ def verifyBirthBeforeDeath(person):
     if not individual['alive']:
         personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
         if personDeathDate < personBirthDate:
+            # TODO: Noah: Fix this definition
             pass
 
 def verifyDivorceBeforeDeath(person):
@@ -247,6 +284,26 @@ def verifyBirthBeforeMarriage(person):
     marriedFields = familiesDict[spouse]['married'].split()
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
     return birthDay >= marriedDate
+    
+def verifyBirthAfterParentsMarriage(family):
+    """
+    children should be born after marriage of parents
+    and not more than 9 months after divorce
+    """
+    errors = False
+    marriage_date = gedcomDateToUnixTimestamp(family['married'])
+    for child_id in family['children']:
+        child = individualsDict[child_id]
+        birthday = gedcomDateToUnixTimestamp(child['birthday'])
+        if birthday < marriage_date:
+            errors = True
+            print(f"ERR: Child {child_id} born before parents marriage")
+        if family['divorced'] != 'NA':
+            divorce_date = gedcomDateToUnixTimestamp(family['divorced'])
+            if birthday > (divorce_date + 2764800):  # 9 mo. after divorce
+                errors = True
+                print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
+    return errors
 
 def main():
     processFile(GEDCOM_FILE)
@@ -274,6 +331,14 @@ def main():
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        verifyBirthAfterParentsMarriage(familiesDict[family])
+
+        if not ensureMarriageGenderRoles(familiesDict[family], invidualsDict):
+            print('Family {0} fails proper gender role check'.format(family))
+
+        if not verifyMarriageNotSiblings(familiesDict[family], individualsDict):
+            print('Family {0} fails marriage between siblings check'.format(family))
+
 
     for _, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
