@@ -22,6 +22,7 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(project03.verifyMarriageBeforeDeath(examples.exampleImproperFamilyWithWidow))
 
+
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyDeathBefore150YearsOld
@@ -40,6 +41,7 @@ class AliveTooLongTestCase(unittest.TestCase):
 
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
+
 
 class DateBeforeCurrentDateTestCase(unittest.TestCase):
     def testDateBeforeCurrentDate(self):
@@ -201,6 +203,27 @@ class TestForBigamy(unittest.TestCase):
         self.assertTrue(project03.verifyNoBigamy(self.familiesWithoutBigamy['@F1@']))
     def testNegativeBigamy(self):
         self.assertFalse(project03.verifyNoBigamy(self.familiesWithBigamy['@F2@']))
+
+class TestMarriageAfter14(unittest.TestCase):
+     #testing US10
+    def testBothOver14(self):
+        self.assertTrue(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsAfterBoth))
+    def testHusbandOver14(self):
+        self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriageHusbandOver14Years))
+    def testWifeOver14(self):
+        self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriageWifeOver14Years))
+    def testBothUnder14(self):
+        self.assertFalse(project03.verifyMarriageAfter14(examples.exampleMarriage14YearsBeforeBoth))
+#Testing US35 & US36
+class TestRecent30DayBornorDeath(unittest.TestCase):
+    def test_verifyBirthAtRecent30Days(self):
+        self.assertTrue(CS555.verifyBirthAtRecent30Days(examples.examplePersonRecentBirth))
+
+    def test_verifyDeathAtRecent30Days(self):
+        self.assertTrue(CS555.verifyDeathAtRecent30Days(examples.examplePersonRecentDeath))
+
+    def test_PersonNotRecentDeath(self):
+        self.assertFalse(CS555.verifyDeathAtRecent30Days(examples.examplePersonNotRecentDeath))
 
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
