@@ -10,6 +10,18 @@ examplePersonAlive = {
     'spouse': '@F1@'
 }
 
+examplePersonAlive2 = {
+    'id': '@I2@',
+    'name': 'George /Salmon/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F5@',
+    'spouse': '@F1@'
+}
+
 examplePersonDead = {
     'id': '@I5@',
     'name': 'Gina /Koi/',
@@ -262,4 +274,38 @@ exampleIndividualInvalidGender = {
     'death': 'NA',
     'child': 'NA',
     'spouse': 'NA'
+
+exampleFamilyBetweenSiblings = {
+    'id': '@F1@',
+    'married': '14 MAY 1994',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'Anthony /Gabario/',
+    'wifeId': '@I4@',
+    'wifeName': 'Serafina /Russo/',
+    'children': []
+}
+
+examplePersonSameParent1 = {
+    'id': '@I3@',
+    'name': 'Anthony /Gabario/',
+    'gender': 'M',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'
+}
+
+examplePersonSameParent2 = {
+    'id': '@I4@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'
 }
