@@ -442,4 +442,4 @@ exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = '2 DEC 2025'
 
-exampleDateEqualCurrentDate = '4 OCT 2020'
+exampleDateEqualCurrentDate = '5 OCT 2020'
