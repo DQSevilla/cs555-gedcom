@@ -203,6 +203,17 @@ class TestForBigamy(unittest.TestCase):
     def testNegativeBigamy(self):
         self.assertFalse(project03.verifyNoBigamy(self.familiesWithBigamy['@F2@']))
 
+# Testing US35 & US36
+class TestRecent30DayBornorDeath(unittest.TestCase):
+    def test_verifyBirthAtRecent30Days(self):
+        self.assertTrue(CS555.verifyBirthAtRecent30Days(examples.examplePersonRecentBirth))
+
+    def test_verifyDeathAtRecent30Days(self):
+        self.assertTrue(CS555.verifyDeathAtRecent30Days(examples.examplePersonRecentDeath))
+
+    def test_PersonNotRecentDeath(self):
+        self.assertFalse(CS555.verifyDeathAtRecent30Days(examples.examplePersonNotRecentDeath))
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
