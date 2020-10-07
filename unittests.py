@@ -214,6 +214,31 @@ class TestRecent30DayBornorDeath(unittest.TestCase):
     def test_PersonNotRecentDeath(self):
         self.assertFalse(CS555.verifyDeathAtRecent30Days(examples.examplePersonNotRecentDeath))
 
+class listDeadIndividualsTestCase(unittest.TestCase):
+    def testEmptyList(self):
+        dead = project03.getListDeceased({})
+        self.assertEqual(dead, [])
+        
+    def testAllDead(self):
+        dead = project03.getListDeceased({"@I1@": examples.examplePersonDead,
+                                          "@I2@": examples.examplePersonDead150})
+        self.assertTrue(examples.examplePersonDead in dead)
+        self.assertTrue(examples.examplePersonDead150 in dead)
+
+    def testNoneDead(self):
+        dead = project03.getListDeceased({"@I1@": examples.examplePersonAlive,
+                                          "@I2@": examples.examplePersonAlive2})
+        self.assertEqual(dead, [])
+    
+    def testSomeDead(self):
+        dead = project03.getListDeceased({"@I1@": examples.examplePersonDead,
+                                          "@I2@": examples.examplePersonDead150,
+                                          "@I3@": examples.examplePersonAlive,
+                                          "@I4@": examples.examplePersonAlive2})
+        self.assertTrue(examples.examplePersonDead in dead)
+        self.assertTrue(examples.examplePersonDead150 in dead)
+
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
