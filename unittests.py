@@ -214,6 +214,29 @@ class TestRecent30DayBornorDeath(unittest.TestCase):
     def test_PersonNotRecentDeath(self):
         self.assertFalse(CS555.verifyDeathAtRecent30Days(examples.examplePersonNotRecentDeath))
 
+
+class listLivingMarriedIndividualsTestCase(unittest.TestCase):
+    def testEmptyList(self):
+        lm = project03.getListLivingMarried({})
+        self.assertEqual(lm, [])
+
+    def testLivingMarried(self):
+        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualAliveMarried})
+        self.assertEqual(lm, [examples.exampleIndividualAliveMarried])
+
+    def testLivingUnmarried(self):
+        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualAliveUnmarried})
+        self.assertEqual(lm, [])
+
+    def testDeadMarried(self):
+        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualDeadMarried})
+        self.assertEqual(lm, [])
+
+    def testDeadUnmarried(self):
+        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualDeadUnmarried})
+        self.assertEqual(lm, [])
+    
+
 if __name__ == '__main__':
     project03.processFile(project03.GEDCOM_FILE)
     unittest.main()
