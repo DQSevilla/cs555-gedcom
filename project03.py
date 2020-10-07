@@ -406,6 +406,15 @@ def verifyMarriageAfter14(family):
     else:
         return False
 
+
+def getListLivingMarried(individualsDict):
+    # returns a list of living married individuals
+    living_married = []
+    for ind in individualsDict.values():
+        if ind['alive'] and ind['spouse'] != 'NA':
+            living_married.append(ind)
+    return living_married
+    
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -426,6 +435,14 @@ def main():
 
     print(individualsTable)
     print(familiesTable)
+
+    # Print list of living married individuals
+    livingMarriedTable = PrettyTable()
+    livingMarriedTable.field_names = ['ID', 'Name']
+    for ind in getListLivingMarried(individualsDict):
+        livingMarriedTable.add_row([ind['id'], ind['name']])
+    print("Living Married Individuals")
+    print(livingMarriedTable)
 
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):
