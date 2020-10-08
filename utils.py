@@ -27,4 +27,4 @@ def datetime_to_gedcom_date(date : datetime) -> str:
     Returns:
         a GEDCOM compatible date string
     """
-    return date.strftime("%d %b %Y")
+    return date.strftime("%d %b %Y").upper()
