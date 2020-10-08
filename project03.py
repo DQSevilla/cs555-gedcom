@@ -253,13 +253,13 @@ def verifyAuntsAndUncles(person):
 	#Get id of Aunt or Uncle
     individual = person['id']
 
-    personSiblings = person['child']['children'].remove(individual)
+    personSiblings = familiesDict[person['child']]['children'].remove(individual)
     niecesAndNephews = []
 
     for sibling in personSiblings:
-    	niecesAndNephews += sibling['spouse']['children']
+    	niecesAndNephews += familiesDict[individualsDict[sibling]['spouse']]['children']
 
-    if person['spouse']['husbandId'] in niecesAndNephews or person['spouse']['wifeId'] in niecesAndNephews:
+    if familiesDict[person['spouse']]['husbandId'] in niecesAndNephews or familiesDict[person['spouse']]['wifeId'] in niecesAndNephews:
     	return False
 
     return True
