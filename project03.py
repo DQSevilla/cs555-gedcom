@@ -1,6 +1,7 @@
 from prettytable import PrettyTable
 from copy import deepcopy
 from datetime import date, datetime
+from utils import date_occurs_before
 import time
 
 GEDCOM_FILE = 'cs555project03.ged'
@@ -167,14 +168,9 @@ def gedcomDateToUnixTimestamp(date):
     return time.mktime(datetime.strptime(timeString, '%d/%m/%Y').timetuple())
 
 def verifyMarriageBeforeDivorce(family):
-    #Check if they're divorced at all
     if not family['divorced'] == 'NA':
-        divorcedDate = gedcomDateToUnixTimestamp(family['divorced'])
-        marriageDate = gedcomDateToUnixTimestamp(family['married'])
-
-        #Check that the Unix timestamp of their divorce is after the one of their marriage
-        return divorcedDate > marriageDate
-    #If they're not, we're done
+        #Check date order
+        return date_occurs_before(family['married'], family['divorced'])
     else:
         return True
 

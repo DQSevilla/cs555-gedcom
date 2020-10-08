@@ -28,3 +28,19 @@ def datetime_to_gedcom_date(date : datetime) -> str:
         a GEDCOM compatible date string
     """
     return date.strftime("%d %b %Y")
+
+def date_occurs_before(gedcom_date_first : str, gedcom_date_second: str) -> bool: 
+    """
+    Checks whether the first gedcom date occurs before the second one
+
+    Args:
+        gedcom_date_first (str): A gedcom string date e.g. "1 JAN 1970"
+        gedcom_date_second (str): A gedcom string date e.g. "1 JAN 1970"
+
+    Returns:
+        a boolean, true if gedcom_date_first occurs before gedcom_date_second, false otherwise
+    """
+    date_first = gedcom_date_to_datetime(gedcom_date_first)
+    date_second = gedcom_date_to_datetime(gedcom_date_second)
+
+    return date_first < date_second
