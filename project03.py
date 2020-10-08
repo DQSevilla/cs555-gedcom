@@ -240,16 +240,16 @@ def verifyNoMarriageToDescendants(person):
     individual = individualsDict[person['id']]
 
     #get spouse and check if they even exist
-    personSpouse = gedcomDateToUnixTimestamp(individual['spouse'])
+    personSpouse = individual['spouse']
     if not personSpouse:
     	return True
 
     #get children and make sure they are not a spouse
-    personChildren = gedcomDateToUnixTimestamp(individual['children'])
+    personChildren = familiesDict[personSpouse]['children']
     personDecendants = []
     while personChildren != []:
     	personDecendants.append(personChildren[0])
-    	personChildren = personChildren + gedcomDateToUnixTimestamp(personChildren[0]['children'])
+    	personChildren = personChildren + familiesDict[individualsTable[personChildren[0]]['spouse']]['children']
     	personChildren = personChildren[1:]
 
     if personSpouse in personDecendants:
