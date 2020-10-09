@@ -68,9 +68,9 @@ examplePersonDeadOver150 = {
     'name': 'Gina /Koi/',
     'gender': 'F',
     'birthday': '1 JAN 1970',
-    'age': 154,
+    'age': 249,
     'alive': False,
-    'death': '30 NOV 2119',
+    'death': '30 NOV 2219',
     'child': 'NA',
     'spouse': '@F2@'
 }
