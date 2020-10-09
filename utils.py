@@ -27,9 +27,10 @@ def datetime_to_gedcom_date(date : datetime) -> str:
     Returns:
         a GEDCOM compatible date string
     """
-    return date.strftime("%d %b %Y")
+    
+    return date.strftime("%d %b %Y").upper()
 
-def date_occurs_before(gedcom_date_first : str, gedcom_date_second: str) -> bool: 
+def date_occurs_before(gedcom_date_first : str, gedcom_date_second : str) -> bool: 
     """
     Checks whether the first gedcom date occurs before the second one
 
@@ -44,3 +45,19 @@ def date_occurs_before(gedcom_date_first : str, gedcom_date_second: str) -> bool
     date_second = gedcom_date_to_datetime(gedcom_date_second)
 
     return date_first < date_second
+
+def date_occurs_before_cond(gedcom_date_first : str, gedcom_date_second : str, cond : str) -> bool:
+    """
+    Checks whether the first gedcom date occurs before the second one
+    If cond is NA, we return true by default
+
+    Args:
+        gedcom_date_first (str): A gedcom string date e.g. "1 JAN 1970"
+        gedcom_date_second (str): A gedcom string date e.g. "1 JAN 1970"
+        cond (str): A field in the gedcom file that could possibly be NA
+
+    Returns:
+        a boolean, true if gedcom_date_first occurs before gedcom_date_second, or cond == 'NA'
+        false otherwise
+    """
+    return cond == 'NA' or date_occurs_before(gedcom_date_first, gedcom_date_second)
