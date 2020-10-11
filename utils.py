@@ -105,5 +105,5 @@ def dates_within_cond(gedcom_date_first : str, gedcom_date_second : str, limit :
             limit is a number
             units is a string in ('days', 'months', 'years')
     """
-
+    
     return cond == 'NA' or dates_within(gedcom_date_first, gedcom_date_second, limit, units)

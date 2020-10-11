@@ -1,5 +1,4 @@
 import sys
-from project03 import processFile
 from parse import parse_gedcom_file_03
 from verifier import verify, initialize_verifier
 

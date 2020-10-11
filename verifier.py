@@ -1,25 +1,6 @@
-from prettytable import PrettyTable
 from copy import deepcopy
 from datetime import date, datetime
 from utils import *
-import time
-
-GEDCOM_FILE = 'cs555project03.ged'
-#GEDCOM_FILE = 'test.ged'
-VALID_TAGS = ['INDI', 'NAME', 'SEX', 'BIRT', 'DEAT',
-              'FAMC', 'FAMS', 'FAM', 'MARR', 'HUSB', 'WIFE',
-              'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
-IGNORE_TAGS = ['HEAD', 'TRLR', 'NOTE']
-DATE_TAGS = ['BIRT', 'DEAT', 'DIV', 'MARR']
-IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS']
-FAM_TAGS = ['HUSB', 'WIFE','CHIL', 'DIV', 'DATE']
-MONTHS = {  'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4,
-            'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
-            'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC':12
-}
-
-individuals = []
-families = []
 
 individualsDict = {}
 familiesDict = {}
@@ -30,23 +11,6 @@ def initialize_verifier(individuals, families):
 
     individualsDict = individuals
     familiesDict = families
-
-def computeAge(d):
-    today = date.today()
-    age = today.year - d.year - ((today.month, today.day) < (d.month, d.day))
-    return age
-
-def convertDate(dateString):
-    dateFields = dateString.split()
-    return date(int(dateFields[2]), MONTHS[dateFields[1]], int(dateFields[0]))
-
-def gedcomDateToUnixTimestamp(date):
-    dateArray = date.split(' ')
-    month = MONTHS[dateArray[1]]
-    day = dateArray[0]
-    year = dateArray[2]
-    timeString = '{0}/{1}/{2}'.format(day,month,year)
-    return time.mktime(datetime.strptime(timeString, '%d/%m/%Y').timetuple())
 
 def find_individual(individual_id):
     return individualsDict[individual_id]
@@ -68,8 +32,6 @@ def US02_verify_birth_before_marriage(individual):
     return date_occurs_before(individual['birthday'], family['married'])
 
 def US03_verify_birth_before_death(individual):
-    personBirthDate = gedcomDateToUnixTimestamp(individual['birthday'])
-
     return individual['alive'] or date_occurs_before(individual['birthday'], individual['death'])
 
 def US04_verify_marriage_before_divorce(family):
