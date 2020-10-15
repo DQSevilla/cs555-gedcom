@@ -1,3 +1,7 @@
+from utils import datetime_to_gedcom_date
+from datetime import datetime
+from datetime import timedelta
+
 examplePersonAlive = {
     'id': '@I1@',
     'name': 'Alice /Trout/',
@@ -64,9 +68,9 @@ examplePersonDeadOver150 = {
     'name': 'Gina /Koi/',
     'gender': 'F',
     'birthday': '1 JAN 1970',
-    'age': 154,
+    'age': 249,
     'alive': False,
-    'death': '30 NOV 2119',
+    'death': '30 NOV 2219',
     'child': 'NA',
     'spouse': '@F2@'
 }
@@ -488,6 +492,6 @@ exampleMarriage14YearsBeforeBoth = {
 
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
-exampleDateAfterCurrentDate = '2 DEC 2025'
+exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
 
-exampleDateEqualCurrentDate = '4 OCT 2020'
+exampleDateEqualCurrentDate = datetime_to_gedcom_date(datetime.now())
