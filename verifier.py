@@ -124,6 +124,12 @@ def US12_verify_parents_not_too_old(family):
     return valid
     #print(f"ERR: Child {child} has too old of a parent")
 
+def US15_verify_fewer_than_15_siblings(family):
+    if len(family['children']) < 15:
+        return True
+    else:
+        return False
+        
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])

@@ -490,6 +490,17 @@ exampleMarriage14YearsBeforeBoth = {
     'children': []
 }
 
+exampleFamilyOver15Siblings = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@', '@I3@', '@I4@', '@I5@', '@I6@', '@I7@', '@I8@', '@I9@', '@I10@', '@I11@', '@I12@', '@I13@', '@I14@', '@I15@', '@I16@']
+}
+
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
