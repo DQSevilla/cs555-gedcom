@@ -389,6 +389,15 @@ def verifyMarriageAfter14(family):
     else:
         return False
 
+
+def getListDeceased(individualsDict):
+    # returns a list of dead individuals
+    list_dead = []
+    for ind in individualsDict.values():
+        if not ind['alive']:
+            list_dead.append(ind)
+    return list_dead
+
 def main():
     processFile(GEDCOM_FILE)
     # Table of Individuals
@@ -409,6 +418,14 @@ def main():
 
     print(individualsTable)
     print(familiesTable)
+
+    # Print list of deceased individuals
+    deadIndividualsTable = PrettyTable()
+    deadIndividualsTable.field_names = ['ID', 'Name']
+    for ind in getListDeceased(individualsDict):
+        deadIndividualsTable.add_row([ind['id'], ind['name']])
+    print("Deceased Individuals:")
+    print(deadIndividualsTable)
 
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):

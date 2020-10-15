@@ -203,6 +203,18 @@ class TestRecent30DayBornorDeath(unittest.TestCase):
     def test_PersonNotRecentDeath(self):
         self.assertFalse(verifier.US36_verify_death_at_recent_30_days(examples.examplePersonNotRecentDeath))
 
+class DeadIndividualsTestCase(unittest.TestCase):
+    # US29 List deceased
+
+    def test_dead(self):
+        self.assertTrue(verifier.US29_verify_deceased(examples.examplePersonDead))
+        return
+
+    def test_alive(self):
+        self.assertFalse(verifier.US29_verify_deceased(examples.examplePersonAlive))
+        return
+
+
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
     individuals, families = parse.parse_gedcom_file_03(gedcom_file)
