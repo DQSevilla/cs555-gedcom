@@ -124,6 +124,23 @@ def US12_verify_parents_not_too_old(family):
     return valid
     #print(f"ERR: Child {child} has too old of a parent")
 
+def US13_verify_sibling_spacing(family):
+    #if there is only child in the family or none, return True
+    if len(family['children']) < 2:
+        return True
+    for child1 in family['children']:
+        for child2 in family['children']:
+            #if we're checking the same child, skip
+            if child1 == child2:
+                continue
+            #first check if they are twins
+            if dates_within(individualsDict[child1]['birthday'], individualsDict[child2]['birthday'], 1, 'days'):
+                continue
+            #then if the two children have birthday's within 8 months of each other, return False
+            if dates_within(individualsDict[child1]['birthday'], individualsDict[child2]['birthday'], 8, 'months'):
+                return False
+    return True
+
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])
