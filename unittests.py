@@ -203,29 +203,16 @@ class TestRecent30DayBornorDeath(unittest.TestCase):
     def test_PersonNotRecentDeath(self):
         self.assertFalse(verifier.US36_verify_death_at_recent_30_days(examples.examplePersonNotRecentDeath))
 
-class listDeadIndividualsTestCase(unittest.TestCase):
-    def testEmptyList(self):
-        dead = project03.getListDeceased({})
-        self.assertEqual(dead, [])
-        
-    def testAllDead(self):
-        dead = project03.getListDeceased({"@I1@": examples.examplePersonDead,
-                                          "@I2@": examples.examplePersonDead150})
-        self.assertTrue(examples.examplePersonDead in dead)
-        self.assertTrue(examples.examplePersonDead150 in dead)
+class DeadIndividualsTestCase(unittest.TestCase):
+    # US29 List deceased
 
-    def testNoneDead(self):
-        dead = project03.getListDeceased({"@I1@": examples.examplePersonAlive,
-                                          "@I2@": examples.examplePersonAlive2})
-        self.assertEqual(dead, [])
-    
-    def testSomeDead(self):
-        dead = project03.getListDeceased({"@I1@": examples.examplePersonDead,
-                                          "@I2@": examples.examplePersonDead150,
-                                          "@I3@": examples.examplePersonAlive,
-                                          "@I4@": examples.examplePersonAlive2})
-        self.assertTrue(examples.examplePersonDead in dead)
-        self.assertTrue(examples.examplePersonDead150 in dead)
+    def test_dead(self):
+        self.assertTrue(verifier.US29_verify_deceased(examples.examplePersonDead))
+        return
+
+    def test_alive(self):
+        self.assertFalse(verifier.US29_verify_deceased(examples.examplePersonAlive))
+        return
 
 
 if __name__ == '__main__':
