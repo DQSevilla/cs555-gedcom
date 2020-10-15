@@ -1,6 +1,7 @@
 from prettytable import PrettyTable
 from copy import deepcopy
 from datetime import date, datetime
+from utils import *
 import time
 
 GEDCOM_FILE = 'cs555project03.ged'
@@ -157,6 +158,7 @@ def processFile(file):
                 elif tag == 'CHIL': fam['children'].append(args)
     addRecord(ind, "INDI")
     addRecord(fam, "FAM")
+    
 
 def gedcomDateToUnixTimestamp(date):
     dateArray = date.split(' ')
@@ -167,40 +169,20 @@ def gedcomDateToUnixTimestamp(date):
     return time.mktime(datetime.strptime(timeString, '%d/%m/%Y').timetuple())
 
 def verifyMarriageBeforeDivorce(family):
-    #Check if they're divorced at all
-    if not family['divorced'] == 'NA':
-        divorcedDate = gedcomDateToUnixTimestamp(family['divorced'])
-        marriageDate = gedcomDateToUnixTimestamp(family['married'])
-
-        #Check that the Unix timestamp of their divorce is after the one of their marriage
-        return divorcedDate > marriageDate
-    #If they're not, we're done
-    else:
-        return True
+    return date_occurs_before_cond(family['married'], family['divorced'], family['divorced'])
 
 def verifyMarriageBeforeDeath(family):
-    #Get IDs of both parties in the couple
     wife = individualsDict[family['wifeId']]
     husband = individualsDict[family['husbandId']]
+    
+    marriageDate = family['married']
 
-    #Get the marriage date
-    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+    wifeStatus = wife['alive'] or date_occurs_before(marriageDate, wife['death'])
+    husbandStatus = husband['alive'] or date_occurs_before(marriageDate, husband['death'])
 
-    #Check if they are dead, and if they are, if they died before wedding
-    if not wife['alive']:
-        wifeDeathDate = gedcomDateToUnixTimestamp(wife['death'])
-        if wifeDeathDate < marriageDate:
-            return False
-    if not husband['alive']:
-        husbandDeathDate = gedcomDateToUnixTimestamp(husband['death'])
-        if husbandDeathDate < marriageDate:
-            return False
-
-    #If neither failed, we passed, return true
-    return True
+    return wifeStatus and husbandStatus
 
 def verifyMarriageNotSiblings(family, individuals):
-
     wife = individuals[family['wifeId']]
     husband = individuals[family['husbandId']]
 
@@ -378,13 +360,14 @@ def verifyNoBigamy(family):
     modifiedDict.pop(family['id'])
 
     #check every other family
-    for fam in familiesDict.values():
+    for fam in modifiedDict.values():
         #if another family's husband ID is identical
         if husbandID == fam['husbandId']:
             return False
         #if another family's wife ID is identical
         if wifeID == fam['wifeId']:
             return False
+            
     #unique ID for both husband and wife in family
     return True
 
