@@ -129,7 +129,7 @@ def US15_verify_fewer_than_15_siblings(family):
         return True
     else:
         return False
-        
+
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])
@@ -195,6 +195,8 @@ def verify():
             print(f"US11-ERR: Family {id} fails bigamy check")   
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
+        if not US15_verify_fewer_than_15_siblings(family):
+            print(f"US15-ERR: Family {id} has more than 14 siblings")
         if not US18_verify_marriage_not_siblings(family):
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
