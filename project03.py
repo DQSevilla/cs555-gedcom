@@ -390,6 +390,15 @@ def verifyMarriageAfter14(family):
         return False
 
 
+def getListLivingMarried(individualsDict):
+    # returns a list of living married individuals
+    living_married = []
+    for ind in individualsDict.values():
+        if ind['alive'] and ind['spouse'] != 'NA':
+            living_married.append(ind)
+    return living_married
+    
+
 def getListDeceased(individualsDict):
     # returns a list of dead individuals
     list_dead = []
@@ -419,6 +428,14 @@ def main():
     print(individualsTable)
     print(familiesTable)
 
+    # Print list of living married individuals
+    livingMarriedTable = PrettyTable()
+    livingMarriedTable.field_names = ['ID', 'Name']
+    for ind in getListLivingMarried(individualsDict):
+        livingMarriedTable.add_row([ind['id'], ind['name']])
+    print("Living Married Individuals")
+    print(livingMarriedTable)
+
     # Print list of deceased individuals
     deadIndividualsTable = PrettyTable()
     deadIndividualsTable.field_names = ['ID', 'Name']
@@ -426,6 +443,7 @@ def main():
         deadIndividualsTable.add_row([ind['id'], ind['name']])
     print("Deceased Individuals:")
     print(deadIndividualsTable)
+
 
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):

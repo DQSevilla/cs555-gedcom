@@ -215,6 +215,22 @@ class DeadIndividualsTestCase(unittest.TestCase):
         return
 
 
+class listLivingMarriedIndividualsTestCase(unittest.TestCase):
+    # US30 List living married
+
+    def testLivingMarried(self):
+        self.assertTrue(verifier.US30_verify_living_married(examples.exampleIndividualAliveMarried))
+
+    def testLivingUnmarried(self):
+        self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualAliveUnmarried))
+
+    def testDeadMarried(self):
+        self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadMarried))
+
+    def testDeadUnmarried(self):
+        self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
+
+
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
     individuals, families = parse.parse_gedcom_file_03(gedcom_file)

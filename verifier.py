@@ -156,6 +156,10 @@ def US21_verify_marriage_gender_roles(family):
 def US29_verify_deceased(individual):
     return not individual['alive']
 
+# US30: List living married individuals
+def US30_verify_living_married(individual):
+    return individual['alive'] and individual['spouse'] != 'NA'
+
 # US35: List recent births
 def US35_verify_birth_at_recent_30_days(individual):
     today = datetime_to_gedcom_date(datetime.now())
@@ -205,6 +209,8 @@ def verify():
             print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
+        if US30_verify_living_married(individual):
+            print(f"US30-INFO: Individual {id} is living and married")
         if US35_verify_birth_at_recent_30_days(individual):
             print(f"US35-INFO: Individual {id} was born within 30 days")
         if US36_verify_death_at_recent_30_days(individual):

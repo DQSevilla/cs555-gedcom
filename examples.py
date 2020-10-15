@@ -317,6 +317,54 @@ exampleIndividualInvalidGender = {
     'spouse': 'NA'
 }
 
+exampleIndividualAliveUnmarried = {
+    'id': '@I1@',
+    'name': 'e /e/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleIndividualAliveMarried = {
+    'id': '@I1@',
+    'name': 'e /e/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': '@I2@'
+}
+
+exampleIndividualDeadUnmarried = {
+    'id': '@I1@',
+    'name': 'e /e/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': False,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': 'NA'
+}
+
+exampleIndividualDeadMarried = {
+    'id': '@I1@',
+    'name': 'e /e/',
+    'gender': 'M',
+    'birthday': '2 DEC 1983',
+    'age': 36,
+    'alive': False,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': '@I2@'
+}
+
 exampleFamilyBetweenSiblings = {
     'id': '@F1@',
     'married': '14 MAY 1994',
