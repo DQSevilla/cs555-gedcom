@@ -215,28 +215,21 @@ class DeadIndividualsTestCase(unittest.TestCase):
         return
 
 
-
 class listLivingMarriedIndividualsTestCase(unittest.TestCase):
-    def testEmptyList(self):
-        lm = project03.getListLivingMarried({})
-        self.assertEqual(lm, [])
+    # US30 List living married
 
     def testLivingMarried(self):
-        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualAliveMarried})
-        self.assertEqual(lm, [examples.exampleIndividualAliveMarried])
+        self.assertTrue(verifier.US30_verify_living_married(examples.exampleIndividualAliveMarried))
 
     def testLivingUnmarried(self):
-        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualAliveUnmarried})
-        self.assertEqual(lm, [])
+        self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualAliveUnmarried))
 
     def testDeadMarried(self):
-        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualDeadMarried})
-        self.assertEqual(lm, [])
+        self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadMarried))
 
     def testDeadUnmarried(self):
-        lm = project03.getListLivingMarried({'@I1@': examples.exampleIndividualDeadUnmarried})
-        self.assertEqual(lm, [])
-    
+        self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
+
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'

@@ -428,7 +428,6 @@ def main():
     print(individualsTable)
     print(familiesTable)
 
-<<<<<<< HEAD
     # Print list of living married individuals
     livingMarriedTable = PrettyTable()
     livingMarriedTable.field_names = ['ID', 'Name']
@@ -436,7 +435,7 @@ def main():
         livingMarriedTable.add_row([ind['id'], ind['name']])
     print("Living Married Individuals")
     print(livingMarriedTable)
-=======
+
     # Print list of deceased individuals
     deadIndividualsTable = PrettyTable()
     deadIndividualsTable.field_names = ['ID', 'Name']
@@ -444,7 +443,7 @@ def main():
         deadIndividualsTable.add_row([ind['id'], ind['name']])
     print("Deceased Individuals:")
     print(deadIndividualsTable)
->>>>>>> origin/master
+
 
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):
