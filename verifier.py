@@ -2,6 +2,8 @@ from copy import deepcopy
 from datetime import date, datetime
 from utils import *
 
+from collections import defaultdict
+
 individualsDict = {}
 familiesDict = {}
 
@@ -124,6 +126,21 @@ def US12_verify_parents_not_too_old(family):
     return valid
     #print(f"ERR: Child {child} has too old of a parent")
 
+def US14_verify_multiple_births(family, local_inds=None):
+    # Check if there are more than 5 siblings birthed on the same day for each family
+    birthdays = defaultdict(int)
+    if local_inds == None:
+        local_inds = individualsDict
+    # Initialize the dictionary of birthdays in the family
+    for ind_id in family['children']:
+        ind_birthday = local_inds[ind_id]['birthday']
+        birthdays[ind_birthday] += 1
+
+    for birthday in birthdays:
+        if birthdays[birthday] > 5:
+            return False
+    return True
+
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])
@@ -189,6 +206,8 @@ def verify():
             print(f"US11-ERR: Family {id} fails bigamy check")   
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
+        if not US14_verify_multiple_births(family):
+            print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
         if not US18_verify_marriage_not_siblings(family):
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
