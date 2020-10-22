@@ -259,16 +259,19 @@ def verifyNoMarriageToDescendants(person):
 
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
-    individual = individualsDict[person['id']]
+    individualObj = individualsDict[person['id']]
+    
+    #Check if they are alive, and if they are not, return
+    if individualObj['alive']:
+        return True
 
     #Get the birth date
-    personBirthDate = gedcomDateToUnixTimestamp(individual['birthday'])
+    personBirthDate = gedcomDateToUnixTimestamp(individualObj['birthday'])
+    personDeathDate = gedcomDateToUnixTimestamp(individualObj['death'])
 
-    #Check if they are dead, and if they are, if they died before their birth
-    if not individual['alive']:
-        personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
-        if personDeathDate < personBirthDate:
-            return False
+    if personDeathDate < personBirthDate:
+        return False
+
     return True
 
 def verifyDivorceBeforeDeath(person):
