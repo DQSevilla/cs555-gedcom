@@ -15,7 +15,7 @@ IGNORE_TAGS = ['HEAD', 'TRLR', 'NOTE']
 DATE_TAGS = ['BIRT', 'DEAT', 'DIV', 'MARR']
 IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS']
 FAM_TAGS = ['HUSB', 'WIFE','CHIL', 'DIV', 'DATE']
-MONTHS = {  
+MONTHS = {
     'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4,
     'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
     'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC':12
@@ -38,11 +38,13 @@ def compare(s):
 def addRecord(record, type):
     if type == 'INDI':
         if record['id'] in individualsDict:
+            # US22
             print(f"ERR: Duplicate individual with id {record['id']}")
         individuals.append(list(record.values()))
         individualsDict[record['id']] = record
     else:
         if record['id'] in familiesDict:
+            # US22
             print(f"ERR: Duplicate family with id {record['id']}")
         families.append(list(record.values()))
         familiesDict[record['id']] = record
@@ -193,7 +195,7 @@ def parse_gedcom_file_03(file_path : str):
     addRecord(ind, "INDI")
     addRecord(fam, "FAM")
 
-    return individualsDict, familiesDict    
+    return individualsDict, familiesDict
 
 if __name__ == "__main__":
     parse_gedcom_file("cs555project03.ged")

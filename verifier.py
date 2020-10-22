@@ -40,7 +40,7 @@ def US04_verify_marriage_before_divorce(family):
 def US05_verify_marriage_before_death(family):
     wife = individualsDict[family['wifeId']]
     husband = individualsDict[family['husbandId']]
-    
+
     marriageDate = family['married']
 
     wifeStatus = wife['alive'] or date_occurs_before(marriageDate, wife['death'])
@@ -70,7 +70,7 @@ def US08_verify_birth_after_parents_marriage(individual):
         return True
 
     family = find_family(individual['child'])
-    
+
     wedding_status = date_occurs_before(family['married'], individual['birthday'])
     divorce_status = dates_within_cond(family['divorced'], individual['birthday'], 9, 'months', family['divorced'])
 
@@ -119,7 +119,7 @@ def US11_verify_no_bigamy(family):
         #if another family's wife ID is identical
         if wifeID == fam['wifeId']:
             return False
-            
+
     #unique ID for both husband and wife in family
     return True
 
@@ -166,6 +166,26 @@ def US21_verify_marriage_gender_roles(family):
 
     return wife['gender'] == 'F' and husband['gender'] == 'M'
 
+# US23: Verify unique name and birthdate
+def US23_unique_name_and_birthdate(individualsDict=individualsDict):
+    """Verify unique name and birthdate"""
+    all_unique = True
+    names_to_ids_and_birthdays = {}
+    for id, individual in individualsDict.items():
+        name = individual["name"]
+        birthday = individual["birthday"]
+
+        if name not in names_to_ids_and_birthdays:
+            names_to_ids_and_birthdays[name] = (id, birthday)
+        else:
+            other_id, other_bday = names_to_ids_and_birthdays[name]
+            if other_bday == birthday:
+                all_unique = False
+                print(f"US23-ERR: Individual {id} has same name and birthday"
+                      f" as {other_id}")
+
+    return all_unique
+
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
     return not individual['alive']
@@ -178,7 +198,7 @@ def US30_verify_living_married(individual):
 def US35_verify_birth_at_recent_30_days(individual):
     today = datetime_to_gedcom_date(datetime.now())
     return dates_within(individual['birthday'], today, 30, 'days')
-    
+
 # US36: List recent deaths
 def US36_verify_death_at_recent_30_days(individual):
     today = datetime_to_gedcom_date(datetime.now())
@@ -200,14 +220,14 @@ def verify():
         if not US10_verify_marriage_after_14(family):
             print(f"US10-ERR: Family {id} fails marriage after 14 check")
         if not US11_verify_no_bigamy(family):
-            print(f"US11-ERR: Family {id} fails bigamy check")   
+            print(f"US11-ERR: Family {id} fails bigamy check")
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
         if not US18_verify_marriage_not_siblings(family):
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
             print(f"US21-ERR: Family {id} does not pass gender roles test")
-     
+
     for id, individual in individualsDict.items():
         if not US01_verify_date_before_current_date(individual['birthday']):
             print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date")
@@ -231,3 +251,5 @@ def verify():
             print(f"US35-INFO: Individual {id} was born within 30 days")
         if US36_verify_death_at_recent_30_days(individual):
             print(f"US36-INFO: Individual {id} has died within 30 days")
+
+    US23_unique_name_and_birthdate()  # operate on all individuals at once

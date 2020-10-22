@@ -37,7 +37,7 @@ class AliveTooLongTestCase(unittest.TestCase):
 
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
-    
+
 class DateBeforeCurrentDateTestCase(unittest.TestCase):
     def testDateBeforeCurrentDate(self):
         self.assertTrue(verifier.US01_verify_date_before_current_date(examples.exampleDateBeforeCurrentDate))
@@ -95,19 +95,19 @@ class MarriageGendersTestCase(unittest.TestCase):
     @patch('verifier.find_individual')
     def test_married_both_female(self, mock_individual):
         mock_individual.side_effect = iter([examples.exampleWifeCorrectGender,
-                                            examples.exampleHusbandIncorrectGender])        
+                                            examples.exampleHusbandIncorrectGender])
         self.assertFalse(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyLesbian))
 
     @patch('verifier.find_individual')
     def test_married_male_female_incorrect(self, mock_individual):
         mock_individual.side_effect = iter([examples.exampleWifeIncorrectGender,
-                                            examples.exampleHusbandIncorrectGender])        
+                                            examples.exampleHusbandIncorrectGender])
         self.assertFalse(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyBothGendersIncorrect))
 
     @patch('verifier.find_individual')
     def test_married_male_female_correct(self, mock_individual):
         mock_individual.side_effect = iter([examples.exampleWifeCorrectGender,
-                                            examples.exampleHusbandCorrectGender])        
+                                            examples.exampleHusbandCorrectGender])
         self.assertTrue(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyCorrect))
 
     @patch('verifier.find_individual')
@@ -162,11 +162,11 @@ class US12TestCase(unittest.TestCase):
         self.assertFalse(verifier.US12_verify_parents_not_too_old(
             examples.exampleFamilyWithTooYoungKid,
         ))
-    
+
     def test_not_old_parent(self):
         self.assertTrue(verifier.US12_verify_parents_not_too_old(
             examples.exampleFamilyWithWidow
-        ))       
+        ))
 
 class TestForBigamy(unittest.TestCase):
     def setUp(self):
@@ -180,7 +180,7 @@ class TestForBigamy(unittest.TestCase):
             '@F2@': examples.exampleImproperFamilyDivorced, #Hus ID = 7, Wife ID = 3
             '@F3@': examples.exampleFamilyDivorced #Hus ID = 7, Wife ID = 3
         }
-        
+
     def testPositiveBigamy(self):
         self.assertTrue(verifier.US11_verify_no_bigamy(self.familiesWithoutBigamy['@F1@']))
     def testNegativeBigamy(self):
@@ -237,6 +237,37 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+
+class UniqueNameAndBirthdateTestCase(unittest.TestCase):
+    """US23: unique name and birthdays combinations"""
+    def test_all_unique(self):
+        self.assertTrue(verifier.US23_unique_name_and_birthdate())
+
+    def test_not_all_unique(self):
+        self.assertFalse(verifier.US23_unique_name_and_birthdate(individualsDict={
+            '@I1@': {
+                'id': '@I1@',
+                'name': 'Alice /Trout/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': '@F2@',
+                'spouse': '@F1@',
+            },
+            '@I2@': {
+                'id': '@I1@',
+                'name': 'Alice /Trout/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': '@F5@',
+                'spouse': '@F1@',
+            },
+        }))
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
