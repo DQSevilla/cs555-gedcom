@@ -22,6 +22,53 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(project03.verifyMarriageBeforeDeath(examples.exampleImproperFamilyWithWidow))
 
+class verifyNoMarriageToDescendants(unittest.TestCase):
+    individualsDict = {
+        '@I1@':{
+        'id': '@I1@',
+        'name': 'Alice /Trout/',
+        'gender': 'F',
+        'birthday': '2 DEC 1970',
+        'age': 49,
+        'alive': True,
+        'death': 'NA',
+        'child': '@F2@',
+        'spouse': '@F1@'
+        },
+        '@I2@':{
+        'id': '@I2@',
+        'name': 'Dan /Trout/',
+        'gender': 'M',
+        'birthday': '2 DEC 1970',
+        'age': 49,
+        'alive': True,
+        'death': 'NA',
+        'child': '@F2@',
+        'spouse': '@F1@'
+        }
+    }
+
+    familiesDict = {
+        '@F1@':{
+        'id': '@F1@',
+        'married': '14 MAY 1994',
+        'divorced': 'NA',
+        'husbandId': '@I2@',
+        'husbandName': 'George /Salmon/',
+        'wifeId': '@I1@',
+        'wifeName': 'Alice /Trout/',
+        'children': ['@I2@', '@I16@']
+        }
+    }
+
+
+    def MarriageToDecendants(self):
+        self.assertFalse(project03.verifyNoMarriageToDescendants(individualsDict['@I1@'], individualsDict, familiesDict))
+
+    familiesDict['@F1@']['children'] = ['@I3@', '@I16@'] 
+    def NoMarriageToDecendants(self):
+        self.assertTrue(project03.verifyNoMarriageToDescendants(individualsDict['@I1@'], individualsDict, familiesDict))
+
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyDeathBefore150YearsOld

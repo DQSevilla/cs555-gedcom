@@ -235,9 +235,9 @@ def ensureMarriageGenderRoles(family, individuals):
 
     return True
 
-def verifyNoMarriageToDescendants(person):
+def verifyNoMarriageToDescendants(person, individualsDict = individualsDict, familiesDict = familiesDict):
     #get individuals id
-    individual = individualsDict[person['id']]
+    individual = individualsDict[person]
 
     #get spouse and check if they even exist
     personSpouse = individual['spouse']
@@ -327,7 +327,7 @@ def verifyBirthBeforeMarriage(person):
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
     return birthDay < marriedDate
 
-def verifyBirthAfterParentsMarriage(family):
+def verifyBirthAfterParentsMarriage(family, individualsDict=individualsDict):
     """
     children should be born after marriage of parents
     and not more than 9 months after divorce
