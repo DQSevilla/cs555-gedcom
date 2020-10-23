@@ -22,6 +22,85 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(project03.verifyMarriageBeforeDeath(examples.exampleImproperFamilyWithWidow))
 
+class verifyAuntsAndUncles(unittest.TestCase):
+    individualsDict = {
+        '@I1@':{
+        'id': '@I1@',
+        'name': 'Alice /Trout/',
+        'gender': 'F',
+        'birthday': '2 DEC 1970',
+        'age': 49,
+        'alive': True,
+        'death': 'NA',
+        'child': '@F2@',
+        'spouse': '@F1@'
+        },
+        '@I2@':{
+        'id': '@I2@',
+        'name': 'Dan /Trout/',
+        'gender': 'M',
+        'birthday': '2 DEC 1970',
+        'age': 49,
+        'alive': True,
+        'death': 'NA',
+        'child': '@F3@',
+        'spouse': '@F1@'
+        },
+        '@I3@':{
+        'id': '@I1@',
+        'name': 'Alice /Trout/',
+        'gender': 'F',
+        'birthday': '2 DEC 1970',
+        'age': 49,
+        'alive': True,
+        'death': 'NA',
+        'child': '@F55@',
+        'spouse': '@F4@'
+        },
+        '@I4@':{
+        'id': '@I2@',
+        'name': 'Dan /Trout/',
+        'gender': 'M',
+        'birthday': '2 DEC 1970',
+        'age': 49,
+        'alive': True,
+        'death': 'NA',
+        'child': '@F3@',
+        'spouse': '@F4@'
+        }
+    }
+
+    familiesDict = {
+        '@F1@':{
+        'id': '@F1@',
+        'married': '14 MAY 1994',
+        'divorced': 'NA',
+        'husbandId': '@I2@',
+        'husbandName': 'George /Salmon/',
+        'wifeId': '@I33@',
+        'wifeName': 'Alice /Trout/',
+        'children': ['@I3@', '@I16@']
+        },
+        '@F3@':{
+        'id': '@F3@',
+        'married': '14 MAY 1994',
+        'divorced': 'NA',
+        'husbandId': '@I66@',
+        'husbandName': 'George /Salmon/',
+        'wifeId': '@I5@',
+        'wifeName': 'Alice /Trout/',
+        'children': ['@I33@', '@I44@']
+        }
+    }
+
+
+    def MarriageToDecendants(self):
+        self.assertFalse(project03.verifyAuntsAndUncles(individualsDict['@I1@'], individualsDict, familiesDict))
+
+    familiesDict['@F1@']['wifeId'] = '@I1@' 
+    def NoMarriageToDecendants(self):
+        self.assertTrue(project03.verifyAuntsAndUncles(individualsDict['@I1@'], individualsDict, familiesDict))
+
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = project03.verifyDeathBefore150YearsOld

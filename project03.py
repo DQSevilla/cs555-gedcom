@@ -249,9 +249,10 @@ def verifyBirthBeforeDeath(person):
             return False
     return True
 
-def verifyAuntsAndUncles(person):
+#aunts and uncles should not marry their neices and nephews
+def verifyAuntsAndUncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
 	#Get id of Aunt or Uncle
-    individual = person['id']
+    individual = person
 
     personSiblings = familiesDict[person['child']]['children'].remove(individual)
     niecesAndNephews = []
