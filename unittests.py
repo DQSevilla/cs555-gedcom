@@ -208,6 +208,19 @@ class DeadIndividualsTestCase(unittest.TestCase):
         self.assertFalse(verifier.US29_verify_deceased(examples.examplePersonAlive))
         return
 
+class TestBirthAfterParentDeath(unittest.TestCase):
+
+    def test_parents_alive(self):
+        self.assertTrue(verifier.US09_verify_birth_before_parents_death(examples.exampleBornBeforeDeathParents))
+
+    def test_birth_before_9_months_father_death(self):
+        self.assertTrue(verifier.US09_verify_birth_before_parents_death(examples.exampleBornBefore9MonthsFather))
+
+    def test_birth_after_mother_death(self):
+        self.assertFalse(verifier.US09_verify_birth_before_parents_death(examples.exampleBornAfterDeathParents))
+
+    def test_birth_after_9_months_father_death(self):
+        self.assertFalse(verifier.US09_verify_birth_before_parents_death(examples.exampleBornAfter9MonthsFather))
 
 class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     # US30 List living married

@@ -114,7 +114,7 @@ examplePersonRecentBirth = {
     'id': '@I5@',
     'name': 'Gina /Koi/',
     'gender': 'F',
-    'birthday': '20 SEP 2020',
+    'birthday': datetime_to_gedcom_date(datetime.now()),
     'age': 0,
     'alive': True,
     'death': 'NA',
@@ -488,6 +488,54 @@ exampleMarriage14YearsBeforeBoth = {
     'wifeId': '@I1@',
     'wifeName': 'Alice /Trout/', #1970
     'children': []
+}
+
+exampleBornAfterDeathParents = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '15 FEB 2015',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleBornBeforeDeathParents = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '15 FEB 2015',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F1@',
+    'spouse': '@F1@'
+}
+
+exampleBornAfter9MonthsFather = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2001',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F4@',
+    'spouse': '@F1@'
+}
+
+exampleBornBefore9MonthsFather = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2000',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F4@',
+    'spouse': '@F1@'
 }
 
 exampleDateBeforeCurrentDate = '2 DEC 1970'
