@@ -78,6 +78,20 @@ def US08_verify_birth_after_parents_marriage(individual):
     #print(f"ERR: Child {child_id} born before parents marriage")
     #print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
 
+def US09_verify_birth_before_parents_death(individual):
+    if individual['child'] == 'NA':
+        return True
+
+    birthday = individual['birthday']
+    family = find_family(individual['child'])
+    mother = find_individual(family['wifeId'])
+    father = find_individual(family['husbandId'])
+
+    mother_status = date_occurs_before_cond(birthday, mother['death'], mother['death'])
+    father_status = date_occurs_before_cond(birthday, father['death'], father['death']) or dates_within(birthday, father['death'], 9, 'months')
+
+    return mother_status and father_status
+
 def US10_verify_marriage_after_14(family):
     wifeBirthday = find_individual(family['wifeId'])['birthday']
     husbandBirthday = find_individual(family['husbandId'])['birthday']
@@ -207,6 +221,8 @@ def verify():
             print(f"US07-ERR: Individual {id} is over 150 years old or lived to be over 150")
         if not US08_verify_birth_after_parents_marriage(individual):
             print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
+        if not US09_verify_birth_before_parents_death(individual):
+            print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
