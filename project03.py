@@ -1,5 +1,7 @@
 from prettytable import PrettyTable
+from copy import deepcopy
 from datetime import date, datetime
+from utils import *
 import time
 
 GEDCOM_FILE = 'cs555project03.ged'
@@ -156,6 +158,7 @@ def processFile(file):
                 elif tag == 'CHIL': fam['children'].append(args)
     addRecord(ind, "INDI")
     addRecord(fam, "FAM")
+    
 
 def gedcomDateToUnixTimestamp(date):
     dateArray = date.split(' ')
@@ -166,40 +169,20 @@ def gedcomDateToUnixTimestamp(date):
     return time.mktime(datetime.strptime(timeString, '%d/%m/%Y').timetuple())
 
 def verifyMarriageBeforeDivorce(family):
-    #Check if they're divorced at all
-    if not family['divorced'] == 'NA':
-        divorcedDate = gedcomDateToUnixTimestamp(family['divorced'])
-        marriageDate = gedcomDateToUnixTimestamp(family['married'])
-
-        #Check that the Unix timestamp of their divorce is after the one of their marriage
-        return divorcedDate > marriageDate
-    #If they're not, we're done
-    else:
-        return True
+    return date_occurs_before_cond(family['married'], family['divorced'], family['divorced'])
 
 def verifyMarriageBeforeDeath(family):
-    #Get IDs of both parties in the couple
     wife = individualsDict[family['wifeId']]
     husband = individualsDict[family['husbandId']]
+    
+    marriageDate = family['married']
 
-    #Get the marriage date
-    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+    wifeStatus = wife['alive'] or date_occurs_before(marriageDate, wife['death'])
+    husbandStatus = husband['alive'] or date_occurs_before(marriageDate, husband['death'])
 
-    #Check if they are dead, and if they are, if they died before wedding
-    if not wife['alive']:
-        wifeDeathDate = gedcomDateToUnixTimestamp(wife['death'])
-        if wifeDeathDate < marriageDate:
-            return False
-    if not husband['alive']:
-        husbandDeathDate = gedcomDateToUnixTimestamp(husband['death'])
-        if husbandDeathDate < marriageDate:
-            return False
-
-    #If neither failed, we passed, return true
-    return True
+    return wifeStatus and husbandStatus
 
 def verifyMarriageNotSiblings(family, individuals):
-
     wife = individuals[family['wifeId']]
     husband = individuals[family['husbandId']]
 
@@ -274,24 +257,28 @@ def verifyBirthBeforeDeath(person):
 
     return True
 
-def verifyDivorceBeforeDeath(person):
-    #Get IDs of the individual in question parties in the couple
-    individual = individualsDict[person]
 
-    #If they have never been divorced, everything is okay
-    if not person['divorced']:
+def verifyDivorceBeforeDeath(family):
+    if family['divorced'] == 'NA':
         return True
 
-    #Get the birth date
-    personDivorceDate = gedcomDateToUnixTimestamp(person['divorced'])
+    divorceTime = gedcomDateToUnixTimestamp(family['divorced'])
 
-    #Check if they are dead, and if they are, if they died before their birth
-    if not person['alive']:
-        personDeathDate = gedcomDateToUnixTimestamp(person['death'])
-        if personDeathDate < personDivorceDate:
+    husband = individualsDict[family['husbandId']]
+    wife = individualsDict[family['wifeId']]
+
+    if not husband['alive']:
+        deathDate = gedcomDateToUnixTimestamp(husband['death'])
+        if deathDate < divorceTime:
+            print(f"ERR husband in family {family['id']} died before divorce")
             return False
 
-    #If neither failed, we passed, return true
+    if not wife['alive']:
+        deathDate = gedcomDateToUnixTimestamp(wife['death'])
+        if deathDate < divorceTime:
+            print(f"ERR wife in family {family['id']} died before divorce")
+            return False
+
     return True
 
 def verifyDeathBefore150YearsOld(person):
@@ -327,7 +314,38 @@ def verifyBirthBeforeMarriage(person):
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
     return birthDay < marriedDate
 
+<<<<<<< HEAD
 def verifyBirthAfterParentsMarriage(family, individualsDict=individualsDict):
+=======
+# US35: List recent births
+def verifyBirthAtRecent30Days(person):
+    currentDateTimestamp = time.time();
+    name = person['name']
+    birthdayStamp = gedcomDateToUnixTimestamp(person['birthday']);
+    # If the date of birth is within 30 days
+    if currentDateTimestamp - birthdayStamp < 2592000:
+        print(f"Family member {name} was born on {person['birthday']}")
+        return True
+    else:
+        return False
+
+# US36: List recent deaths
+def verifyDeathAtRecent30Days(person):
+    currentDateTimestamp = time.time();
+    if not person['alive']:
+        name = person['name']
+        deathDateStamp = gedcomDateToUnixTimestamp(person['death']);
+        # If the date of death is within 30 days
+        if currentDateTimestamp - deathDateStamp < 2592000:
+            print(f"Family member {name} was dead on {person['death']}")
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def verifyBirthAfterParentsMarriage(family):
+>>>>>>> master
     """
     children should be born after marriage of parents
     and not more than 9 months after divorce
@@ -349,7 +367,7 @@ def verifyBirthAfterParentsMarriage(family, individualsDict=individualsDict):
 
 def verifyParentsNotTooOld(family):
     errors = False
-    
+
     motherAge = individualsDict[family['wifeId']]['age']
     fatherAge = individualsDict[family['husbandId']]['age']
     children  = family['children']
@@ -361,6 +379,62 @@ def verifyParentsNotTooOld(family):
             errors = True
 
     return not errors
+
+def verifyNoBigamy(family):
+    #retrieve ID for husband and wife
+    husbandID = family['husbandId']
+    wifeID = family['wifeId']
+    #make a modified family dictionary without family in question
+    modifiedDict = deepcopy(familiesDict)
+    modifiedDict.pop(family['id'])
+
+    #check every other family
+    for fam in modifiedDict.values():
+        #if another family's husband ID is identical
+        if husbandID == fam['husbandId']:
+            return False
+        #if another family's wife ID is identical
+        if wifeID == fam['wifeId']:
+            return False
+            
+    #unique ID for both husband and wife in family
+    return True
+
+def verifyMarriageAfter14(family):
+    #get individuals by ID
+    wife = individualsDict[family['wifeId']]
+    husband = individualsDict[family['husbandId']]
+
+    #get their marriage date
+    marriageDate = gedcomDateToUnixTimestamp(family['married'])
+
+    #14 years in unix = 441849600
+    years14Unix = 441849600
+    wifeBirth = gedcomDateToUnixTimestamp(wife['birthday'])
+    husBirth = gedcomDateToUnixTimestamp(husband['birthday'])
+    #if both wife and husband's marriage date minus their birthdays are both over 14 years unix
+    if (marriageDate - husBirth > years14Unix and marriageDate - wifeBirth > years14Unix):
+        return True
+    else:
+        return False
+
+
+def getListLivingMarried(individualsDict):
+    # returns a list of living married individuals
+    living_married = []
+    for ind in individualsDict.values():
+        if ind['alive'] and ind['spouse'] != 'NA':
+            living_married.append(ind)
+    return living_married
+    
+
+def getListDeceased(individualsDict):
+    # returns a list of dead individuals
+    list_dead = []
+    for ind in individualsDict.values():
+        if not ind['alive']:
+            list_dead.append(ind)
+    return list_dead
 
 def main():
     processFile(GEDCOM_FILE)
@@ -379,15 +453,35 @@ def main():
     individuals.sort(key=compare)
     for family in families:
         familiesTable.add_row(family)
-    
+
     print(individualsTable)
     print(familiesTable)
-    
+
+    # Print list of living married individuals
+    livingMarriedTable = PrettyTable()
+    livingMarriedTable.field_names = ['ID', 'Name']
+    for ind in getListLivingMarried(individualsDict):
+        livingMarriedTable.add_row([ind['id'], ind['name']])
+    print("Living Married Individuals")
+    print(livingMarriedTable)
+
+    # Print list of deceased individuals
+    deadIndividualsTable = PrettyTable()
+    deadIndividualsTable.field_names = ['ID', 'Name']
+    for ind in getListDeceased(individualsDict):
+        deadIndividualsTable.add_row([ind['id'], ind['name']])
+    print("Deceased Individuals:")
+    print(deadIndividualsTable)
+
+
     for family in familiesDict:
         if not verifyMarriageBeforeDivorce(familiesDict[family]):
             print('Family {0} fails marriage before divorce check'.format(family))
         if not verifyMarriageBeforeDeath(familiesDict[family]):
             print('Family {0} fails marriage before death check'.format(family))
+        if not verifyNoBigamy(familiesDict[family]):
+            print('Family {0} fails bigamy check'.format(family))
+
         if not verifyDateBeforeCurrentDate(familiesDict[family]['married']):
             print(f"Family {family} has a marriage date that is after, or equal to, the current date")
         if not verifyDateBeforeCurrentDate(familiesDict[family]['divorced']):
@@ -401,22 +495,29 @@ def main():
             print('Family {0} fails marriage between siblings check'.format(family))
 
         verifyParentsNotTooOld(familiesDict[family])
+        if not verifyMarriageAfter14(familiesDict[family]):
+            print('Family {0} fails marriage after 14 check'.format(family))
+
+        verifyDivorceBeforeDeath(familiesDict[family])
 
     for id, individual in individualsDict.items():
         if not verifyDeathBefore150YearsOld(individual):
             print(f"ERR: Individual {id} is over 150 years old")
         if not verifyBirthBeforeDeath(individual):
             print(f"ERR: Individual {id} was born after they died")
-        if not verifyDivorceBeforeDeath(individual):
-            print(f"ERR: Individual {id} was born after they were divorced")
         if not verifyDateBeforeCurrentDate(individual['birthday']):
             print(f"ERR: Individual {id} has a birthday that is after, or equal to, the current date")
         if not verifyDateBeforeCurrentDate(individual['death']):
             print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
         if not verifyBirthBeforeMarriage(individual):
             print(f"ERR: Individual {id} has a birthday after their marriage date")
+<<<<<<< HEAD
         if not verifyNoMarriageToDescendants(individuals):
             print(f"ERR: Individual {id} has is married to one of their decendants")
+=======
+        verifyBirthAtRecent30Days(individual)
+        verifyDeathAtRecent30Days(individual)
+>>>>>>> master
 
 if __name__ == '__main__':
     main()
