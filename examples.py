@@ -543,3 +543,115 @@ exampleDateBeforeCurrentDate = '2 DEC 1970'
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
 
 exampleDateEqualCurrentDate = datetime_to_gedcom_date(datetime.now())
+
+exampleInd1 = {
+    'birthday': '2 DEC 1999'
+}
+
+exampleInd2 = {
+    'birthday': '2 DEC 1999'
+}
+
+exampleInd3 = {
+    'birthday': '2 DEC 1999'
+}
+
+exampleInd4 = {
+    'birthday': '2 DEC 1999'
+}
+
+exampleInd5 = {
+    'birthday': '2 DEC 1999'
+}
+
+exampleInd6 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd7 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd8 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd9 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd10 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd11 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd12 = {
+    'birthday': '25 DEC 1998'
+}
+
+exampleInd13 = {
+    'birthday': '4 JUN 1999'
+}
+
+exampleInd14 = {
+    'birthday': '12 AUG 1999'
+}
+
+exampleInd15 = {
+    'birthday': ' 30 JAN 2000'
+}
+
+
+exampleIndividualsDict = {
+    '@I1@': exampleInd1, 
+    '@I2@': exampleInd2,
+    '@I3@': exampleInd3,
+    '@I4@': exampleInd4,
+    '@I5@': exampleInd5,
+    '@I6@': exampleInd6,
+    '@I7@': exampleInd7,
+    '@I8@': exampleInd8,
+    '@I9@': exampleInd9,
+    '@I10@': exampleInd10,
+    '@I11@': exampleInd11,
+    '@I12@': exampleInd12,
+    '@I13@': exampleInd13,
+    '@I14@': exampleInd14,
+    '@I15@': exampleInd15
+}
+
+exampleFamilyChildrenBirthLessThan5 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I5@', '@I8@', '@I12@', '@I15@']
+}
+
+exampleFamilyChildrenBirthEqual5 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@', '@I3@', '@I4@', '@I5@', '@I6@', '@I7@', '@I8@', '@I9@', '@I10@']
+}
+
+exampleFamilyChildrenBirthGreaterThan5 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I6@', '@I7@', '@I8@', '@I9@', '@I10@', '@I11@']
+}

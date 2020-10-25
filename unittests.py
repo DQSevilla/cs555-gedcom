@@ -237,6 +237,16 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+class US14TestCases(unittest.TestCase):
+    def testLessThan5(self):
+        self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthLessThan5, examples.exampleIndividualsDict))
+
+    def testEqual5(self):
+        self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthEqual5, examples.exampleIndividualsDict))
+
+    def testGreaterThan5(self):
+        self.assertFalse(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthGreaterThan5, examples.exampleIndividualsDict))
+
 
 class UniqueNameAndBirthdateTestCase(unittest.TestCase):
     """US23: unique name and birthdays combinations"""
