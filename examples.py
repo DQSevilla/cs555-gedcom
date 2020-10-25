@@ -545,31 +545,45 @@ exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedel
 exampleDateEqualCurrentDate = datetime_to_gedcom_date(datetime.now())
 
 exampleInd1 = {
-    'birthday': '2 DEC 1999'
+    'birthday': '2 DEC 1999',
+    'gender': 'F',
+    'name': "Alice /Trout/"
 }
 
 exampleInd2 = {
-    'birthday': '2 DEC 1999'
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': "Simon /Gao/"
 }
 
 exampleInd3 = {
-    'birthday': '2 DEC 1999'
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': 'John /Doe/'
 }
 
 exampleInd4 = {
-    'birthday': '2 DEC 1999'
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': 'Sean /Gao/'
 }
 
 exampleInd5 = {
-    'birthday': '2 DEC 1999'
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': 'Xian /Gao/'
 }
 
 exampleInd6 = {
-    'birthday': '4 DEC 1999'
+    'birthday': '4 DEC 1999',
+    'gender': 'F',
+    'name': 'Michelle /Gao/'
 }
 
 exampleInd7 = {
-    'birthday': '4 DEC 1999'
+    'birthday': '4 DEC 1999',
+    'gender': 'F',
+    'name': 'Jane /Gao/'
 }
 
 exampleInd8 = {
@@ -604,6 +618,11 @@ exampleInd15 = {
     'birthday': ' 30 JAN 2000'
 }
 
+exampleInd16 = {
+    'birthday': '2 MARCH 1970',
+    'gender': 'M',
+    'name': 'Jeff /Gao/'
+}
 
 exampleIndividualsDict = {
     '@I1@': exampleInd1, 
@@ -620,7 +639,8 @@ exampleIndividualsDict = {
     '@I12@': exampleInd12,
     '@I13@': exampleInd13,
     '@I14@': exampleInd14,
-    '@I15@': exampleInd15
+    '@I15@': exampleInd15,
+    '@I16@': exampleInd16
 }
 
 exampleFamilyChildrenBirthLessThan5 = {
@@ -654,4 +674,37 @@ exampleFamilyChildrenBirthGreaterThan5 = {
     'wifeId': '@I1@',
     'wifeName': 'Alice /Trout/', #1970
     'children': ['@I6@', '@I7@', '@I8@', '@I9@', '@I10@', '@I11@']
+}
+
+exampleFamilyMalesWithSameLastName = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
+
+exampleFamilyMalesWithoutSameLastName = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I3@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
+
+exampleFamilyMalesWithSameLastNameButDifferentFemale = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
 }
