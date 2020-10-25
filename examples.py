@@ -490,9 +490,6 @@ exampleMarriage14YearsBeforeBoth = {
     'children': []
 }
 
-exampleFamilyOneChild = {
-    'id': '@F3@',
-    'married': '2 JAN 2000',
     'divorced': 'NA',
     'husbandId': '@I3@',
     'husbandName': 'John /Salmon/', #1997
@@ -535,7 +532,6 @@ exampleTwin2 = {
     'child': '@F2@',
     'spouse': '@F1@'
 }
-
 
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
