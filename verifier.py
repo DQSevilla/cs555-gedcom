@@ -155,6 +155,16 @@ def US14_verify_multiple_births(family, local_inds=None):
             return False
     return True
 
+def US16_verify_male_last_names(family, local_inds=None):
+    if local_inds == None: local_inds = individualsDict
+    family_last_name = family['husbandName'].split('/')[1]
+    for child_id in family['children']:
+        current_child = local_inds[child_id]
+        if current_child['gender'] == 'M':
+            child_last_name = current_child['name'].split('/')[1]
+            if family_last_name != child_last_name: return False
+    return True
+
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])
@@ -242,6 +252,8 @@ def verify():
             print(f"US12-ERR: Family {id} had children with parents who are too old")
         if not US14_verify_multiple_births(family):
             print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
+        if not US16_verify_male_last_names(family):
+            print(f"US16-ERR: Family {id} has males with different last names")
         if not US18_verify_marriage_not_siblings(family):
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):

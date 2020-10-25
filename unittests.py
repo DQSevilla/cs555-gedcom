@@ -238,13 +238,13 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
 class US14TestCases(unittest.TestCase):
-    def testLessThan5(self):
+    def test_less_than_5(self):
         self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthLessThan5, examples.exampleIndividualsDict))
 
-    def testEqual5(self):
+    def test_equal_5(self):
         self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthEqual5, examples.exampleIndividualsDict))
 
-    def testGreaterThan5(self):
+    def test_greater_than_5(self):
         self.assertFalse(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthGreaterThan5, examples.exampleIndividualsDict))
 
 
@@ -278,6 +278,16 @@ class UniqueNameAndBirthdateTestCase(unittest.TestCase):
                 'spouse': '@F1@',
             },
         }))
+
+class US16TestCases(unittest.TestCase):
+    def test_same_male_last_name(self):
+        self.assertTrue(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithSameLastName, examples.exampleIndividualsDict))
+
+    def test_different_male_last_name(self):
+        self.assertFalse(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithoutSameLastName, examples.exampleIndividualsDict))
+
+    def test_same_male_last_name_diff_female_last_name(self):
+        self.assertTrue(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithSameLastNameButDifferentFemale, examples.exampleIndividualsDict))
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
