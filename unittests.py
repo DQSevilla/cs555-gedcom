@@ -230,6 +230,15 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+class verifySiblingSpacingTestCase(unittest.TestCase):
+    def onlyOneChild(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild))
+    # def twins(self):
+    #     self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyTwins))
+    # def all8MonthsApart(self):
+    #     self.assertTrue(ver)
+    # def not8MonthsApart(self):
+    #     self.assertFalse()
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'

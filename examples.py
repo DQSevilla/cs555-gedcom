@@ -490,6 +490,53 @@ exampleMarriage14YearsBeforeBoth = {
     'children': []
 }
 
+exampleFamilyOneChild = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@']
+}
+
+exampleFamilyTwins = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@']
+}
+
+exampleTwin1 = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleTwin2 = {
+    'id': '@I2@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '1 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
