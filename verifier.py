@@ -2,6 +2,8 @@ from copy import deepcopy
 from datetime import date, datetime
 from utils import *
 
+from collections import defaultdict
+
 individualsDict = {}
 familiesDict = {}
 
@@ -40,7 +42,7 @@ def US04_verify_marriage_before_divorce(family):
 def US05_verify_marriage_before_death(family):
     wife = individualsDict[family['wifeId']]
     husband = individualsDict[family['husbandId']]
-    
+
     marriageDate = family['married']
 
     wifeStatus = wife['alive'] or date_occurs_before(marriageDate, wife['death'])
@@ -70,13 +72,27 @@ def US08_verify_birth_after_parents_marriage(individual):
         return True
 
     family = find_family(individual['child'])
-    
+
     wedding_status = date_occurs_before(family['married'], individual['birthday'])
     divorce_status = dates_within_cond(family['divorced'], individual['birthday'], 9, 'months', family['divorced'])
 
     return wedding_status or divorce_status
     #print(f"ERR: Child {child_id} born before parents marriage")
     #print(f"ERR: Child {child_id} born more than 9 mo. after parent's divorce")
+
+def US09_verify_birth_before_parents_death(individual):
+    if individual['child'] == 'NA':
+        return True
+
+    birthday = individual['birthday']
+    family = find_family(individual['child'])
+    mother = find_individual(family['wifeId'])
+    father = find_individual(family['husbandId'])
+
+    mother_status = date_occurs_before_cond(birthday, mother['death'], mother['death'])
+    father_status = date_occurs_before_cond(birthday, father['death'], father['death']) or dates_within(birthday, father['death'], 9, 'months')
+
+    return mother_status and father_status
 
 def US10_verify_marriage_after_14(family):
     wifeBirthday = find_individual(family['wifeId'])['birthday']
@@ -105,7 +121,7 @@ def US11_verify_no_bigamy(family):
         #if another family's wife ID is identical
         if wifeID == fam['wifeId']:
             return False
-            
+
     #unique ID for both husband and wife in family
     return True
 
@@ -139,6 +155,29 @@ def US13_verify_sibling_spacing(family):
             #then if the two children have birthday's within 8 months of each other, return False
             if dates_within(individualsDict[child1]['birthday'], individualsDict[child2]['birthday'], 8, 'months'):
                 return False
+def US14_verify_multiple_births(family, local_inds=None):
+    # Check if there are more than 5 siblings birthed on the same day for each family
+    birthdays = defaultdict(int)
+    if local_inds == None:
+        local_inds = individualsDict
+    # Initialize the dictionary of birthdays in the family
+    for ind_id in family['children']:
+        ind_birthday = local_inds[ind_id]['birthday']
+        birthdays[ind_birthday] += 1
+
+    for birthday in birthdays:
+        if birthdays[birthday] > 5:
+            return False
+    return True
+
+def US16_verify_male_last_names(family, local_inds=None):
+    if local_inds == None: local_inds = individualsDict
+    family_last_name = family['husbandName'].split('/')[1]
+    for child_id in family['children']:
+        current_child = local_inds[child_id]
+        if current_child['gender'] == 'M':
+            child_last_name = current_child['name'].split('/')[1]
+            if family_last_name != child_last_name: return False
     return True
 
 def US18_verify_marriage_not_siblings(family):
@@ -169,6 +208,26 @@ def US21_verify_marriage_gender_roles(family):
 
     return wife['gender'] == 'F' and husband['gender'] == 'M'
 
+# US23: Verify unique name and birthdate
+def US23_unique_name_and_birthdate(individualsDict=individualsDict):
+    """Verify unique name and birthdate"""
+    all_unique = True
+    names_to_ids_and_birthdays = {}
+    for id, individual in individualsDict.items():
+        name = individual["name"]
+        birthday = individual["birthday"]
+
+        if name not in names_to_ids_and_birthdays:
+            names_to_ids_and_birthdays[name] = (id, birthday)
+        else:
+            other_id, other_bday = names_to_ids_and_birthdays[name]
+            if other_bday == birthday:
+                all_unique = False
+                print(f"US23-ERR: Individual {id} has same name and birthday"
+                      f" as {other_id}")
+
+    return all_unique
+
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
     return not individual['alive']
@@ -181,7 +240,7 @@ def US30_verify_living_married(individual):
 def US35_verify_birth_at_recent_30_days(individual):
     today = datetime_to_gedcom_date(datetime.now())
     return dates_within(individual['birthday'], today, 30, 'days')
-    
+
 # US36: List recent deaths
 def US36_verify_death_at_recent_30_days(individual):
     today = datetime_to_gedcom_date(datetime.now())
@@ -203,14 +262,18 @@ def verify():
         if not US10_verify_marriage_after_14(family):
             print(f"US10-ERR: Family {id} fails marriage after 14 check")
         if not US11_verify_no_bigamy(family):
-            print(f"US11-ERR: Family {id} fails bigamy check")   
+            print(f"US11-ERR: Family {id} fails bigamy check")
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
+        if not US14_verify_multiple_births(family):
+            print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
+        if not US16_verify_male_last_names(family):
+            print(f"US16-ERR: Family {id} has males with different last names")
         if not US18_verify_marriage_not_siblings(family):
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
             print(f"US21-ERR: Family {id} does not pass gender roles test")
-     
+
     for id, individual in individualsDict.items():
         if not US01_verify_date_before_current_date(individual['birthday']):
             print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date")
@@ -224,6 +287,8 @@ def verify():
             print(f"US07-ERR: Individual {id} is over 150 years old or lived to be over 150")
         if not US08_verify_birth_after_parents_marriage(individual):
             print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
+        if not US09_verify_birth_before_parents_death(individual):
+            print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
@@ -232,3 +297,5 @@ def verify():
             print(f"US35-INFO: Individual {id} was born within 30 days")
         if US36_verify_death_at_recent_30_days(individual):
             print(f"US36-INFO: Individual {id} has died within 30 days")
+
+    US23_unique_name_and_birthdate()  # operate on all individuals at once

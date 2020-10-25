@@ -114,7 +114,7 @@ examplePersonRecentBirth = {
     'id': '@I5@',
     'name': 'Gina /Koi/',
     'gender': 'F',
-    'birthday': '20 SEP 2020',
+    'birthday': datetime_to_gedcom_date(datetime.now()),
     'age': 0,
     'alive': True,
     'death': 'NA',
@@ -490,6 +490,7 @@ exampleMarriage14YearsBeforeBoth = {
     'children': []
 }
 
+<<<<<<< HEAD
     'divorced': 'NA',
     'husbandId': '@I3@',
     'husbandName': 'John /Salmon/', #1997
@@ -530,6 +531,53 @@ exampleTwin2 = {
     'alive': True,
     'death': 'NA',
     'child': '@F2@',
+=======
+exampleBornAfterDeathParents = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '15 FEB 2015',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
+
+exampleBornBeforeDeathParents = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '15 FEB 2015',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F1@',
+    'spouse': '@F1@'
+}
+
+exampleBornAfter9MonthsFather = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2001',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F4@',
+    'spouse': '@F1@'
+}
+
+exampleBornBefore9MonthsFather = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2000',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F4@',
+>>>>>>> 7e2ef6bfd8e7b755220fe02e4ca6472d9c3200c2
     'spouse': '@F1@'
 }
 
@@ -538,3 +586,168 @@ exampleDateBeforeCurrentDate = '2 DEC 1970'
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
 
 exampleDateEqualCurrentDate = datetime_to_gedcom_date(datetime.now())
+
+exampleInd1 = {
+    'birthday': '2 DEC 1999',
+    'gender': 'F',
+    'name': "Alice /Trout/"
+}
+
+exampleInd2 = {
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': "Simon /Gao/"
+}
+
+exampleInd3 = {
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': 'John /Doe/'
+}
+
+exampleInd4 = {
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': 'Sean /Gao/'
+}
+
+exampleInd5 = {
+    'birthday': '2 DEC 1999',
+    'gender': 'M',
+    'name': 'Xian /Gao/'
+}
+
+exampleInd6 = {
+    'birthday': '4 DEC 1999',
+    'gender': 'F',
+    'name': 'Michelle /Gao/'
+}
+
+exampleInd7 = {
+    'birthday': '4 DEC 1999',
+    'gender': 'F',
+    'name': 'Jane /Gao/'
+}
+
+exampleInd8 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd9 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd10 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd11 = {
+    'birthday': '4 DEC 1999'
+}
+
+exampleInd12 = {
+    'birthday': '25 DEC 1998'
+}
+
+exampleInd13 = {
+    'birthday': '4 JUN 1999'
+}
+
+exampleInd14 = {
+    'birthday': '12 AUG 1999'
+}
+
+exampleInd15 = {
+    'birthday': ' 30 JAN 2000'
+}
+
+exampleInd16 = {
+    'birthday': '2 MARCH 1970',
+    'gender': 'M',
+    'name': 'Jeff /Gao/'
+}
+
+exampleIndividualsDict = {
+    '@I1@': exampleInd1, 
+    '@I2@': exampleInd2,
+    '@I3@': exampleInd3,
+    '@I4@': exampleInd4,
+    '@I5@': exampleInd5,
+    '@I6@': exampleInd6,
+    '@I7@': exampleInd7,
+    '@I8@': exampleInd8,
+    '@I9@': exampleInd9,
+    '@I10@': exampleInd10,
+    '@I11@': exampleInd11,
+    '@I12@': exampleInd12,
+    '@I13@': exampleInd13,
+    '@I14@': exampleInd14,
+    '@I15@': exampleInd15,
+    '@I16@': exampleInd16
+}
+
+exampleFamilyChildrenBirthLessThan5 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I5@', '@I8@', '@I12@', '@I15@']
+}
+
+exampleFamilyChildrenBirthEqual5 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@', '@I3@', '@I4@', '@I5@', '@I6@', '@I7@', '@I8@', '@I9@', '@I10@']
+}
+
+exampleFamilyChildrenBirthGreaterThan5 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I6@', '@I7@', '@I8@', '@I9@', '@I10@', '@I11@']
+}
+
+exampleFamilyMalesWithSameLastName = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
+
+exampleFamilyMalesWithoutSameLastName = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I3@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
+
+exampleFamilyMalesWithSameLastNameButDifferentFemale = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
