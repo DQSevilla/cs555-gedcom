@@ -14,11 +14,11 @@ def initialize_verifier(individuals, families):
     individualsDict = individuals
     familiesDict = families
 
-def find_individual(individual_id):
-    return individualsDict[individual_id]
+def find_individual(individual_id, defaultdict = None):
+    return defaultdict[individual_id] if defaultdict else individualsDict[individual_id]
 
-def find_family(family_id):
-    return familiesDict[family_id]
+def find_family(family_id, defaultdict = None):
+    return defaultdict[family_id] if defaultdict else familiesDict[family_id]
 
 # User Story 01: Date is before the current date
 def US01_verify_date_before_current_date(date_string):
@@ -168,20 +168,19 @@ def US16_verify_male_last_names(family, local_inds=None):
 def US17_verify_no_marriage_to_descendants(person, individualsDict = individualsDict, familiesDict = familiesDict):
     #get individuals id
     individual = person
-    #get spouse and check if they exist
-    personSpouse = individual['spouse']
-    if not personSpouse:
-        return True
+    personSpouse = find_family(individual['spouse'], defaultdict = familiesDict)
 
     #get children and make sure they are not a spouse
-    personChildren = find_family(personSpouse['children'])
+    personChildren = personSpouse['children']
     personDecendants = []
     while personChildren != []:
         personDecendants.append(personChildren[0])
-        personChildren = personChildren + find_family(individualsTable[personChildren[0]]['spouse'])['children']
+        personChildren = personChildren + find_family(find_individual(personChildren[0], defaultdict = individualsDict)['spouse'], defaultdict = familiesDict)['children']
         personChildren = personChildren[1:]
+        if personSpouse['wifeId'] in personDecendants or personSpouse['husbandId'] in personDecendants:
+            return False
 
-    return not personSpouse in personDecendants
+    return True
 
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
@@ -292,6 +291,8 @@ def verify():
             print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
         if not US09_verify_birth_before_parents_death(individual):
             print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
+        if not US17_verify_no_marriage_to_descendants(Individual):
+            print(f"US29-INFO: Individual {id} is married to one of their decendants")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
