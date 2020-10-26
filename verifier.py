@@ -169,6 +169,28 @@ def US16_verify_male_last_names(family, local_inds=None):
             if family_last_name != child_last_name: return False
     return True
 
+def US17_verify_no_marriage_to_descendants(person, individualsDict = individualsDict, familiesDict = familiesDict):
+    #get individuals id
+    individual = person
+    if individual['spouse'] == 'NA':
+        return True
+
+    personSpouse = find_family(individual['spouse'], defaultdict = familiesDict)
+
+    #get children and make sure they are not a spouse
+    personChildren = personSpouse['children']
+    personDecendants = []
+    while personChildren != []:
+        personDecendants.append(personChildren[0])
+        kidFamily = find_individual(personChildren[0], defaultdict = individualsDict)['spouse']
+        if kidFamily != 'NA':
+            personChildren = personChildren + find_family(kidFamily, defaultdict = familiesDict)['children']
+        personChildren = personChildren[1:]
+        if personSpouse['wifeId'] in personDecendants or personSpouse['husbandId'] in personDecendants:
+            return False
+
+    return True
+
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])
@@ -304,6 +326,8 @@ def verify():
             print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
         if not US09_verify_birth_before_parents_death(individual):
             print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
+        if not US17_verify_no_marriage_to_descendants(individual):
+            print(f"US29-INFO: Individual {id} is married to one of their decendants")
         if not US20_verify_aunts_and_uncles(individual):
             print(f"US20-ERR: Individual {id} is married to their niece of nephew")
         if US29_verify_deceased(individual):
