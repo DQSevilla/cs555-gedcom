@@ -490,48 +490,6 @@ exampleMarriage14YearsBeforeBoth = {
     'children': []
 }
 
-<<<<<<< HEAD
-    'divorced': 'NA',
-    'husbandId': '@I3@',
-    'husbandName': 'John /Salmon/', #1997
-    'wifeId': '@I1@',
-    'wifeName': 'Alice /Trout/', #1970
-    'children': ['@I2@']
-}
-
-exampleFamilyTwins = {
-    'id': '@F3@',
-    'married': '2 JAN 2000',
-    'divorced': 'NA',
-    'husbandId': '@I3@',
-    'husbandName': 'John /Salmon/', #1997
-    'wifeId': '@I1@',
-    'wifeName': 'Alice /Trout/', #1970
-    'children': ['@I1@', '@I2@']
-}
-
-exampleTwin1 = {
-    'id': '@I1@',
-    'name': 'Alice /Trout/',
-    'gender': 'F',
-    'birthday': '2 DEC 1970',
-    'age': 49,
-    'alive': True,
-    'death': 'NA',
-    'child': '@F2@',
-    'spouse': '@F1@'
-}
-
-exampleTwin2 = {
-    'id': '@I2@',
-    'name': 'Alice /Trout/',
-    'gender': 'F',
-    'birthday': '1 DEC 1970',
-    'age': 49,
-    'alive': True,
-    'death': 'NA',
-    'child': '@F2@',
-=======
 exampleBornAfterDeathParents = {
     'id': '@I1@',
     'name': 'Alice /Trout/',
@@ -577,10 +535,53 @@ exampleBornBefore9MonthsFather = {
     'alive': True,
     'death': 'NA',
     'child': '@F4@',
->>>>>>> 7e2ef6bfd8e7b755220fe02e4ca6472d9c3200c2
     'spouse': '@F1@'
 }
 
+exampleFamilyOneChild = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@']
+}
+
+
+exampleTwinFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I17@', '@I15@']
+}
+
+exampleSpacedFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I12@', '@I16@', '@I18@']
+}
+
+exampleNonSpacedFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I13@', '@I14@', '@I17@', '@I15@']
+}
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
@@ -667,6 +668,14 @@ exampleInd16 = {
     'name': 'Jeff /Gao/'
 }
 
+exampleInd17 = {
+    'birthday': '29 JAN 2000'
+}
+
+exampleInd18 = {
+    'birthday': '20 MAY 1980'
+}
+
 exampleIndividualsDict = {
     '@I1@': exampleInd1, 
     '@I2@': exampleInd2,
@@ -683,7 +692,9 @@ exampleIndividualsDict = {
     '@I13@': exampleInd13,
     '@I14@': exampleInd14,
     '@I15@': exampleInd15,
-    '@I16@': exampleInd16
+    '@I16@': exampleInd16,
+    '@I17@': exampleInd17,
+    '@I18@': exampleInd18
 }
 
 exampleFamilyChildrenBirthLessThan5 = {

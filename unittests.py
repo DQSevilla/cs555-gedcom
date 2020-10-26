@@ -237,11 +237,16 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
-<<<<<<< HEAD
 class verifySiblingSpacingTestCase(unittest.TestCase):
     def onlyOneChild(self):
-        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild))
-=======
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild, examples.exampleIndividualsDict))
+    def twinFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleTwinFamily, examples.exampleIndividualsDict))
+    def spacedFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleSpacedFamily, examples.exampleIndividualDict))
+    def nonSpacedFamily(self):
+        self.assertFalse(verifier.US13_verify_sibling_spacing(examples.exampleNonSpacedFamily, examples.exampleIndividualsDict))
+
 class US14TestCases(unittest.TestCase):
     def test_less_than_5(self):
         self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthLessThan5, examples.exampleIndividualsDict))
@@ -293,7 +298,6 @@ class US16TestCases(unittest.TestCase):
 
     def test_same_male_last_name_diff_female_last_name(self):
         self.assertTrue(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithSameLastNameButDifferentFemale, examples.exampleIndividualsDict))
->>>>>>> 7e2ef6bfd8e7b755220fe02e4ca6472d9c3200c2
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
