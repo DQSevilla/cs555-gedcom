@@ -14,11 +14,11 @@ def initialize_verifier(individuals, families):
     individualsDict = individuals
     familiesDict = families
 
-def find_individual(individual_id):
-    return individualsDict[individual_id]
+def find_individual(individual_id, defaultdict = None):
+    return defaultdict[individual_id] if defaultdict else individualsDict[individual_id]
 
-def find_family(family_id):
-    return familiesDict[family_id]
+def find_family(family_id, defaultdict = None):
+    return defaultdict[family_id] if defaultdict else familiesDict[family_id]
 
 # User Story 01: Date is before the current date
 def US01_verify_date_before_current_date(date_string):
@@ -176,6 +176,23 @@ def US18_verify_marriage_not_siblings(family):
     # if both have the same parents
     return wife['child'] != husband['child']
 
+#aunts and uncles should not marry their neices and nephews
+def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
+    #Get id of Aunt or Uncle
+    individual = person
+
+    personSiblings = find_family(person['child'], defaultdict = familiesDict)['children']
+    personSiblings.remove(individual['id'])
+    niecesAndNephews = []
+
+    for sibling in personSiblings:
+        niecesAndNephews += find_family(find_individual(sibling,defaultdict = individualsDict)['spouse'], defaultdict = familiesDict)['children']
+
+    if find_family(person['spouse'], defaultdict = familiesDict)['husbandId'] in niecesAndNephews or find_family(person['spouse'], defaultdict = familiesDict)['wifeId'] in niecesAndNephews:
+        return False
+
+    return True
+
 def US21_verify_marriage_gender_roles(family):
     """Checks if a marriage is between a male and a female.
 
@@ -274,6 +291,8 @@ def verify():
             print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
         if not US09_verify_birth_before_parents_death(individual):
             print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
+        if not US20_verify_aunts_and_uncles(individual):
+            print(f"US20-ERR: Individual {id} is married to their niece of nephew")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
