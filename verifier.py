@@ -165,6 +165,24 @@ def US16_verify_male_last_names(family, local_inds=None):
             if family_last_name != child_last_name: return False
     return True
 
+def US17_verify_no_marriage_to_descendants(person, individualsDict = individualsDict, familiesDict = familiesDict):
+    #get individuals id
+    individual = person
+    #get spouse and check if they exist
+    personSpouse = individual['spouse']
+    if not personSpouse:
+        return True
+
+    #get children and make sure they are not a spouse
+    personChildren = find_family(personSpouse['children'])
+    personDecendants = []
+    while personChildren != []:
+        personDecendants.append(personChildren[0])
+        personChildren = personChildren + find_family(individualsTable[personChildren[0]]['spouse'])['children']
+        personChildren = personChildren[1:]
+
+    return not personSpouse in personDecendants
+
 def US18_verify_marriage_not_siblings(family):
     wife = find_individual(family['wifeId'])
     husband = find_individual(family['husbandId'])

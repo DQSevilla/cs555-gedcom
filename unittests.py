@@ -19,7 +19,7 @@ class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDeathFailure(self):
         self.assertFalse(verifier.US05_verify_marriage_before_death(examples.exampleImproperFamilyWithWidow))
 
-class verifyNoMarriageToDescendants(unittest.TestCase):
+class NoMarriageToDescendantsTestCase(unittest.TestCase):
     individualsDict = {
         '@I1@':{
         'id': '@I1@',
@@ -58,13 +58,12 @@ class verifyNoMarriageToDescendants(unittest.TestCase):
         }
     }
 
-
-    def MarriageToDecendants(self):
-        self.assertFalse(project03.verifyNoMarriageToDescendants(individualsDict['@I1@'], individualsDict, familiesDict))
+    def marriage_to_decendants(self):
+        self.assertFalse(verifier.US17_verify_no_marriage_to_descendants(individualsDict['@I1@'], individualsDict, familiesDict))
 
     familiesDict['@F1@']['children'] = ['@I3@', '@I16@'] 
-    def NoMarriageToDecendants(self):
-        self.assertTrue(project03.verifyNoMarriageToDescendants(individualsDict['@I1@'], individualsDict, familiesDict))
+    def no_marriage_to_decendants(self):
+        self.assertTrue(verifier.US17_verify_no_marriage_to_descendants(individualsDict['@I1@'], individualsDict, familiesDict))
 
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
