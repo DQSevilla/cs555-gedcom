@@ -232,28 +232,6 @@ def verifyBirthBeforeDeath(person):
             return False
     return True
 
-<<<<<<< HEAD
-#aunts and uncles should not marry their neices and nephews
-def verifyAuntsAndUncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
-	#Get id of Aunt or Uncle
-    individual = person
-
-    personSiblings = familiesDict[person['child']]['children'].remove(individual)
-    niecesAndNephews = []
-
-    for sibling in personSiblings:
-    	niecesAndNephews += familiesDict[individualsDict[sibling]['spouse']]['children']
-
-    if familiesDict[person['spouse']]['husbandId'] in niecesAndNephews or familiesDict[person['spouse']]['wifeId'] in niecesAndNephews:
-    	return False
-
-    return True
-
-def verifyDivorceBeforeDeath(person):
-    #Get IDs of the individual in question parties in the couple
-    individual = individualsDict[person]
-=======
->>>>>>> master
 
 def verifyDivorceBeforeDeath(family):
     if family['divorced'] == 'NA':
@@ -504,13 +482,8 @@ def main():
             print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
         if not verifyBirthBeforeMarriage(individual):
             print(f"ERR: Individual {id} has a birthday after their marriage date")
-<<<<<<< HEAD
-        if not verifyAuntsAndUncles(individual):
-            print(f"ERR: Individual {id} is married to one of their nieces or nephews")
-=======
         verifyBirthAtRecent30Days(individual)
         verifyDeathAtRecent30Days(individual)
->>>>>>> master
 
 if __name__ == '__main__':
     main()
