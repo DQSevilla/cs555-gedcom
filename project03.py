@@ -218,43 +218,18 @@ def ensureMarriageGenderRoles(family, individuals):
 
     return True
 
-def verifyNoMarriageToDescendants(person, individualsDict = individualsDict, familiesDict = familiesDict):
-    #get individuals id
-    individual = individualsDict[person]
-
-    #get spouse and check if they even exist
-    personSpouse = individual['spouse']
-    if not personSpouse:
-    	return True
-
-    #get children and make sure they are not a spouse
-    personChildren = familiesDict[personSpouse]['children']
-    personDecendants = []
-    while personChildren != []:
-    	personDecendants.append(personChildren[0])
-    	personChildren = personChildren + familiesDict[individualsTable[personChildren[0]]['spouse']]['children']
-    	personChildren = personChildren[1:]
-
-    if personSpouse in personDecendants:
-    	return False
-
-    return True
-
 def verifyBirthBeforeDeath(person):
     #Get IDs of the individual in question parties in the couple
-    individualObj = individualsDict[person['id']]
-    
-    #Check if they are alive, and if they are not, return
-    if individualObj['alive']:
-        return True
+    individual = individualsDict[person['id']]
 
     #Get the birth date
-    personBirthDate = gedcomDateToUnixTimestamp(individualObj['birthday'])
-    personDeathDate = gedcomDateToUnixTimestamp(individualObj['death'])
+    personBirthDate = gedcomDateToUnixTimestamp(individual['birthday'])
 
-    if personDeathDate < personBirthDate:
-        return False
-
+    #Check if they are dead, and if they are, if they died before their birth
+    if not individual['alive']:
+        personDeathDate = gedcomDateToUnixTimestamp(individual['death'])
+        if personDeathDate < personBirthDate:
+            return False
     return True
 
 
@@ -314,9 +289,6 @@ def verifyBirthBeforeMarriage(person):
     marriedDate = date(int(marriedFields[2]), MONTHS[marriedFields[1]], int(marriedFields[0]))
     return birthDay < marriedDate
 
-<<<<<<< HEAD
-def verifyBirthAfterParentsMarriage(family, individualsDict=individualsDict):
-=======
 # US35: List recent births
 def verifyBirthAtRecent30Days(person):
     currentDateTimestamp = time.time();
@@ -345,7 +317,6 @@ def verifyDeathAtRecent30Days(person):
         return False
 
 def verifyBirthAfterParentsMarriage(family):
->>>>>>> master
     """
     children should be born after marriage of parents
     and not more than 9 months after divorce
@@ -511,13 +482,8 @@ def main():
             print(f"ERR: Individual {id} has a death date that is after, or equal to, the current date")
         if not verifyBirthBeforeMarriage(individual):
             print(f"ERR: Individual {id} has a birthday after their marriage date")
-<<<<<<< HEAD
-        if not verifyNoMarriageToDescendants(individuals):
-            print(f"ERR: Individual {id} has is married to one of their decendants")
-=======
         verifyBirthAtRecent30Days(individual)
         verifyDeathAtRecent30Days(individual)
->>>>>>> master
 
 if __name__ == '__main__':
     main()
