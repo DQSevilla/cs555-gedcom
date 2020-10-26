@@ -29,7 +29,7 @@ def datetime_to_gedcom_date(date : datetime) -> str:
     """
     return date.strftime("%d %b %Y").upper()
 
-def date_occurs_before(gedcom_date_first : str, gedcom_date_second : str) -> bool: 
+def date_occurs_before(gedcom_date_first : str, gedcom_date_second : str) -> bool:
     """
     Checks whether the first gedcom date occurs before the second one
 
@@ -66,13 +66,13 @@ def dates_within(gedcom_date_first : str, gedcom_date_second : str, limit : int,
     """
     Checks whether two dates are within limit units of each other
 
-    Args: 
+    Args:
         gedcom_date_first (str): A gedcom string date e.g. "1 JAN 1970"
         gedcom_date_second (str): A gedcom string date e.g. "1 JAN 1970"
         limit (int): an amount of time e.g. 150
         units (str): a measurement of time e.g. days
 
-    Returns: 
+    Returns:
         True if dt1 and dt2 are within limit units where:
             dt1, dt2 are instances of datetime
             limit is a number
@@ -91,7 +91,7 @@ def dates_within_cond(gedcom_date_first : str, gedcom_date_second : str, limit :
     Checks whether two dates are within limit units of each other
     If cond is NA, we return true by default
 
-    Args: 
+    Args:
         gedcom_date_first (str): A gedcom string date e.g. "1 JAN 1970"
         gedcom_date_second (str): A gedcom string date e.g. "1 JAN 1970"
         limit (int): an amount of time e.g. 150
@@ -99,11 +99,11 @@ def dates_within_cond(gedcom_date_first : str, gedcom_date_second : str, limit :
         cond (str): A field in the gedcom file that could possibly be NA
 
 
-    Returns: 
+    Returns:
         True if cond == NA or, dt1 and dt2 are within limit units where:
             dt1, dt2 are instances of datetime
             limit is a number
             units is a string in ('days', 'months', 'years')
     """
-    
+
     return cond == 'NA' or dates_within(gedcom_date_first, gedcom_date_second, limit, units)

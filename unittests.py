@@ -1,5 +1,6 @@
 import unittest
 import time, datetime
+from unittest.mock import patch
 
 import parse
 import verifier
@@ -36,7 +37,7 @@ class AliveTooLongTestCase(unittest.TestCase):
 
     def test_dead_greater_than_150(self):
         self.assertFalse(self.verifier(examples.examplePersonDeadOver150))
-    
+
 class DateBeforeCurrentDateTestCase(unittest.TestCase):
     def testDateBeforeCurrentDate(self):
         self.assertTrue(verifier.US01_verify_date_before_current_date(examples.exampleDateBeforeCurrentDate))
@@ -83,96 +84,89 @@ class MarriageBirthComparisonTestCase(unittest.TestCase):
         self.assertTrue(self.verifier(examples.exampleBirthBeforeMarriageFamily))
 
 class MarriageGendersTestCase(unittest.TestCase):
+    # US21 Correct gender for role
 
-    @classmethod
-    def setUpClass(cls):
-        cls.families = {
-            '@F1@': examples.exampleFamilyGay,
-            '@F2@': examples.exampleFamilyLesbian,
-            '@F3@': examples.exampleFamilyBothGendersIncorrect,
-            '@F4@': examples.exampleFamilyCorrect,
-            '@F5@': examples.exampleFamilyInvalidGenders
-        }
+    @patch('verifier.find_individual')
+    def test_married_both_male(self, mock_individual):
+        mock_individual.side_effect = iter([examples.exampleWifeIncorrectGender,
+                                            examples.exampleHusbandCorrectGender])
+        self.assertFalse(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyGay))
 
-        cls.individuals = {
-            '@I1@': examples.exampleWifeIncorrectGender,
-            '@I2@': examples.exampleHusbandCorrectGender,
-            '@I3@': examples.exampleWifeCorrectGender,
-            '@I4@': examples.exampleHusbandIncorrectGender,
-            '@I5@': examples.exampleIndividualInvalidGender
-        }
+    @patch('verifier.find_individual')
+    def test_married_both_female(self, mock_individual):
+        mock_individual.side_effect = iter([examples.exampleWifeCorrectGender,
+                                            examples.exampleHusbandIncorrectGender])
+        self.assertFalse(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyLesbian))
 
-    @unittest.skip("Old implementation relied on creating new dictionaries on the fly")
-    def test_married_both_male(self):
-        self.assertFalse(verifier.US21_verify_marriage_gender_roles(
-            MarriageGendersTestCase.families['@F1@']))
+    @patch('verifier.find_individual')
+    def test_married_male_female_incorrect(self, mock_individual):
+        mock_individual.side_effect = iter([examples.exampleWifeIncorrectGender,
+                                            examples.exampleHusbandIncorrectGender])
+        self.assertFalse(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyBothGendersIncorrect))
 
-    def test_married_both_female(self):
-        self.assertFalse(verifier.US21_verify_marriage_gender_roles(
-            MarriageGendersTestCase.families['@F2@']))
+    @patch('verifier.find_individual')
+    def test_married_male_female_correct(self, mock_individual):
+        mock_individual.side_effect = iter([examples.exampleWifeCorrectGender,
+                                            examples.exampleHusbandCorrectGender])
+        self.assertTrue(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyCorrect))
 
-    def test_married_male_female_incorrect(self):
-        self.assertFalse(verifier.US21_verify_marriage_gender_roles(
-            MarriageGendersTestCase.families['@F3@']))
-
-    @unittest.skip("Old implementation relied on creating new dictionaries on the fly")
-    def test_married_male_female_correct(self):
-        self.assertTrue(verifier.US21_verify_marriage_gender_roles(
-            MarriageGendersTestCase.families['@F4@']))
-
-    def test_married_invalid_genders(self):
-        self.assertFalse(verifier.US21_verify_marriage_gender_roles(
-            MarriageGendersTestCase.families['@F5@']))
+    @patch('verifier.find_individual')
+    def test_married_invalid_genders(self, mock_individual):
+        mock_individual.side_effect = iter([examples.exampleIndividualInvalidGender,
+                                            examples.exampleIndividualInvalidGender])
+        self.assertFalse(verifier.US21_verify_marriage_gender_roles(examples.exampleFamilyInvalidGenders))
 
 class MarriageBetweenSiblingsTestCase(unittest.TestCase):
-    def setUp(self):
-        self.families = {
-            '@F1@': examples.exampleFamilyTogether,
-            '@F2@': examples.exampleFamilyBetweenSiblings
-        }
+    # US18 siblings should not marry
 
-        self.individuals = {
-            '@I1@': examples.examplePersonAlive,
-            '@I2@': examples.examplePersonAlive2,
-            '@I3@': examples.examplePersonSameParent1,
-            '@I4@': examples.examplePersonSameParent2,
-        }
+    @patch('verifier.find_individual')
+    def test_not_between_siblings(self, mock_individual):
+        mock_individual.side_effect = iter([examples.examplePersonAlive,
+                                            examples.examplePersonAlive2])
+        self.assertTrue(verifier.US18_verify_marriage_not_siblings(examples.exampleFamilyTogether))
 
-    def test_not_between_siblings(self):
-        self.assertTrue(verifier.US18_verify_marriage_not_siblings(
-            self.families['@F1@']))
+    @patch('verifier.find_individual')
+    def test_between_siblings(self, mock_individual):
+        mock_individual.side_effect = iter([examples.examplePersonSameParent1,
+                                            examples.examplePersonSameParent2])
+        self.assertFalse(verifier.US18_verify_marriage_not_siblings(examples.exampleFamilyBetweenSiblings))
 
-    @unittest.skip("Old implementation relied on creating new dictionaries on the fly")
-    def test_between_siblings(self):
-        self.assertFalse(verifier.US18_verify_marriage_not_siblings(
-            self.families['@F2@']))
+    @patch('verifier.find_individual')
+    def test_husband_parent_na(self, mock_individual):
+        husband_no_parent = examples.examplePersonSameParent2
+        husband_no_parent['child'] = 'NA'
+        mock_individual.side_effect = iter([examples.examplePersonSameParent1,
+                                            husband_no_parent])
+        self.assertTrue(verifier.US18_verify_marriage_not_siblings(examples.exampleFamilyTogether))
 
-    def test_husband_parent_na(self):
-        self.individuals['@I3@']['child'] = 'NA'
-        self.assertTrue(verifier.US18_verify_marriage_not_siblings(
-            self.families['@F2@']))
+    @patch('verifier.find_individual')
+    def test_wife_parent_na(self, mock_individual):
+        wife_no_parent = examples.examplePersonSameParent1
+        wife_no_parent['child'] = 'NA'
+        mock_individual.side_effect = iter([wife_no_parent,
+                                            examples.examplePersonSameParent2])
+        self.assertTrue(verifier.US18_verify_marriage_not_siblings(examples.exampleFamilyTogether))
 
-    def test_wife_parent_na(self):
-        self.individuals['@I4@']['child'] = 'NA'
-        self.assertTrue(verifier.US18_verify_marriage_not_siblings(
-            self.families['@F2@']))
-
-    def test_both_parents_na(self):
-        self.individuals['@I3@']['child'] = 'NA'
-        self.individuals['@I4@']['child'] = 'NA'
-        self.assertTrue(verifier.US18_verify_marriage_not_siblings(
-            self.families['@F2@']))
+    @patch('verifier.find_individual')
+    def test_both_parents_na(self, mock_individual):
+        wife_no_parent = examples.examplePersonSameParent1
+        wife_no_parent['child'] = 'NA'
+        husband_no_parent = examples.examplePersonSameParent2
+        husband_no_parent['child'] = 'NA'
+        mock_individual.side_effect = iter([wife_no_parent,
+                                            husband_no_parent])
+        self.assertTrue(verifier.US18_verify_marriage_not_siblings(examples.exampleFamilyTogether))
 
 class US12TestCase(unittest.TestCase):
     def test_old_parent(self):
         self.assertFalse(verifier.US12_verify_parents_not_too_old(
             examples.exampleFamilyWithTooYoungKid,
         ))
-    
+
     def test_not_old_parent(self):
         self.assertTrue(verifier.US12_verify_parents_not_too_old(
             examples.exampleFamilyWithWidow
-        ))       
+        ))
 
 class TestForBigamy(unittest.TestCase):
     def setUp(self):
@@ -186,7 +180,7 @@ class TestForBigamy(unittest.TestCase):
             '@F2@': examples.exampleImproperFamilyDivorced, #Hus ID = 7, Wife ID = 3
             '@F3@': examples.exampleFamilyDivorced #Hus ID = 7, Wife ID = 3
         }
-        
+
     def testPositiveBigamy(self):
         self.assertTrue(verifier.US11_verify_no_bigamy(self.familiesWithoutBigamy['@F1@']))
     def testNegativeBigamy(self):
@@ -214,6 +208,19 @@ class DeadIndividualsTestCase(unittest.TestCase):
         self.assertFalse(verifier.US29_verify_deceased(examples.examplePersonAlive))
         return
 
+class TestBirthAfterParentDeath(unittest.TestCase):
+
+    def test_parents_alive(self):
+        self.assertTrue(verifier.US09_verify_birth_before_parents_death(examples.exampleBornBeforeDeathParents))
+
+    def test_birth_before_9_months_father_death(self):
+        self.assertTrue(verifier.US09_verify_birth_before_parents_death(examples.exampleBornBefore9MonthsFather))
+
+    def test_birth_after_mother_death(self):
+        self.assertFalse(verifier.US09_verify_birth_before_parents_death(examples.exampleBornAfterDeathParents))
+
+    def test_birth_after_9_months_father_death(self):
+        self.assertFalse(verifier.US09_verify_birth_before_parents_death(examples.exampleBornAfter9MonthsFather))
 
 class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     # US30 List living married
@@ -236,6 +243,57 @@ class verifyLessThan15SiblingsTestCase(unittest.TestCase):
         self.assertTrue(verifier.US15_verify_fewer_than_15_siblings(examples.exampleFamilyLesbian))
     def testOver15(self):
         self.assertFalse(verifier.US15_verify_fewer_than_15_siblings(examples.exampleFamilyOver15Siblings))
+class US14TestCases(unittest.TestCase):
+    def test_less_than_5(self):
+        self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthLessThan5, examples.exampleIndividualsDict))
+
+    def test_equal_5(self):
+        self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthEqual5, examples.exampleIndividualsDict))
+
+    def test_greater_than_5(self):
+        self.assertFalse(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthGreaterThan5, examples.exampleIndividualsDict))
+
+
+class UniqueNameAndBirthdateTestCase(unittest.TestCase):
+    """US23: unique name and birthdays combinations"""
+    def test_all_unique(self):
+        self.assertTrue(verifier.US23_unique_name_and_birthdate())
+
+    def test_not_all_unique(self):
+        self.assertFalse(verifier.US23_unique_name_and_birthdate(individualsDict={
+            '@I1@': {
+                'id': '@I1@',
+                'name': 'Alice /Trout/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': '@F2@',
+                'spouse': '@F1@',
+            },
+            '@I2@': {
+                'id': '@I1@',
+                'name': 'Alice /Trout/',
+                'gender': 'F',
+                'birthday': '2 DEC 1970',
+                'age': 49,
+                'alive': True,
+                'death': 'NA',
+                'child': '@F5@',
+                'spouse': '@F1@',
+            },
+        }))
+
+class US16TestCases(unittest.TestCase):
+    def test_same_male_last_name(self):
+        self.assertTrue(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithSameLastName, examples.exampleIndividualsDict))
+
+    def test_different_male_last_name(self):
+        self.assertFalse(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithoutSameLastName, examples.exampleIndividualsDict))
+
+    def test_same_male_last_name_diff_female_last_name(self):
+        self.assertTrue(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithSameLastNameButDifferentFemale, examples.exampleIndividualsDict))
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
