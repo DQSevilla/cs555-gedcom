@@ -237,6 +237,12 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+class verifyLessThan15SiblingsTestCase(unittest.TestCase):
+    #US15 less than 15 siblings
+    def testLess15(self):
+        self.assertTrue(verifier.US15_verify_fewer_than_15_siblings(examples.exampleFamilyLesbian))
+    def testOver15(self):
+        self.assertFalse(verifier.US15_verify_fewer_than_15_siblings(examples.exampleFamilyOver15Siblings))
 class US14TestCases(unittest.TestCase):
     def test_less_than_5(self):
         self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthLessThan5, examples.exampleIndividualsDict))

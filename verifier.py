@@ -155,6 +155,10 @@ def US14_verify_multiple_births(family, local_inds=None):
             return False
     return True
 
+
+def US15_verify_fewer_than_15_siblings(family):
+    return len(family['children']) < 15
+    
 def US16_verify_male_last_names(family, local_inds=None):
     if local_inds == None: local_inds = individualsDict
     family_last_name = family['husbandName'].split('/')[1]
@@ -252,6 +256,8 @@ def verify():
             print(f"US12-ERR: Family {id} had children with parents who are too old")
         if not US14_verify_multiple_births(family):
             print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
+        if not US15_verify_fewer_than_15_siblings(family):
+            print(f"US15-ERR: Family {id} has more than 14 siblings")
         if not US16_verify_male_last_names(family):
             print(f"US16-ERR: Family {id} has males with different last names")
         if not US18_verify_marriage_not_siblings(family):
