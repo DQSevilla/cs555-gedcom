@@ -180,13 +180,20 @@ def US18_verify_marriage_not_siblings(family):
 def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
     #Get id of Aunt or Uncle
     individual = person
+    if person['spouse'] == 'NA':
+        return True
+
+    if person['child'] == 'NA':
+        return True
 
     personSiblings = find_family(person['child'], defaultdict = familiesDict)['children']
     personSiblings.remove(individual['id'])
     niecesAndNephews = []
 
     for sibling in personSiblings:
-        niecesAndNephews += find_family(find_individual(sibling,defaultdict = individualsDict)['spouse'], defaultdict = familiesDict)['children']
+        kidFamily = find_individual(sibling,defaultdict = individualsDict)['spouse']
+        if kidFamily != 'NA':
+            niecesAndNephews += find_family(kidFamily, defaultdict = familiesDict)['children']
 
     if find_family(person['spouse'], defaultdict = familiesDict)['husbandId'] in niecesAndNephews or find_family(person['spouse'], defaultdict = familiesDict)['wifeId'] in niecesAndNephews:
         return False
