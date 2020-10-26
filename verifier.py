@@ -155,6 +155,10 @@ def US14_verify_multiple_births(family, local_inds=None):
             return False
     return True
 
+
+def US15_verify_fewer_than_15_siblings(family):
+    return len(family['children']) < 15
+    
 def US16_verify_male_last_names(family, local_inds=None):
     if local_inds == None: local_inds = individualsDict
     family_last_name = family['husbandName'].split('/')[1]
@@ -197,6 +201,30 @@ def US18_verify_marriage_not_siblings(family):
 
     # if both have the same parents
     return wife['child'] != husband['child']
+
+#aunts and uncles should not marry their neices and nephews
+def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
+    #Get id of Aunt or Uncle
+    individual = person
+    if person['spouse'] == 'NA':
+        return True
+
+    if person['child'] == 'NA':
+        return True
+
+    personSiblings = find_family(person['child'], defaultdict = familiesDict)['children']
+    personSiblings.remove(individual['id'])
+    niecesAndNephews = []
+
+    for sibling in personSiblings:
+        kidFamily = find_individual(sibling,defaultdict = individualsDict)['spouse']
+        if kidFamily != 'NA':
+            niecesAndNephews += find_family(kidFamily, defaultdict = familiesDict)['children']
+
+    if find_family(person['spouse'], defaultdict = familiesDict)['husbandId'] in niecesAndNephews or find_family(person['spouse'], defaultdict = familiesDict)['wifeId'] in niecesAndNephews:
+        return False
+
+    return True
 
 def US21_verify_marriage_gender_roles(family):
     """Checks if a marriage is between a male and a female.
@@ -274,6 +302,8 @@ def verify():
             print(f"US12-ERR: Family {id} had children with parents who are too old")
         if not US14_verify_multiple_births(family):
             print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
+        if not US15_verify_fewer_than_15_siblings(family):
+            print(f"US15-ERR: Family {id} has more than 14 siblings")
         if not US16_verify_male_last_names(family):
             print(f"US16-ERR: Family {id} has males with different last names")
         if not US18_verify_marriage_not_siblings(family):
@@ -298,6 +328,8 @@ def verify():
             print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
         if not US17_verify_no_marriage_to_descendants(individual):
             print(f"US29-INFO: Individual {id} is married to one of their decendants")
+        if not US20_verify_aunts_and_uncles(individual):
+            print(f"US20-ERR: Individual {id} is married to their niece of nephew")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):

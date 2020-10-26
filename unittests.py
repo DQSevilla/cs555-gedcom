@@ -87,6 +87,95 @@ class NoMarriageToDescendantsTestCase(unittest.TestCase):
         self.familiesDict['@F1@']['children'] = ['@I3@'] 
         self.assertTrue(verifier.US17_verify_no_marriage_to_descendants(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
+class AuntsAndUnclesTestCase(unittest.TestCase):
+    def setUp(self):
+        self.individualsDict = {
+            '@I1@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F2@',
+            'spouse': '@F1@'
+            },
+            '@I2@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F1@'
+            },
+            '@I3@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F55@',
+            'spouse': '@F4@'
+            },
+            '@I4@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F3@'
+            }
+        }
+
+        self.familiesDict = {
+            '@F1@':{
+            'id': '@F1@',
+            'married': '14 MAY 1994',
+            'divorced': 'NA',
+            'husbandId': '@I2@',
+            'husbandName': 'George /Salmon/',
+            'wifeId': '@I33@',
+            'wifeName': 'Alice /Trout/',
+            'children': ['@I3@', '@I16@']
+            },
+            '@F2@':{
+            'id': '@F2@',
+            'married': '14 MAY 1994',
+            'divorced': 'NA',
+            'husbandId': '@I7@',
+            'husbandName': 'Guy /Salmon/',
+            'wifeId': '@I90@',
+            'wifeName': 'Alice /Trout/',
+            'children': ['@I1@', '@I4@']
+            },
+            '@F3@':{
+            'id': '@F3@',
+            'married': '14 MAY 1994',
+            'divorced': 'NA',
+            'husbandId': '@I66@',
+            'husbandName': 'George /Salmon/',
+            'wifeId': '@I5@',
+            'wifeName': 'Alice /Trout/',
+            'children': ['@I33@', '@I44@']
+            }
+        }
+
+    def test_aunts_and_uncles(self):
+        self.assertFalse(verifier.US20_verify_aunts_and_uncles(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
+
+    def test_no_aunts_and_uncles(self):
+        self.familiesDict['@F1@']['wifeId'] = '@I1@' 
+        self.assertTrue(verifier.US20_verify_aunts_and_uncles(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
+
 class AliveTooLongTestCase(unittest.TestCase):
     def setUp(self):
         self.verifier = verifier.US07_verify_death_before_150_years_old
@@ -305,6 +394,12 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+class verifyLessThan15SiblingsTestCase(unittest.TestCase):
+    #US15 less than 15 siblings
+    def testLess15(self):
+        self.assertTrue(verifier.US15_verify_fewer_than_15_siblings(examples.exampleFamilyLesbian))
+    def testOver15(self):
+        self.assertFalse(verifier.US15_verify_fewer_than_15_siblings(examples.exampleFamilyOver15Siblings))
 class US14TestCases(unittest.TestCase):
     def test_less_than_5(self):
         self.assertTrue(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthLessThan5, examples.exampleIndividualsDict))
