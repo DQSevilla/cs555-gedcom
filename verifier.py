@@ -273,21 +273,19 @@ def US30_verify_living_married(individual):
 
 # US33: List all orphaned children
 def US33_verify_orphans(individual):
+    if individual['child'] == 'NA':
+        return False
     parentsFamily = find_family(individual['child'])
     father = find_individual(parentsFamily['husbandId'])
     mother = find_individual(parentsFamily['wifeId'])
     childAge =  individual['age']
-    if father['alive'] == False and mother['alive'] == False and childAge < 18:
-        return True
-    return False
+    return father['alive'] == False and mother['alive'] == False and childAge < 18
 
 # US34: List large age differences couples
 def US34_verify_large_age_differences_couples(family):
     husbandAge = find_individual(family['husbandId'])['age']
     wifeAge = find_individual(family['wifeId'])['age']
-    if husbandAge >= wifeAge * 2 or wifeAge >= husbandAge * 2:
-        return False
-    return True
+    return not husbandAge >= wifeAge * 2 or wifeAge >= husbandAge * 2
 
 # US35: List recent births
 def US35_verify_birth_at_recent_30_days(individual):
