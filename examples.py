@@ -446,6 +446,54 @@ exampleBirthdayEqualMarriage = {
     'child': '@F2@',
     'spouse': '@F1@'
 }
+
+exampleOrphan = {
+    'id': '@I71@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '14 MAY 2007',
+    'age': 13,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F72@',
+    'spouse': '@F71@'
+}
+
+exampleFatherOfOrphan = {
+    'id': '@I72@',
+    'name': 'John /Trout/',
+    'gender': 'M',
+    'birthday': '14 MAY 1954',
+    'age': 66,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': '@F72@'
+}
+
+exampleMatherOfOrphan = {
+    'id': '@I73@',
+    'name': 'Amy /Trout/',
+    'gender': 'F',
+    'birthday': '14 MAY 1989',
+    'age': 31,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F74@',
+    'spouse': '@F72@'
+}
+
+exampleOrphanFamily = {
+    'id': '@F72@',
+    'married': '2 JAN 2005',
+    'divorced': 'NA',
+    'husbandId': '@I72@',
+    'husbandName': 'John /Goldfish/',
+    'wifeId': '@I73@',
+    'wifeName': 'Amy /Trout/',
+    'children': ['@I71@']
+}
+
 exampleMarriage14YearsAfterBoth = {
     'id': '@F1@',
     'married': '2 JAN 2020',
@@ -500,6 +548,7 @@ exampleFamilyOver15Siblings = {
     'wifeName': 'Alice /Trout/', #1970
     'children': ['@I1@', '@I2@', '@I3@', '@I4@', '@I5@', '@I6@', '@I7@', '@I8@', '@I9@', '@I10@', '@I11@', '@I12@', '@I13@', '@I14@', '@I15@', '@I16@']
 }
+
 exampleBornAfterDeathParents = {
     'id': '@I1@',
     'name': 'Alice /Trout/',

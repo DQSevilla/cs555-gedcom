@@ -452,6 +452,16 @@ class US16TestCases(unittest.TestCase):
     def test_same_male_last_name_diff_female_last_name(self):
         self.assertTrue(verifier.US16_verify_male_last_names(examples.exampleFamilyMalesWithSameLastNameButDifferentFemale, examples.exampleIndividualsDict))
 
+class US33AndUS34TestCases(unittest.TestCase):
+    #def setUp(self):
+    @unittest.skip("TODO: Fix")
+    def test_orphans(self):
+        self.assertTrue(verifier.US33_verify_orphans(examples.exampleOrphan))
+    
+    @unittest.skip("TODO: Fix")
+    def test_large_age_differences_couples(self):
+        self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
+
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
     individuals, families = parse.parse_gedcom_file_03(gedcom_file)

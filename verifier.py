@@ -271,6 +271,22 @@ def US29_verify_deceased(individual):
 def US30_verify_living_married(individual):
     return individual['alive'] and individual['spouse'] != 'NA'
 
+# US33: List all orphaned children
+def US33_verify_orphans(individual):
+    if individual['child'] == 'NA':
+        return False
+    parentsFamily = find_family(individual['child'])
+    father = find_individual(parentsFamily['husbandId'])
+    mother = find_individual(parentsFamily['wifeId'])
+    childAge =  individual['age']
+    return father['alive'] == False and mother['alive'] == False and childAge < 18
+
+# US34: List large age differences couples
+def US34_verify_large_age_differences_couples(family):
+    husbandAge = find_individual(family['husbandId'])['age']
+    wifeAge = find_individual(family['wifeId'])['age']
+    return not husbandAge >= wifeAge * 2 or wifeAge >= husbandAge * 2
+
 # US35: List recent births
 def US35_verify_birth_at_recent_30_days(individual):
     today = datetime_to_gedcom_date(datetime.now())
@@ -310,6 +326,8 @@ def verify():
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
             print(f"US21-ERR: Family {id} does not pass gender roles test")
+        if not US34_verify_large_age_differences_couples(family):
+            print(f"US34-ERR: Family {id} has couples who are large age differences")
 
     for id, individual in individualsDict.items():
         if not US01_verify_date_before_current_date(individual['birthday']):
@@ -334,6 +352,8 @@ def verify():
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
             print(f"US30-INFO: Individual {id} is living and married")
+        if US33_verify_orphans(individual):
+            print(f"US33-INFO: Individual {id} is an orphan")
         if US35_verify_birth_at_recent_30_days(individual):
             print(f"US35-INFO: Individual {id} was born within 30 days")
         if US36_verify_death_at_recent_30_days(individual):
