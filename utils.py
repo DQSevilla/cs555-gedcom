@@ -4,6 +4,18 @@ Common utilities such as date and time conversions
 from datetime import datetime
 
 
+def print_individual(person_id: str, indiv_dict: dict, keys: list):
+
+    for key in keys:
+        if key == 'name':
+            if indiv_dict[person_id]['gender'] = 'M':
+                print('\033[1;34;40m' + indiv_dict[person_id][name] + '\033[1;34;40m' + ',')
+            else:
+                print('\033[1;35;40m' + indiv_dict[person_id][name] + '\033[1;35;40m' + ',')
+        else:
+            print(indiv_dict[person_id][key] + ',')
+
+
 def gedcom_date_to_datetime(gedcom_date : str) -> datetime:
     """
     Convert a GEDCOM date string to a Python datetime object
