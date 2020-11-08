@@ -298,6 +298,21 @@ def US36_verify_death_at_recent_30_days(individual):
     return (not individual['alive']) and dates_within(individual['death'], today, 30, 'days')
     #print(f"Family member {name} died on {person['death']}")
 
+# US46: Count the percentage of males and females
+def US46_male_female_ratio(individualsDict=individualsDict):
+    male_num = 0
+    female_num = 0
+    for id, individual in individualsDict.items():
+        name = individual["name"]
+        birthday = individual["birthday"]
+
+        if individual['gender'] == 'M':
+            male_num += 1
+        else:
+            female_num += 1
+
+    return male_num/(male_num+female_num), female_num/(male_num+female_num)
+
 def verify():
     for id, family in familiesDict.items():
         if not US01_verify_date_before_current_date(family['married']):
