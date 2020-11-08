@@ -271,6 +271,18 @@ def US29_verify_deceased(individual):
 def US30_verify_living_married(individual):
     return individual['alive'] and individual['spouse'] != 'NA'
 
+# US32 List multiple births
+def US32_get_multiple_births(family):
+    births = {}
+    for cid in family['children']:
+        child = find_individual(cid)
+        births.setdefault(child['birthday'], []).append(cid)
+    groups = []
+    for children in births.values():
+        if len(children) >= 2:
+            groups.append(children)
+    return groups
+
 # US33: List all orphaned children
 def US33_verify_orphans(individual):
     if individual['child'] == 'NA':
@@ -300,6 +312,11 @@ def US36_verify_death_at_recent_30_days(individual):
 
 def verify():
     for id, family in familiesDict.items():
+        multiple_births = US32_get_multiple_births(family)
+        if multiple_births != []:
+            print(f"US32-INFO: Family {id} has multiple_births:")
+            for group in multiple_births:
+                print(f"\t{group}")
         if not US01_verify_date_before_current_date(family['married']):
             print(f"US01-ERR: Family {id} has a marriage date that is after, or equal to, the current date")
         if not US01_verify_date_before_current_date(family['divorced']):
