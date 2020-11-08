@@ -5,6 +5,7 @@ from unittest.mock import patch
 import parse
 import verifier
 import examples
+import utils
 
 class MarriageValidationTestCase(unittest.TestCase):
     def testMarriageBeforeDivorceSuccess(self):
@@ -461,6 +462,43 @@ class US33AndUS34TestCases(unittest.TestCase):
     @unittest.skip("TODO: Fix")
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
+
+class US43ColorCodeGendersTestCases(unittest.TestCase):
+    def setUp(self):
+        self.individualsDict = {
+            '@I1@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F2@',
+            'spouse': '@F1@'
+            },
+            '@I2@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F1@'
+            }
+        }
+
+    def test_boy(self):
+        print()
+        print("Boys names are blue:")
+        utils.print_individual('@I2@', self.individualsDict, ['name'])
+
+    def test_girl(self):
+        print()
+        print("Girls names are pink:")
+        utils.print_individual('@I1@', self.individualsDict, ['name'])
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
