@@ -394,6 +394,30 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+
+class listMultipleBirths(unittest.TestCase):
+    # US32 List multiple births
+
+    def setUp(self):
+        self.family_twins = {'children': ['@I1@', '@I2@']}
+        self.family_normal = {'children': ['@I1@', '@I2@']}
+        self.family_no_children = {'children': []}
+
+    @patch('verifier.find_individual')
+    def testMultipleBirths(self, mock_individual):
+        mock_individual.side_effect = iter([examples.examplePersonSameBirthday1,
+                                            examples.examplePersonSameBirthday2])
+        self.assertEqual(verifier.US32_get_multiple_births(self.family_twins), [['@I1@', '@I2@']])
+
+    @patch('verifier.find_individual')
+    def testSingleBirths(self, mock_individual):
+        mock_individual.side_effect = iter([examples.examplePersonDifferentBirthday1,
+                                            examples.examplePersonDifferentBirthday2])
+        self.assertEqual(verifier.US32_get_multiple_births(self.family_normal), [])
+
+    def testNoBirths(self):
+        self.assertEqual(verifier.US32_get_multiple_births(self.family_no_children), [])
+
 class verifyLessThan15SiblingsTestCase(unittest.TestCase):
     #US15 less than 15 siblings
     def testLess15(self):
