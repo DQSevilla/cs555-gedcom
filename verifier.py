@@ -263,6 +263,26 @@ def US23_unique_name_and_birthdate(individualsDict=individualsDict):
 
     return all_unique
 
+# US24: Unique families by spouse name and marriage date
+def US24_unique_families_by_spouse(familiesDict=familiesDict):
+    """Verify families are unique by spouse names and date"""
+    all_unique = True
+    husbands, wives = {}, {}
+    for id, family in familiesDict.items():
+        husband = family["husbandName"]
+        wife = family["wifeName"]
+        marriage_date = family["married"]
+
+        if (husband, marriage_date) in husbands and (wife, marriage_date) in wives:
+            print(f"US24-ERR: Family {id} has same spouse names and marriage"
+                  f" date as family {husbands[(husband, marriage_date)]}")
+            all_unique = False
+        else:
+            husbands[(husband, marriage_date)] = id
+            wives[(wife, marriage_date)] = id
+
+    return all_unique
+
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
     return not individual['alive']
@@ -303,9 +323,14 @@ def US45_print_large_families(
         individualsDict=individualsDict,
         familiesDict=familiesDict,
 ):
+    at_least_one = False
     for id, family in familiesDict.items():
         if len(family["children"]) > 5:
             print_family(family, None, ["id"])
+            at_least_one = True
+
+    if not at_least_one:
+        print("None")
 
     print()
 
@@ -371,6 +396,7 @@ def verify():
             print(f"US36-INFO: Individual {id} has died within 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
+    US24_unique_families_by_spouse(familiesDict=familiesDict)
 
     print("Large Families:")
-    US45_print_large_families(familiesDict=familiesDict)
+    US45_print_large_families()

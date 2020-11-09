@@ -695,7 +695,7 @@ exampleInd16 = {
 }
 
 exampleIndividualsDict = {
-    '@I1@': exampleInd1, 
+    '@I1@': exampleInd1,
     '@I2@': exampleInd2,
     '@I3@': exampleInd3,
     '@I4@': exampleInd4,
