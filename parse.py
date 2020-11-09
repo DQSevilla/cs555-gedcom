@@ -169,6 +169,8 @@ def parse_gedcom_file_03(file_path : str):
                 if tag == 'NAME': ind['name'] = args
                 elif tag == 'SEX': ind['gender'] = args
                 elif tag == 'DATE':
+                    #Check if the date is invalid
+                    gedcom_date_to_datetime(args)
                     if currentDate == 'BIRT':
                         ind['birthday'] = args
                         # Compute age

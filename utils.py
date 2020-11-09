@@ -48,7 +48,12 @@ def gedcom_date_to_datetime(gedcom_date : str) -> datetime:
     Returns:
         a datetime.datetime representation of the date string
     """
-    return datetime.strptime(gedcom_date, "%d %b %Y")
+    try:
+        return datetime.strptime(gedcom_date, "%d %b %Y")
+    except:
+        print(f"PARSER-ERR: Date {gedcom_date} is invalid. Defaulting to 1/1/70.")
+        return datetime.strptime('1 JAN 1970', "%d %b %Y")
+
 
 
 def datetime_to_gedcom_date(date : datetime) -> str:
