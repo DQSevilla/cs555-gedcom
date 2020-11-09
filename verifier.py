@@ -221,6 +221,28 @@ def US18_verify_marriage_not_siblings(family):
     # if both have the same parents
     return wife['child'] != husband['child']
 
+def US19_verify_no_first_cousin_marriage(individual):
+    spouse = individual['spouse']
+    parents = individual['child']
+    if spouse == 'NA' or parents == 'NA':
+        return True
+    spouse = find_family(spouse)
+    family = find_family(parents)
+
+    #Get their cousins and make sure that the spouse is not in there
+    individual_id = individual['id']
+    children = family['children']
+
+    #This is never true in a valid family but could be somehow in an invalid gedcom file
+    if children == []:
+        return True
+
+    children.remove(individual_id)
+    wife_id = spouse['wifeId']
+    husband_id = spouse['husbandId']
+
+    return not (wife_id in children or husband_id in children)
+
 #aunts and uncles should not marry their neices and nephews
 def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
     #Get id of Aunt or Uncle
@@ -403,6 +425,8 @@ def verify():
             print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
         if not US17_verify_no_marriage_to_descendants(individual):
             print(f"US29-INFO: Individual {id} is married to one of their decendants")
+        if not US19_verify_no_first_cousin_marriage(individual):
+            print(f"US19-ERR: Individual {id} is married to their first cousin")
         if not US20_verify_aunts_and_uncles(individual):
             print(f"US20-ERR: Individual {id} is married to their niece of nephew")
         if US29_verify_deceased(individual):
