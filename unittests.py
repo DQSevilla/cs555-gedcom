@@ -396,6 +396,7 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
 
+
 class listMultipleBirths(unittest.TestCase):
     # US32 List multiple births
 
@@ -418,6 +419,18 @@ class listMultipleBirths(unittest.TestCase):
 
     def testNoBirths(self):
         self.assertEqual(verifier.US32_get_multiple_births(self.family_no_children), [])
+
+
+class verifySiblingSpacingTestCase(unittest.TestCase):
+    def onlyOneChild(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild, examples.exampleIndividualsDict))
+    def twinFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleTwinFamily, examples.exampleIndividualsDict))
+    def spacedFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleSpacedFamily, examples.exampleIndividualDict))
+    def nonSpacedFamily(self):
+        self.assertFalse(verifier.US13_verify_sibling_spacing(examples.exampleNonSpacedFamily, examples.exampleIndividualsDict))
+
 
 class verifyLessThan15SiblingsTestCase(unittest.TestCase):
     #US15 less than 15 siblings
@@ -529,6 +542,16 @@ class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
             ),
             True,
         )
+
+class US25TestCases(unittest.TestCase):
+    def test_unique1(self):
+        self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth, examples.exampleIndividualsDict))
+
+    def test_not_unique(self):
+        self.assertFalse(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyNotUniqueFirstNameAndBirth, examples.exampleIndividualsDict))
+
+    def test_unique2(self):
+        self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth2, examples.exampleIndividualsDict))
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
