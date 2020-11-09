@@ -337,6 +337,19 @@ def US36_verify_death_at_recent_30_days(individual):
     return (not individual['alive']) and dates_within(individual['death'], today, 30, 'days')
     #print(f"Family member {name} died on {person['death']}")
 
+#US39: List upcoming anniversaries
+def US39_verify_upcoming_anniversaries_30_days(individual, familiesDict = familiesDict):
+    if individual['spouse'] == "NA": 
+        return False
+    family = find_family(individual['spouse'])
+    datetime_today = datetime.now()
+    today = datetime_to_gedcom_date(datetime.now())
+    old_married = gedcom_date_to_datetime(family['married'])
+    #set married year
+    new_married = old_married.replace(year = datetime_today.year)
+    
+    return dates_within(datetime_to_gedcom_date(new_married), today, 30, 'days')
+
 # US45: List families with large families
 def US45_print_large_families(
         individualsDict=individualsDict,
@@ -415,6 +428,8 @@ def verify():
             print(f"US35-INFO: Individual {id} was born within 30 days")
         if US36_verify_death_at_recent_30_days(individual):
             print(f"US36-INFO: Individual {id} has died within 30 days")
+        if US39_verify_upcoming_anniversaries_30_days(individual):
+            print(f"US39-INFO: Individual {id}'s anniversary is within 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
     US24_unique_families_by_spouse(familiesDict=familiesDict)

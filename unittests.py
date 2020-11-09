@@ -473,7 +473,11 @@ class US33AndUS34TestCases(unittest.TestCase):
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
-
+class US39UpcomingAnniversary(unittest.TestCase):
+    def upcomingAnniversary(self):
+        self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
+    def noUpcomingAnniversary(self):
+        self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):
         self.familiesDictDup = {
