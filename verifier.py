@@ -318,6 +318,43 @@ def US36_verify_death_at_recent_30_days(individual):
     return (not individual['alive']) and dates_within(individual['death'], today, 30, 'days')
     #print(f"Family member {name} died on {person['death']}")
 
+# US37: List recent survivors
+def US37_print_all_surviors(
+        individualsDict=individualsDict,
+        familiesDict=familiesDict,
+):
+    at_least_one = False
+    for id, individual in individualsDict.items():
+        if US36_verify_death_at_recent_30_days(individual) == True:
+            at_least_one = True
+            the_dead = individual
+            the_family_of_the_dead = find_family(the_dead['spouse'])
+            if the_dead['gender'] == 'F':
+                the_spouse_of_the_dead = find_individual(the_family_of_the_dead['husbandId'])
+            else:
+                the_spouse_of_the_dead = find_individual(the_family_of_the_dead['wifeId'])
+            if the_spouse_of_the_dead['alive'] == True:
+                print(f'Living spouse of individual {id}: ')
+                print_individual(the_spouse_of_the_dead, ['id'])
+            for childId in the_family_of_the_dead['children']:
+                child = find_individual(childId)
+                if child['alive'] == True:
+                    print(f'Living descendants of individual{id}: ')
+                    print_individual(child, ['id'])
+    if not at_least_one:
+        print("There isn't dead in recent 30 days")
+    print()
+
+# US38: List upcoming birthdays
+def US38_verify_birthday_in_the_next_30_days(individual):
+    if individual['alive'] == True:
+        today_datetime = datetime.now()
+        current_year = today_datetime.year
+        this_year_birthday_datetime = gedcom_date_to_datetime(individual['birthday']).replace(year=current_year)
+        today = datetime_to_gedcom_date(today_datetime)
+        this_year_birthday = datetime_to_gedcom_date(this_year_birthday_datetime)
+        return dates_within(this_year_birthday, today, 30, 'days')
+
 # US45: List families with large families
 def US45_print_large_families(
         individualsDict=individualsDict,
@@ -394,9 +431,13 @@ def verify():
             print(f"US35-INFO: Individual {id} was born within 30 days")
         if US36_verify_death_at_recent_30_days(individual):
             print(f"US36-INFO: Individual {id} has died within 30 days")
+        if US38_verify_birthday_in_the_next_30_days(individual):
+            print(f"US38-INFO: Individual {id} has birthday in the next 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
     US24_unique_families_by_spouse(familiesDict=familiesDict)
 
     print("Large Families:")
     US45_print_large_families()
+
+    US37_print_all_surviors()

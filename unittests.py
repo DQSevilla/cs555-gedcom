@@ -455,14 +455,25 @@ class US16TestCases(unittest.TestCase):
 
 class US33AndUS34TestCases(unittest.TestCase):
     #def setUp(self):
-    @unittest.skip("TODO: Fix")
-    def test_orphans(self):
+    @patch('verifier.find_individual')
+    @patch('verifier.find_family')
+    def test_orphans(self, mock_family, mock_individual):
+        mock_family.side_effect = iter([examples.exampleOrphanFamily])
+        mock_individual.side_effect = iter([examples.exampleFatherOfOrphan,
+                                            examples.exampleMatherOfOrphan])
         self.assertTrue(verifier.US33_verify_orphans(examples.exampleOrphan))
 
-    @unittest.skip("TODO: Fix")
-    def test_large_age_differences_couples(self):
+    @patch('verifier.find_individual')
+    def test_large_age_differences_couples(self, mock_individual):
+        mock_individual.side_effect = iter([examples.exampleFatherOfOrphan,
+                                            examples.exampleMatherOfOrphan])
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
+class US38PersonBirthdayInNext30DaysTestCases(unittest.TestCase):
+    def test_birthday(self):
+        self.assertTrue(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonBirthdayInNext30Days))
+    def test_not_recent_birthday(self):
+        self.assertFalse(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonRecentDeath))
 
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):

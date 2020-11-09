@@ -135,12 +135,71 @@ examplePersonRecentBirth = {
 
 examplePersonRecentDeath = {
     'id': '@I5@',
+    'name': 'Peter /Koi/',
+    'gender': 'M',
+    'birthday': '14 FEB 1950',
+    'age': 71,
+    'alive': False,
+    'death': datetime_to_gedcom_date(datetime.now()),
+    'child': 'NA',
+    'spouse': '@F75@'
+}
+
+exampleDeadspouse = {
+    'id': '@I6@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '14 FEB 1950',
+    'age': 71,
+    'alive': True,
+    'death': 'NA',
+    'child': 'NA',
+    'spouse': '@F75@'
+}
+
+exampleDeadchild1 = {
+    'id': '@I71@',
+    'name': 'Mary /Trout/',
+    'gender': 'F',
+    'birthday': '14 MAY 1995',
+    'age': 25,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F75@',
+    'spouse': 'NA'
+}
+
+exampleDeadchild2 = {
+    'id': '@I72@',
+    'name': 'Sam /Trout/',
+    'gender': 'M',
+    'birthday': '14 MAY 1997',
+    'age': 23,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F75@',
+    'spouse': 'NA'
+}
+
+exampleDeadFamily = {
+    'id': '@F75@',
+    'married': '14 MAY 1994',
+    'divorced': 'NA',
+    'husbandId': '@I5@',
+    'husbandName': 'Peter /Koi/',
+    'wifeId': '@I6@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I71@', '@I72@']
+}
+
+examplePersonBirthdayInNext30Days = {
+    'id': '@I5@',
     'name': 'Gina /Koi/',
     'gender': 'F',
-    'birthday': '14 FEB 1940',
-    'age': 70,
-    'alive': False,
-    'death': '1 OCT 2020',
+    'birthday': '21 NOV 1988',
+    'age': 0,
+    'alive': True,
+    'death': 'NA',
     'child': 'NA',
     'spouse': '@F2@'
 }
