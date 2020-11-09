@@ -493,12 +493,12 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
     def test_boy(self):
         print()
         print("Boys names are blue:")
-        utils.print_individual('@I2@', self.individualsDict, ['name'])
+        utils.print_individual(self.individualsDict['@I2@'], ['name'])
 
     def test_girl(self):
         print()
         print("Girls names are pink:")
-        utils.print_individual('@I1@', self.individualsDict, ['name'])
+        utils.print_individual(self.individualsDict['@I1@'], ['name'])
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
