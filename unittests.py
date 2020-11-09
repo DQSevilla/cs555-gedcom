@@ -500,6 +500,16 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
         print("Girls names are pink:")
         print(self.individualsDict["@I1@"], ["name"])
 
+class US25TestCases(unittest.TestCase):
+    def test_unique1(self):
+        self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth, examples.exampleIndividualsDict))
+
+    def test_not_unique(self):
+        self.assertFalse(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyNotUniqueFirstNameAndBirth, examples.exampleIndividualsDict))
+
+    def test_unique2(self):
+        self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth2, examples.exampleIndividualsDict))
+
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
     individuals, families = parse.parse_gedcom_file_03(gedcom_file)
