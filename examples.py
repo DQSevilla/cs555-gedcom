@@ -746,6 +746,24 @@ exampleInd18 = {
     'birthday': '20 MAY 1980'
 }
 
+exampleInd19 = {
+    'birthday': '2 MARCH 1970',
+    'gender': 'M',
+    'name': 'Simp /Gao/'
+}
+
+exampleInd20 = {
+    'birthday': '2 MARCH 1970',
+    'gender': 'M',
+    'name': 'Simp /Gao/'
+}
+
+exampleInd21 = {
+    'birthday': '4 MARCH 1970',
+    'gender': 'M',
+    'name': 'Simp /Gao/'
+}
+
 exampleIndividualsDict = {
     '@I1@': exampleInd1,
     '@I2@': exampleInd2,
@@ -764,7 +782,10 @@ exampleIndividualsDict = {
     '@I15@': exampleInd15,
     '@I16@': exampleInd16,
     '@I17@': exampleInd17,
-    '@I18@': exampleInd18
+    '@I18@': exampleInd18,
+    '@I19@': exampleInd19,
+    '@I20@': exampleInd20,
+    '@I21@': exampleInd21
 }
 
 exampleFamilyChildrenBirthLessThan5 = {
@@ -885,3 +906,35 @@ exampleAnniversaryDict = {
     '@F2@' : exampleFamilyNoAnni
 }
 
+exampleFamilyWithUniqueFirstNameAndBirth = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@']
+}
+
+exampleFamilyNotUniqueFirstNameAndBirth = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I20@']
+}
+
+exampleFamilyWithUniqueFirstNameAndBirth2 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I21@']
+}

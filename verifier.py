@@ -301,6 +301,20 @@ def US24_unique_families_by_spouse(familiesDict=familiesDict):
             wives[(wife, marriage_date)] = id
 
     return all_unique
+    
+def US25_unique_first_name_and_birthdate(family, local_inds=None):
+    if local_inds == None:
+        local_inds = individualsDict
+    names_births = defaultdict(int)
+    for child_id in family['children']:
+        child = local_inds[child_id]
+        first_name = child['name'].split()[0]
+        birthday = child['birthday']
+        names_births[(first_name, birthday)] += 1
+    
+    for _,count in names_births.items():
+        if count > 1: return False
+    return True
 
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
@@ -396,6 +410,8 @@ def verify():
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
             print(f"US21-ERR: Family {id} does not pass gender roles test")
+        if not US25_unique_first_name_and_birthdate(family):
+            print(f"US25-ERR: Family {id} does not pass unique first name and birthdate test")
         if not US34_verify_large_age_differences_couples(family):
             print(f"US34-ERR: Family {id} has couples who are large age differences")
 
