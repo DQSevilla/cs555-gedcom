@@ -832,3 +832,14 @@ exampleFamilyMalesWithSameLastNameButDifferentFemale = {
     'wifeName': 'Alice /Trout/', #1970
     'children': ['@I1@', '@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
 }
+
+exampleSiblingOrdering = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I1@', '@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
