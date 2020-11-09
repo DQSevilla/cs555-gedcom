@@ -24,6 +24,20 @@ def print_individual(individual : Dict[str, str], keys: List[str]):
 
     print(ind_str)
 
+
+def print_family(family : Dict[str, str], ind_keys : List[str], fam_keys : List[str]):
+    """
+    Prints a family
+    """
+    fam_str = ""
+    for index, key in enumerate(fam_keys):
+        if index != 0:
+            fam_str += ", "
+
+        fam_str += f"{key} = {family[key]}"
+
+    print(fam_str)
+
 def gedcom_date_to_datetime(gedcom_date : str) -> datetime:
     """
     Convert a GEDCOM date string to a Python datetime object

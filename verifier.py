@@ -158,7 +158,7 @@ def US14_verify_multiple_births(family, local_inds=None):
 
 def US15_verify_fewer_than_15_siblings(family):
     return len(family['children']) < 15
-    
+
 def US16_verify_male_last_names(family, local_inds=None):
     if local_inds == None: local_inds = individualsDict
     family_last_name = family['husbandName'].split('/')[1]
@@ -298,6 +298,17 @@ def US36_verify_death_at_recent_30_days(individual):
     return (not individual['alive']) and dates_within(individual['death'], today, 30, 'days')
     #print(f"Family member {name} died on {person['death']}")
 
+# US45: List families with large families
+def US45_print_large_families(
+        individualsDict=individualsDict,
+        familiesDict=familiesDict,
+):
+    for id, family in familiesDict.items():
+        if len(family["children"]) > 5:
+            print_family(family, None, ["id"])
+
+    print()
+
 def verify():
     for id, family in familiesDict.items():
         if not US01_verify_date_before_current_date(family['married']):
@@ -360,3 +371,6 @@ def verify():
             print(f"US36-INFO: Individual {id} has died within 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
+
+    print("Large Families:")
+    US45_print_large_families(familiesDict=familiesDict)
