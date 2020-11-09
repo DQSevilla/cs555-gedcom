@@ -140,6 +140,25 @@ def US12_verify_parents_not_too_old(family):
     return valid
     #print(f"ERR: Child {child} has too old of a parent")
 
+def US13_verify_sibling_spacing(family, local_inds = None):
+    #if there is only child in the family or none, return True
+    if len(family['children']) < 2:
+        return True
+    if local_inds == None:
+        local_inds = individualsDict
+    for child1 in family['children']:
+        for child2 in family['children']:
+            #if we're checking the same child, skip
+            if child1 == child2:
+                continue
+            #first check if they are twins
+            if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 1, 'days'):
+                continue
+            #then if the two children have birthday's within 8 months of each other, return False
+            if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 8, 'months'):
+                return False
+    return True
+    
 def US14_verify_multiple_births(family, local_inds=None):
     # Check if there are more than 5 siblings birthed on the same day for each family
     birthdays = defaultdict(int)
@@ -158,7 +177,7 @@ def US14_verify_multiple_births(family, local_inds=None):
 
 def US15_verify_fewer_than_15_siblings(family):
     return len(family['children']) < 15
-    
+
 def US16_verify_male_last_names(family, local_inds=None):
     if local_inds == None: local_inds = individualsDict
     family_last_name = family['husbandName'].split('/')[1]
@@ -263,6 +282,26 @@ def US23_unique_name_and_birthdate(individualsDict=individualsDict):
 
     return all_unique
 
+# US24: Unique families by spouse name and marriage date
+def US24_unique_families_by_spouse(familiesDict=familiesDict):
+    """Verify families are unique by spouse names and date"""
+    all_unique = True
+    husbands, wives = {}, {}
+    for id, family in familiesDict.items():
+        husband = family["husbandName"]
+        wife = family["wifeName"]
+        marriage_date = family["married"]
+
+        if (husband, marriage_date) in husbands and (wife, marriage_date) in wives:
+            print(f"US24-ERR: Family {id} has same spouse names and marriage"
+                  f" date as family {husbands[(husband, marriage_date)]}")
+            all_unique = False
+        else:
+            husbands[(husband, marriage_date)] = id
+            wives[(wife, marriage_date)] = id
+
+    return all_unique
+
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
     return not individual['alive']
@@ -298,6 +337,22 @@ def US36_verify_death_at_recent_30_days(individual):
     return (not individual['alive']) and dates_within(individual['death'], today, 30, 'days')
     #print(f"Family member {name} died on {person['death']}")
 
+# US45: List families with large families
+def US45_print_large_families(
+        individualsDict=individualsDict,
+        familiesDict=familiesDict,
+):
+    at_least_one = False
+    for id, family in familiesDict.items():
+        if len(family["children"]) > 5:
+            print_family(family, None, ["id"])
+            at_least_one = True
+
+    if not at_least_one:
+        print("None")
+
+    print()
+    
 # US46: Count the percentage of males and females
 def US46_male_female_ratio(individualsDict=individualsDict):
     male_num = 0
@@ -316,7 +371,7 @@ def US46_male_female_ratio(individualsDict=individualsDict):
     Pfemale = 1 - Pmale
 
     return 100 * Pmale, 100 * Pfemale
-
+    
 def verify():
     for id, family in familiesDict.items():
         if not US01_verify_date_before_current_date(family['married']):
@@ -335,6 +390,8 @@ def verify():
             print(f"US11-ERR: Family {id} fails bigamy check")
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
+        if not US13_verify_sibling_spacing(family):
+            print(f"US13-ERR: Family {id} has children whose birthdays are not properly spaced")
         if not US14_verify_multiple_births(family):
             print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
         if not US15_verify_fewer_than_15_siblings(family):
@@ -379,4 +436,9 @@ def verify():
             print(f"US36-INFO: Individual {id} has died within 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
+
     US46_male_female_ratio()
+    US24_unique_families_by_spouse(familiesDict=familiesDict)
+
+    print("Large Families:")
+    US45_print_large_families()

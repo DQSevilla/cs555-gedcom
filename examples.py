@@ -14,6 +14,17 @@ examplePersonAlive = {
     'spouse': '@F1@'
 }
 
+examplePersonAliveOnePointFive = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'M',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
 
 examplePersonAlive2 = {
     'id': '@I2@',
@@ -597,6 +608,50 @@ exampleBornBefore9MonthsFather = {
     'spouse': '@F1@'
 }
 
+exampleFamilyOneChild = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@']
+}
+
+
+exampleTwinFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I17@', '@I15@']
+}
+
+exampleSpacedFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I12@', '@I16@', '@I18@']
+}
+
+exampleNonSpacedFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I13@', '@I14@', '@I17@', '@I15@']
+}
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
@@ -683,8 +738,16 @@ exampleInd16 = {
     'name': 'Jeff /Gao/'
 }
 
+exampleInd17 = {
+    'birthday': '29 JAN 2000'
+}
+
+exampleInd18 = {
+    'birthday': '20 MAY 1980'
+}
+
 exampleIndividualsDict = {
-    '@I1@': exampleInd1, 
+    '@I1@': exampleInd1,
     '@I2@': exampleInd2,
     '@I3@': exampleInd3,
     '@I4@': exampleInd4,
@@ -699,7 +762,9 @@ exampleIndividualsDict = {
     '@I13@': exampleInd13,
     '@I14@': exampleInd14,
     '@I15@': exampleInd15,
-    '@I16@': exampleInd16
+    '@I16@': exampleInd16,
+    '@I17@': exampleInd17,
+    '@I18@': exampleInd18
 }
 
 exampleFamilyChildrenBirthLessThan5 = {
