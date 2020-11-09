@@ -140,6 +140,25 @@ def US12_verify_parents_not_too_old(family):
     return valid
     #print(f"ERR: Child {child} has too old of a parent")
 
+def US13_verify_sibling_spacing(family, local_inds = None):
+    #if there is only child in the family or none, return True
+    if len(family['children']) < 2:
+        return True
+    if local_inds == None:
+        local_inds = individualsDict
+    for child1 in family['children']:
+        for child2 in family['children']:
+            #if we're checking the same child, skip
+            if child1 == child2:
+                continue
+            #first check if they are twins
+            if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 1, 'days'):
+                continue
+            #then if the two children have birthday's within 8 months of each other, return False
+            if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 8, 'months'):
+                return False
+    return True
+    
 def US14_verify_multiple_births(family, local_inds=None):
     # Check if there are more than 5 siblings birthed on the same day for each family
     birthdays = defaultdict(int)
@@ -352,6 +371,8 @@ def verify():
             print(f"US11-ERR: Family {id} fails bigamy check")
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
+        if not US13_verify_sibling_spacing(family):
+            print(f"US13-ERR: Family {id} has children whose birthdays are not properly spaced")
         if not US14_verify_multiple_births(family):
             print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
         if not US15_verify_fewer_than_15_siblings(family):

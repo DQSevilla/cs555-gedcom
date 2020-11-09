@@ -395,6 +395,16 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+class verifySiblingSpacingTestCase(unittest.TestCase):
+    def onlyOneChild(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild, examples.exampleIndividualsDict))
+    def twinFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleTwinFamily, examples.exampleIndividualsDict))
+    def spacedFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleSpacedFamily, examples.exampleIndividualDict))
+    def nonSpacedFamily(self):
+        self.assertFalse(verifier.US13_verify_sibling_spacing(examples.exampleNonSpacedFamily, examples.exampleIndividualsDict))
+
 class verifyLessThan15SiblingsTestCase(unittest.TestCase):
     #US15 less than 15 siblings
     def testLess15(self):
