@@ -14,6 +14,17 @@ examplePersonAlive = {
     'spouse': '@F1@'
 }
 
+examplePersonAliveOnePointFive = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'M',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F1@'
+}
 
 examplePersonAlive2 = {
     'id': '@I2@',
