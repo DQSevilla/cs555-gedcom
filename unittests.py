@@ -85,7 +85,7 @@ class NoMarriageToDescendantsTestCase(unittest.TestCase):
         self.assertFalse(verifier.US17_verify_no_marriage_to_descendants(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
     def test_no_marriage_to_decendants(self):
-        self.familiesDict['@F1@']['children'] = ['@I3@'] 
+        self.familiesDict['@F1@']['children'] = ['@I3@']
         self.assertTrue(verifier.US17_verify_no_marriage_to_descendants(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
 class AuntsAndUnclesTestCase(unittest.TestCase):
@@ -174,7 +174,7 @@ class AuntsAndUnclesTestCase(unittest.TestCase):
         self.assertFalse(verifier.US20_verify_aunts_and_uncles(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
     def test_no_aunts_and_uncles(self):
-        self.familiesDict['@F1@']['wifeId'] = '@I1@' 
+        self.familiesDict['@F1@']['wifeId'] = '@I1@'
         self.assertTrue(verifier.US20_verify_aunts_and_uncles(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
 class AliveTooLongTestCase(unittest.TestCase):
@@ -395,6 +395,16 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+class verifySiblingSpacingTestCase(unittest.TestCase):
+    def onlyOneChild(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild, examples.exampleIndividualsDict))
+    def twinFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleTwinFamily, examples.exampleIndividualsDict))
+    def spacedFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleSpacedFamily, examples.exampleIndividualDict))
+    def nonSpacedFamily(self):
+        self.assertFalse(verifier.US13_verify_sibling_spacing(examples.exampleNonSpacedFamily, examples.exampleIndividualsDict))
+
 class verifyLessThan15SiblingsTestCase(unittest.TestCase):
     #US15 less than 15 siblings
     def testLess15(self):
@@ -458,11 +468,54 @@ class US33AndUS34TestCases(unittest.TestCase):
     @unittest.skip("TODO: Fix")
     def test_orphans(self):
         self.assertTrue(verifier.US33_verify_orphans(examples.exampleOrphan))
-    
+
     @unittest.skip("TODO: Fix")
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
+
+class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
+    def setUp(self):
+        self.familiesDictDup = {
+            '@F2@': {
+                'id': '@F2@',
+                'married': '2 JAN 1970',
+                'divorced': 'NA',
+                'husbandId': '@I4@',
+                'husbandName': 'Irwin /Trout/',
+                'wifeId': '@I5@',
+                'wifeName': 'Gina /Koi/',
+                'children': ['@I15@']
+            },
+            '@F3@': {
+                'id': '@F3@',
+                'married': '2 JAN 1970',
+                'divorced': 'NA',
+                'husbandId': '@I5@',
+                'husbandName': 'Irwin /Trout/',
+                'wifeId': '@I6@',
+                'wifeName': 'Gina /Koi/',
+                'children': []
+            }
+        }
+#        self.familiesDictNormal = {}
+
+    def test_not_unique(self):
+        self.assertEqual(
+            verifier.US24_unique_families_by_spouse(
+                familiesDict=self.familiesDictDup,
+            ),
+            False,
+        )
+
+    def test_unique(self):
+        self.assertEqual(
+            verifier.US24_unique_families_by_spouse(
+#                familiesDict=self.familiesDictNormal,
+            ),
+            True,
+        )
+        
 class US43ColorCodeGendersTestCases(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -499,6 +552,7 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
         print()
         print("Girls names are pink:")
         utils.print_individual(self.individualsDict['@I1@'], ['name'])
+        
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
