@@ -515,6 +515,44 @@ class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
             ),
             True,
         )
+        
+class US43ColorCodeGendersTestCases(unittest.TestCase):
+    def setUp(self):
+        self.individualsDict = {
+            '@I1@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F2@',
+            'spouse': '@F1@'
+            },
+            '@I2@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F1@'
+            }
+        }
+
+    def test_boy(self):
+        print()
+        print("Boys names are blue:")
+        utils.print_individual(self.individualsDict['@I2@'], ['name'])
+
+    def test_girl(self):
+        print()
+        print("Girls names are pink:")
+        utils.print_individual(self.individualsDict['@I1@'], ['name'])
+        
 
 class US25TestCases(unittest.TestCase):
     def test_unique1(self):
