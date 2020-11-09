@@ -85,7 +85,7 @@ class NoMarriageToDescendantsTestCase(unittest.TestCase):
         self.assertFalse(verifier.US17_verify_no_marriage_to_descendants(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
     def test_no_marriage_to_decendants(self):
-        self.familiesDict['@F1@']['children'] = ['@I3@'] 
+        self.familiesDict['@F1@']['children'] = ['@I3@']
         self.assertTrue(verifier.US17_verify_no_marriage_to_descendants(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
 class AuntsAndUnclesTestCase(unittest.TestCase):
@@ -174,7 +174,7 @@ class AuntsAndUnclesTestCase(unittest.TestCase):
         self.assertFalse(verifier.US20_verify_aunts_and_uncles(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
     def test_no_aunts_and_uncles(self):
-        self.familiesDict['@F1@']['wifeId'] = '@I1@' 
+        self.familiesDict['@F1@']['wifeId'] = '@I1@'
         self.assertTrue(verifier.US20_verify_aunts_and_uncles(self.individualsDict['@I1@'], self.individualsDict, self.familiesDict))
 
 class AliveTooLongTestCase(unittest.TestCase):
@@ -458,7 +458,7 @@ class US33AndUS34TestCases(unittest.TestCase):
     @unittest.skip("TODO: Fix")
     def test_orphans(self):
         self.assertTrue(verifier.US33_verify_orphans(examples.exampleOrphan))
-    
+
     @unittest.skip("TODO: Fix")
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
@@ -493,12 +493,12 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
     def test_boy(self):
         print()
         print("Boys names are blue:")
-        utils.print_individual('@I2@', self.individualsDict, ['name'])
+        print(self.individualsDict["@I2@"], ["name"])
 
     def test_girl(self):
         print()
         print("Girls names are pink:")
-        utils.print_individual('@I1@', self.individualsDict, ['name'])
+        print(self.individualsDict["@I1@"], ["name"])
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'

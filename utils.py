@@ -2,19 +2,27 @@
 Common utilities such as date and time conversions
 """
 from datetime import datetime
+from typing import Dict, List
 
 
-def print_individual(person_id: str, indiv_dict: dict, keys: list):
+def print_individual(individual : Dict[str, str], keys: List[str]):
+    """
+    Prints an individual (color-coded by name) and any additional
+    information along with it
+    """
+    ind_str = ""
+    for index, key in enumerate(keys):
+        if index != 0:
+            ind_str += ", "
 
-    for key in keys:
         if key == 'name':
-            if indiv_dict[person_id]['gender'] == 'M':
-                print('\033[1;34;40m' + indiv_dict[person_id][key] + '\033[0;37;40m' + ',')
-            else:
-                print('\033[1;35;40m' + indiv_dict[person_id][key] + '\033[0;37;40m' + ',')
+            # blue for boy, red for girl
+            ind_str += "\033[1;34;40m" if individual["gender"] == "M" else "\033[1;35;40m"
+            ind_str += f"name = {individual['name']}\033[0;37;40m" # reset color
         else:
-            print(indiv_dict[person_id][key] + ',')
+            ind_str += f"{key} = {individual[key]}"
 
+    print(ind_str)
 
 def gedcom_date_to_datetime(gedcom_date : str) -> datetime:
     """
@@ -74,7 +82,12 @@ def date_occurs_before_cond(gedcom_date_first : str, gedcom_date_second : str, c
 
     return cond == 'NA' or date_occurs_before(gedcom_date_first, gedcom_date_second)
 
-def dates_within(gedcom_date_first : str, gedcom_date_second : str, limit : int, units : str) -> bool:
+def dates_within(
+    gedcom_date_first : str,
+    gedcom_date_second : str,
+    limit : int,
+    units : str
+) -> bool:
     """
     Checks whether two dates are within limit units of each other
 
@@ -98,7 +111,13 @@ def dates_within(gedcom_date_first : str, gedcom_date_second : str, limit : int,
 
     return (abs((dt1 - dt2).days) / conversion[units]) <= limit
 
-def dates_within_cond(gedcom_date_first : str, gedcom_date_second : str, limit : int, units : str, cond : str) -> bool:
+def dates_within_cond(
+    gedcom_date_first : str,
+    gedcom_date_second : str,
+    limit : int,
+    units : str,
+    cond : str
+) -> bool:
     """
     Checks whether two dates are within limit units of each other
     If cond is NA, we return true by default
