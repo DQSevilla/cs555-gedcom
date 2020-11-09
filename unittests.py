@@ -478,6 +478,8 @@ class US39UpcomingAnniversary(unittest.TestCase):
         self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
     def noUpcomingAnniversary(self):
         self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
+
+
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):
         self.familiesDictDup = {
