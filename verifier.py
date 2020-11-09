@@ -304,7 +304,7 @@ def US45_print_large_families(
         familiesDict=familiesDict,
 ):
     for id, family in familiesDict.items():
-        if len(family["children"]) > 1:
+        if len(family["children"]) > 5:
             print_family(family, None, ["id"])
 
     print()
