@@ -462,7 +462,7 @@ class US33AndUS34TestCases(unittest.TestCase):
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
-class US33AndUS34TestCases(unittest.TestCase):
+class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
             '@I1@':{
@@ -510,12 +510,12 @@ class US33AndUS34TestCases(unittest.TestCase):
             'spouse': '@F3@'
             }
         }
-    def test_orphans(self):
-        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (0.5, 0.5))
+    def test_equal_ratio(self):
+        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (50.0, 50.0))
     
-    def test_large_age_differences_couples(self):
+    def test_different_ratio(self):
         self.individualsDict['@I4@']['gender'] = 'F'
-        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (0.25, 0.75))
+        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
