@@ -346,6 +346,18 @@ def US29_verify_deceased(individual):
 def US30_verify_living_married(individual):
     return individual['alive'] and individual['spouse'] != 'NA'
 
+# US32 List multiple births
+def US32_get_multiple_births(family):
+    births = {}
+    for cid in family['children']:
+        child = find_individual(cid)
+        births.setdefault(child['birthday'], []).append(cid)
+    groups = []
+    for children in births.values():
+        if len(children) >= 2:
+            groups.append(children)
+    return groups
+
 # US33: List all orphaned children
 def US33_verify_orphans(individual):
     if individual['child'] == 'NA':
@@ -410,6 +422,11 @@ def US46_male_female_ratio(individualsDict=individualsDict):
     
 def verify():
     for id, family in familiesDict.items():
+        multiple_births = US32_get_multiple_births(family)
+        if multiple_births != []:
+            print(f"US32-INFO: Family {id} has multiple_births:")
+            for group in multiple_births:
+                print(f"\t{group}")
         if not US01_verify_date_before_current_date(family['married']):
             print(f"US01-ERR: Family {id} has a marriage date that is after, or equal to, the current date")
         if not US01_verify_date_before_current_date(family['divorced']):
@@ -444,6 +461,8 @@ def verify():
             print(f"US34-ERR: Family {id} has couples who are large age differences")
 
     for id, individual in individualsDict.items():
+        # US27 Include person's current age when listing individuals
+        print_individual(individual, ['id', 'name', 'age'])
         if not US01_verify_date_before_current_date(individual['birthday']):
             print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date")
         if not US01_verify_date_before_current_date(individual['death']):

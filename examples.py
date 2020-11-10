@@ -411,6 +411,54 @@ examplePersonSameParent2 = {
     'spouse': '@F1@'
 }
 
+examplePersonSameBirthday1 = {
+    'id': '@I1@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'    
+}
+
+examplePersonSameBirthday2 = {
+    'id': '@I2@',
+    'name': 'Adam /Jeffries/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F2@'    
+}
+
+examplePersonDifferentBirthday1 = {
+    'id': '@I1@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'    
+}
+
+examplePersonDifferentBirthday2 = {
+    'id': '@I2@',
+    'name': 'Adam /Jeffries/',
+    'gender': 'F',
+    'birthday': '20 MAR 1971',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F2@'    
+}
+
 exampleFamilyWithTooYoungKid = {
     'id': '@F2@',
     'married': '2 JAN 1970',
