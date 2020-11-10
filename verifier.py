@@ -254,7 +254,12 @@ def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, fami
         return True
 
     personSiblings = find_family(person['child'], defaultdict = familiesDict)['children']
-    personSiblings.remove(individual['id'])
+
+    if personSiblings == []:
+        return True
+
+    if individual['id'] in personSiblings:
+        personSiblings.remove(individual['id'])
     niecesAndNephews = []
 
     for sibling in personSiblings:
