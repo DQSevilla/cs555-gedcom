@@ -618,6 +618,14 @@ class US25TestCases(unittest.TestCase):
     def test_unique2(self):
         self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth2, examples.exampleIndividualsDict))
 
+class TestMarriageCousin(unittest.TestCase):
+    def test_allowed_marriage(self):
+        self.assertTrue(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualAliveMarried))
+
+    def test_cousin_marriage(self):
+        self.assertFalse(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualCousinMarriage))
+
+
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
     individuals, families = parse.parse_gedcom_file_03(gedcom_file)
