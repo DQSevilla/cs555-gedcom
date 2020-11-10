@@ -211,7 +211,7 @@ examplePersonNotRecentDeath = {
     'birthday': '14 FEB 1940',
     'age': 70,
     'alive': False,
-    'death': '1 SEP 2020',
+    'death': '1 SEP 1941',
     'child': 'NA',
     'spouse': '@F2@'
 }
@@ -470,6 +470,54 @@ examplePersonSameParent2 = {
     'spouse': '@F1@'
 }
 
+examplePersonSameBirthday1 = {
+    'id': '@I1@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'    
+}
+
+examplePersonSameBirthday2 = {
+    'id': '@I2@',
+    'name': 'Adam /Jeffries/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F2@'    
+}
+
+examplePersonDifferentBirthday1 = {
+    'id': '@I1@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'    
+}
+
+examplePersonDifferentBirthday2 = {
+    'id': '@I2@',
+    'name': 'Adam /Jeffries/',
+    'gender': 'F',
+    'birthday': '20 MAR 1971',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F2@'    
+}
+
 exampleFamilyWithTooYoungKid = {
     'id': '@F2@',
     'married': '2 JAN 1970',
@@ -667,6 +715,63 @@ exampleBornBefore9MonthsFather = {
     'spouse': '@F1@'
 }
 
+exampleFamilyOneChild = {
+    'id': '@F3@',
+    'married': '2 JAN 2000',
+    'divorced': 'NA',
+    'husbandId': '@I3@',
+    'husbandName': 'John /Salmon/', #1997
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@']
+}
+
+
+exampleTwinFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I17@', '@I15@']
+}
+
+exampleSpacedFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I12@', '@I16@', '@I18@']
+}
+
+exampleNonSpacedFamily = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I13@', '@I14@', '@I17@', '@I15@']
+}
+
+exampleIndividualCousinMarriage = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2000',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F4@'
+}
+
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
@@ -753,6 +858,32 @@ exampleInd16 = {
     'name': 'Jeff /Gao/'
 }
 
+exampleInd17 = {
+    'birthday': '29 JAN 2000'
+}
+
+exampleInd18 = {
+    'birthday': '20 MAY 1980'
+}
+
+exampleInd19 = {
+    'birthday': '2 MARCH 1970',
+    'gender': 'M',
+    'name': 'Simp /Gao/'
+}
+
+exampleInd20 = {
+    'birthday': '2 MARCH 1970',
+    'gender': 'M',
+    'name': 'Simp /Gao/'
+}
+
+exampleInd21 = {
+    'birthday': '4 MARCH 1970',
+    'gender': 'M',
+    'name': 'Simp /Gao/'
+}
+
 exampleIndividualsDict = {
     '@I1@': exampleInd1,
     '@I2@': exampleInd2,
@@ -769,7 +900,12 @@ exampleIndividualsDict = {
     '@I13@': exampleInd13,
     '@I14@': exampleInd14,
     '@I15@': exampleInd15,
-    '@I16@': exampleInd16
+    '@I16@': exampleInd16,
+    '@I17@': exampleInd17,
+    '@I18@': exampleInd18,
+    '@I19@': exampleInd19,
+    '@I20@': exampleInd20,
+    '@I21@': exampleInd21
 }
 
 exampleFamilyChildrenBirthLessThan5 = {
@@ -836,4 +972,96 @@ exampleFamilyMalesWithSameLastNameButDifferentFemale = {
     'wifeId': '@I1@',
     'wifeName': 'Alice /Trout/', #1970
     'children': ['@I1@', '@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
+}
+
+exampleFamilyWithUniqueFirstNameAndBirth = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@']
+}
+
+exampleSiblingOrdering = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I20@']
+}
+
+exampleFamilyNotUniqueFirstNameAndBirth = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I20@']
+}
+
+exampleFamilyWithUniqueFirstNameAndBirth2 = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I21@']
+}
+
+exampleLivingAndSingle = {
+    'id': '@I30@',
+    'name': 'Nam /So-dan/',
+    'gender': 'M',
+    'birthday': '7 MAY 1995 ',
+    'age': 24,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': 'NA'
+}
+
+exampleLivingAndMarried = {
+    'id': '@I31@',
+    'name': 'Han /Jipyeong/',
+    'gender': 'M',
+    'birthday': '7 MAY 1990',
+    'age': 29,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': '@F72@'
+}
+
+exampleDeadAndSingle = {
+    'id': '@I31@',
+    'name': 'John /Jipyeong/',
+    'gender': 'M',
+    'birthday': '7 MAY 1990',
+    'age': 29,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': 'NA'
+}
+
+exampleDeadAndMarried = {
+    'id': '@I3@',
+    'name': 'George /Salmon/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F5@',
+    'spouse': '@F5'
 }

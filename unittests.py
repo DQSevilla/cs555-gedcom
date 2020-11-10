@@ -395,6 +395,43 @@ class listLivingMarriedIndividualsTestCase(unittest.TestCase):
     def testDeadUnmarried(self):
         self.assertFalse(verifier.US30_verify_living_married(examples.exampleIndividualDeadUnmarried))
 
+
+
+class listMultipleBirths(unittest.TestCase):
+    # US32 List multiple births
+
+    def setUp(self):
+        self.family_twins = {'children': ['@I1@', '@I2@']}
+        self.family_normal = {'children': ['@I1@', '@I2@']}
+        self.family_no_children = {'children': []}
+
+    @patch('verifier.find_individual')
+    def testMultipleBirths(self, mock_individual):
+        mock_individual.side_effect = iter([examples.examplePersonSameBirthday1,
+                                            examples.examplePersonSameBirthday2])
+        self.assertEqual(verifier.US32_get_multiple_births(self.family_twins), [['@I1@', '@I2@']])
+
+    @patch('verifier.find_individual')
+    def testSingleBirths(self, mock_individual):
+        mock_individual.side_effect = iter([examples.examplePersonDifferentBirthday1,
+                                            examples.examplePersonDifferentBirthday2])
+        self.assertEqual(verifier.US32_get_multiple_births(self.family_normal), [])
+
+    def testNoBirths(self):
+        self.assertEqual(verifier.US32_get_multiple_births(self.family_no_children), [])
+
+
+class verifySiblingSpacingTestCase(unittest.TestCase):
+    def onlyOneChild(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleFamilyOneChild, examples.exampleIndividualsDict))
+    def twinFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleTwinFamily, examples.exampleIndividualsDict))
+    def spacedFamily(self):
+        self.assertTrue(verifier.US13_verify_sibling_spacing(examples.exampleSpacedFamily, examples.exampleIndividualDict))
+    def nonSpacedFamily(self):
+        self.assertFalse(verifier.US13_verify_sibling_spacing(examples.exampleNonSpacedFamily, examples.exampleIndividualsDict))
+
+
 class verifyLessThan15SiblingsTestCase(unittest.TestCase):
     #US15 less than 15 siblings
     def testLess15(self):
@@ -411,6 +448,14 @@ class US14TestCases(unittest.TestCase):
     def test_greater_than_5(self):
         self.assertFalse(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthGreaterThan5, examples.exampleIndividualsDict))
 
+class US28TestCases(unittest.TestCase):
+    def runSiblingOrdering(self):
+        raised = False
+        try:
+            verifier.US28_order_siblings(examples.exampleSiblingOrdering)
+        except:
+            raised = True
+        self.assertFalse(raised, "Exception raised unexpectedly")
 
 class UniqueNameAndBirthdateTestCase(unittest.TestCase):
     """US23: unique name and birthdays combinations"""
@@ -469,11 +514,68 @@ class US33AndUS34TestCases(unittest.TestCase):
                                             examples.exampleMatherOfOrphan])
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
+
 class US38PersonBirthdayInNext30DaysTestCases(unittest.TestCase):
     def test_birthday(self):
         self.assertTrue(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonBirthdayInNext30Days))
     def test_not_recent_birthday(self):
         self.assertFalse(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonRecentDeath))
+        
+class US46MaleFemaleRatioTestCase(unittest.TestCase):
+    def setUp(self):
+        self.individualsDict = {
+            '@I1@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F2@',
+            'spouse': '@F1@'
+            },
+            '@I2@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F1@'
+            },
+            '@I3@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F55@',
+            'spouse': '@F4@'
+            },
+            '@I4@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F3@'
+            }
+        }
+    def test_equal_ratio(self):
+        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (50.0, 50.0))
+    
+    def test_different_ratio(self):
+        self.individualsDict['@I4@']['gender'] = 'F'
+        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
+
 
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):
@@ -516,6 +618,75 @@ class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
             ),
             True,
         )
+        
+class US43ColorCodeGendersTestCases(unittest.TestCase):
+    def setUp(self):
+        self.individualsDict = {
+            '@I1@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F2@',
+            'spouse': '@F1@'
+            },
+            '@I2@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F1@'
+            }
+        }
+
+    def test_boy(self):
+        print()
+        print("Boys names are blue:")
+        utils.print_individual(self.individualsDict['@I2@'], ['name'])
+
+    def test_girl(self):
+        print()
+        print("Girls names are pink:")
+        utils.print_individual(self.individualsDict['@I1@'], ['name'])
+        
+
+class US25TestCases(unittest.TestCase):
+    def test_unique1(self):
+        self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth, examples.exampleIndividualsDict))
+
+    def test_not_unique(self):
+        self.assertFalse(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyNotUniqueFirstNameAndBirth, examples.exampleIndividualsDict))
+
+    def test_unique2(self):
+        self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth2, examples.exampleIndividualsDict))
+
+class US31TestCases(unittest.TestCase):
+    # US31: Living and single
+    def test_living_single(self):
+        self.assertTrue(verifier.US31_verify_living_single(examples.exampleLivingAndSingle))
+
+    def test_living_married(self):
+        self.assertFalse(verifier.US31_verify_living_single(examples.exampleLivingAndMarried))
+
+    def test_dead_single(self):
+        self.assertFalse(verifier.US31_verify_living_single(examples.exampleDeadAndSingle))
+
+    def test_dead_married(self):
+        self.assertFalse(verifier.US31_verify_living_single(examples.exampleDeadAndMarried))
+class TestMarriageCousin(unittest.TestCase):
+    def test_allowed_marriage(self):
+        self.assertTrue(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualAliveMarried))
+
+    def test_cousin_marriage(self):
+        self.assertFalse(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualCousinMarriage))
+
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'

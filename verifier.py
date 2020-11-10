@@ -140,6 +140,25 @@ def US12_verify_parents_not_too_old(family):
     return valid
     #print(f"ERR: Child {child} has too old of a parent")
 
+def US13_verify_sibling_spacing(family, local_inds = None):
+    #if there is only child in the family or none, return True
+    if len(family['children']) < 2:
+        return True
+    if local_inds == None:
+        local_inds = individualsDict
+    for child1 in family['children']:
+        for child2 in family['children']:
+            #if we're checking the same child, skip
+            if child1 == child2:
+                continue
+            #first check if they are twins
+            if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 1, 'days'):
+                continue
+            #then if the two children have birthday's within 8 months of each other, return False
+            if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 8, 'months'):
+                return False
+    return True
+    
 def US14_verify_multiple_births(family, local_inds=None):
     # Check if there are more than 5 siblings birthed on the same day for each family
     birthdays = defaultdict(int)
@@ -202,6 +221,28 @@ def US18_verify_marriage_not_siblings(family):
     # if both have the same parents
     return wife['child'] != husband['child']
 
+def US19_verify_no_first_cousin_marriage(individual):
+    spouse = individual['spouse']
+    parents = individual['child']
+    if spouse == 'NA' or parents == 'NA':
+        return True
+    spouse = find_family(spouse)
+    family = find_family(parents)
+
+    #Get their cousins and make sure that the spouse is not in there
+    individual_id = individual['id']
+    children = family['children']
+
+    #This is never true in a valid family but could be somehow in an invalid gedcom file
+    if children == []:
+        return True
+
+    children.remove(individual_id)
+    wife_id = spouse['wifeId']
+    husband_id = spouse['husbandId']
+
+    return not (wife_id in children or husband_id in children)
+
 #aunts and uncles should not marry their neices and nephews
 def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, familiesDict = familiesDict):
     #Get id of Aunt or Uncle
@@ -213,7 +254,12 @@ def US20_verify_aunts_and_uncles(person, individualsDict = individualsDict, fami
         return True
 
     personSiblings = find_family(person['child'], defaultdict = familiesDict)['children']
-    personSiblings.remove(individual['id'])
+
+    if personSiblings == []:
+        return True
+
+    if individual['id'] in personSiblings:
+        personSiblings.remove(individual['id'])
     niecesAndNephews = []
 
     for sibling in personSiblings:
@@ -282,6 +328,31 @@ def US24_unique_families_by_spouse(familiesDict=familiesDict):
             wives[(wife, marriage_date)] = id
 
     return all_unique
+    
+def US25_unique_first_name_and_birthdate(family, local_inds=None):
+    if local_inds == None:
+        local_inds = individualsDict
+    names_births = defaultdict(int)
+    for child_id in family['children']:
+        child = local_inds[child_id]
+        first_name = child['name'].split()[0]
+        birthday = child['birthday']
+        names_births[(first_name, birthday)] += 1
+    
+    for _,count in names_births.items():
+        if count > 1: return False
+    return True
+
+# US28: Order Siblings by Age
+def US28_order_siblings(family):
+    #default case if 0 or 1 siblings
+    sorted_siblings = family['children']
+
+    if len(family['children']) > 1:
+        siblings = family['children']
+        sorted_siblings = sorted(siblings, key = lambda sibling: gedcom_date_to_datetime(find_individual(sibling)['birthday']))
+        
+    return sorted_siblings
 
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
@@ -290,6 +361,28 @@ def US29_verify_deceased(individual):
 # US30: List living married individuals
 def US30_verify_living_married(individual):
     return individual['alive'] and individual['spouse'] != 'NA'
+
+# US31: List living single
+def US31_verify_living_single(individual):
+    # if local_fams == None: 
+    #     local_fams = familiesDict
+    # # # Search through families and check if the individual matches any 'husbandId'
+    # # def never_married(ind_id, fams):
+    # #     for _, fam in fams.items():
+    # #         if fam['husbandId'] == ind_id or fam['wifeId'] == ind_id: return False
+    # #     return True
+    return individual['alive'] and individual['spouse'] == 'NA'
+# US32 List multiple births
+def US32_get_multiple_births(family):
+    births = {}
+    for cid in family['children']:
+        child = find_individual(cid)
+        births.setdefault(child['birthday'], []).append(cid)
+    groups = []
+    for children in births.values():
+        if len(children) >= 2:
+            groups.append(children)
+    return groups
 
 # US33: List all orphaned children
 def US33_verify_orphans(individual):
@@ -370,9 +463,33 @@ def US45_print_large_families(
         print("None")
 
     print()
+    
+# US46: Count the percentage of males and females
+def US46_male_female_ratio(individualsDict=individualsDict):
+    male_num = 0
+    female_num = 0
+    for id, individual in individualsDict.items():
 
+        if individual['gender'] == 'M':
+            male_num += 1
+        else:
+            female_num += 1
+
+    if male_num == 0 and female_num == 0:
+        return 0,0
+
+    Pmale = male_num / (male_num + female_num)
+    Pfemale = 1 - Pmale
+
+    return 100 * Pmale, 100 * Pfemale
+    
 def verify():
     for id, family in familiesDict.items():
+        multiple_births = US32_get_multiple_births(family)
+        if multiple_births != []:
+            print(f"US32-INFO: Family {id} has multiple_births:")
+            for group in multiple_births:
+                print(f"\t{group}")
         if not US01_verify_date_before_current_date(family['married']):
             print(f"US01-ERR: Family {id} has a marriage date that is after, or equal to, the current date")
         if not US01_verify_date_before_current_date(family['divorced']):
@@ -389,6 +506,8 @@ def verify():
             print(f"US11-ERR: Family {id} fails bigamy check")
         if not US12_verify_parents_not_too_old(family):
             print(f"US12-ERR: Family {id} had children with parents who are too old")
+        if not US13_verify_sibling_spacing(family):
+            print(f"US13-ERR: Family {id} has children whose birthdays are not properly spaced")
         if not US14_verify_multiple_births(family):
             print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
         if not US15_verify_fewer_than_15_siblings(family):
@@ -399,10 +518,16 @@ def verify():
             print(f"US18-ERR: Family {id} fails marriage between siblings check")
         if not US21_verify_marriage_gender_roles(family):
             print(f"US21-ERR: Family {id} does not pass gender roles test")
+        if not US25_unique_first_name_and_birthdate(family):
+            print(f"US25-ERR: Family {id} does not pass unique first name and birthdate test")
         if not US34_verify_large_age_differences_couples(family):
             print(f"US34-ERR: Family {id} has couples who are large age differences")
+        print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
+        #print(US28_order_siblings(family))
 
     for id, individual in individualsDict.items():
+        # US27 Include person's current age when listing individuals
+        print_individual(individual, ['id', 'name', 'age'])
         if not US01_verify_date_before_current_date(individual['birthday']):
             print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date")
         if not US01_verify_date_before_current_date(individual['death']):
@@ -419,12 +544,16 @@ def verify():
             print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
         if not US17_verify_no_marriage_to_descendants(individual):
             print(f"US29-INFO: Individual {id} is married to one of their decendants")
+        if not US19_verify_no_first_cousin_marriage(individual):
+            print(f"US19-ERR: Individual {id} is married to their first cousin")
         if not US20_verify_aunts_and_uncles(individual):
             print(f"US20-ERR: Individual {id} is married to their niece of nephew")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
             print(f"US30-INFO: Individual {id} is living and married")
+        if US31_verify_living_single(individual):
+            print(f"US31-INFO: Individual {id} is living and has never been married")
         if US33_verify_orphans(individual):
             print(f"US33-INFO: Individual {id} is an orphan")
         if US35_verify_birth_at_recent_30_days(individual):
@@ -435,6 +564,8 @@ def verify():
             print(f"US38-INFO: Individual {id} has birthday in the next 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
+
+    US46_male_female_ratio()
     US24_unique_families_by_spouse(familiesDict=familiesDict)
 
     print("Large Families:")
