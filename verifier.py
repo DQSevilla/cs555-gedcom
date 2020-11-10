@@ -366,7 +366,26 @@ def US45_print_large_families(
         print("None")
 
     print()
+    
+# US46: Count the percentage of males and females
+def US46_male_female_ratio(individualsDict=individualsDict):
+    male_num = 0
+    female_num = 0
+    for id, individual in individualsDict.items():
 
+        if individual['gender'] == 'M':
+            male_num += 1
+        else:
+            female_num += 1
+
+    if male_num == 0 and female_num == 0:
+        return 0,0
+
+    Pmale = male_num / (male_num + female_num)
+    Pfemale = 1 - Pmale
+
+    return 100 * Pmale, 100 * Pfemale
+    
 def verify():
     for id, family in familiesDict.items():
         if not US01_verify_date_before_current_date(family['married']):
@@ -433,6 +452,8 @@ def verify():
             print(f"US36-INFO: Individual {id} has died within 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
+
+    US46_male_female_ratio()
     US24_unique_families_by_spouse(familiesDict=familiesDict)
 
     print("Large Families:")

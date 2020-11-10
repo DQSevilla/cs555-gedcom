@@ -473,6 +473,60 @@ class US33AndUS34TestCases(unittest.TestCase):
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
+class US46MaleFemaleRatioTestCase(unittest.TestCase):
+    def setUp(self):
+        self.individualsDict = {
+            '@I1@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F2@',
+            'spouse': '@F1@'
+            },
+            '@I2@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F1@'
+            },
+            '@I3@':{
+            'id': '@I1@',
+            'name': 'Alice /Trout/',
+            'gender': 'F',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F55@',
+            'spouse': '@F4@'
+            },
+            '@I4@':{
+            'id': '@I2@',
+            'name': 'Dan /Trout/',
+            'gender': 'M',
+            'birthday': '2 DEC 1970',
+            'age': 49,
+            'alive': True,
+            'death': 'NA',
+            'child': '@F3@',
+            'spouse': '@F3@'
+            }
+        }
+    def test_equal_ratio(self):
+        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (50.0, 50.0))
+    
+    def test_different_ratio(self):
+        self.individualsDict['@I4@']['gender'] = 'F'
+        self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
 
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):
