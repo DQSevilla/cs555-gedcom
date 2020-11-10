@@ -140,7 +140,7 @@ examplePersonRecentDeath = {
     'birthday': '14 FEB 1940',
     'age': 70,
     'alive': False,
-    'death': '1 OCT 2020',
+    'death': datetime_to_gedcom_date(datetime.now()),
     'child': 'NA',
     'spouse': '@F2@'
 }
@@ -152,7 +152,7 @@ examplePersonNotRecentDeath = {
     'birthday': '14 FEB 1940',
     'age': 70,
     'alive': False,
-    'death': '1 SEP 2020',
+    'death': '1 SEP 1941',
     'child': 'NA',
     'spouse': '@F2@'
 }
@@ -411,6 +411,54 @@ examplePersonSameParent2 = {
     'spouse': '@F1@'
 }
 
+examplePersonSameBirthday1 = {
+    'id': '@I1@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'    
+}
+
+examplePersonSameBirthday2 = {
+    'id': '@I2@',
+    'name': 'Adam /Jeffries/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F2@'    
+}
+
+examplePersonDifferentBirthday1 = {
+    'id': '@I1@',
+    'name': 'Serafina /Russo/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F1@'    
+}
+
+examplePersonDifferentBirthday2 = {
+    'id': '@I2@',
+    'name': 'Adam /Jeffries/',
+    'gender': 'F',
+    'birthday': '20 MAR 1971',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F3@',
+    'spouse': '@F2@'    
+}
+
 exampleFamilyWithTooYoungKid = {
     'id': '@F2@',
     'married': '2 JAN 1970',
@@ -652,6 +700,19 @@ exampleNonSpacedFamily = {
     'wifeName': 'Alice /Trout/',
     'children': ['@I13@', '@I14@', '@I17@', '@I15@']
 }
+
+exampleIndividualCousinMarriage = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2000',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F2@',
+    'spouse': '@F4@'
+}
+
 exampleDateBeforeCurrentDate = '2 DEC 1970'
 
 exampleDateAfterCurrentDate = datetime_to_gedcom_date(datetime.today() + timedelta(days=1))
@@ -863,6 +924,17 @@ exampleFamilyWithUniqueFirstNameAndBirth = {
     'wifeId': '@I1@',
     'wifeName': 'Alice /Trout/', #1970
     'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@']
+}
+
+exampleSiblingOrdering = {
+    'id': '@F4@',
+    'married': '2 JAN 1975',
+    'divorced': 'NA',
+    'husbandId': '@I16@',
+    'husbandName': 'Jeff /Gao/', #1971
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/', #1970
+    'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I20@']
 }
 
 exampleFamilyNotUniqueFirstNameAndBirth = {
