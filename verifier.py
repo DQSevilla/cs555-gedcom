@@ -447,6 +447,19 @@ def US38_verify_birthday_in_the_next_30_days(individual):
         today = datetime_to_gedcom_date(today_datetime)
         this_year_birthday = datetime_to_gedcom_date(this_year_birthday_datetime)
         return dates_within(this_year_birthday, today, 30, 'days')
+ 
+#US39: List upcoming anniversaries
+def US39_verify_upcoming_anniversaries_30_days(individual, familiesDict = familiesDict):
+    if individual['spouse'] == "NA": 
+        return False
+    family = find_family(individual['spouse'])
+    datetime_today = datetime.now()
+    today = datetime_to_gedcom_date(datetime.now())
+    old_married = gedcom_date_to_datetime(family['married'])
+    #set married year
+    new_married = old_married.replace(year = datetime_today.year)
+    
+    return dates_within(datetime_to_gedcom_date(new_married), today, 30, 'days')
 
 # US45: List families with large families
 def US45_print_large_families(
@@ -562,6 +575,8 @@ def verify():
             print(f"US36-INFO: Individual {id} has died within 30 days")
         if US38_verify_birthday_in_the_next_30_days(individual):
             print(f"US38-INFO: Individual {id} has birthday in the next 30 days")
+        if US39_verify_upcoming_anniversaries_30_days(individual):
+            print(f"US39-INFO: Individual {id}'s anniversary is within 30 days")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
 

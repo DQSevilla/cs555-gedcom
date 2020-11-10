@@ -974,6 +974,58 @@ exampleFamilyMalesWithSameLastNameButDifferentFemale = {
     'children': ['@I1@', '@I2@', '@I4@', '@I5@', '@I6@', '@I7@']
 }
 
+exampleIncomingAnniversary = {
+    'id': '@I1@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2000',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F4@',
+    'spouse': '@F1@'
+}
+
+exampleFarAnniversary = {
+    'id': '@I2@',
+    'name': 'Alice /Trout/',
+    'gender': 'F',
+    'birthday': '21 NOV 2000',
+    'age': 49,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F4@',
+    'spouse': '@F2@'
+}
+
+
+exampleFamilyAnni = {
+    'id': '@F1@',
+    'married': '29 Nov 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I5@', '@I8@', '@I12@', '@I15@']
+}
+
+exampleFamilyNoAnni = {
+    'id': '@F2@',
+    'married': '21 Jun 1975',
+    'divorced': 'NA',
+    'husbandId': '@I7@',
+    'husbandName': 'Noah /Goldfish/',
+    'wifeId': '@I1@',
+    'wifeName': 'Alice /Trout/',
+    'children': ['@I1@', '@I5@', '@I8@', '@I12@', '@I15@']
+}
+
+exampleAnniversaryDict = {
+    '@F1@' : exampleFamilyAnni,
+    '@F2@' : exampleFamilyNoAnni
+}
+
 exampleFamilyWithUniqueFirstNameAndBirth = {
     'id': '@F4@',
     'married': '2 JAN 1975',

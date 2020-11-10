@@ -513,14 +513,19 @@ class US33AndUS34TestCases(unittest.TestCase):
         mock_individual.side_effect = iter([examples.exampleFatherOfOrphan,
                                             examples.exampleMatherOfOrphan])
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
-
-
+ 
 class US38PersonBirthdayInNext30DaysTestCases(unittest.TestCase):
     def test_birthday(self):
         self.assertTrue(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonBirthdayInNext30Days))
     def test_not_recent_birthday(self):
         self.assertFalse(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonRecentDeath))
-        
+ 
+class US39UpcomingAnniversary(unittest.TestCase):
+    def upcomingAnniversary(self):
+        self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
+    def noUpcomingAnniversary(self):
+        self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
+ 
 class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -575,7 +580,6 @@ class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def test_different_ratio(self):
         self.individualsDict['@I4@']['gender'] = 'F'
         self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
-
 
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):
