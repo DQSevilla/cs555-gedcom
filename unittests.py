@@ -448,6 +448,14 @@ class US14TestCases(unittest.TestCase):
     def test_greater_than_5(self):
         self.assertFalse(verifier.US14_verify_multiple_births(examples.exampleFamilyChildrenBirthGreaterThan5, examples.exampleIndividualsDict))
 
+class US28TestCases(unittest.TestCase):
+    def runSiblingOrdering(self):
+        raised = False
+        try:
+            verifier.US28_order_siblings(examples.exampleSiblingOrdering)
+        except:
+            raised = True
+        self.assertFalse(raised, "Exception raised unexpectedly")
 
 class UniqueNameAndBirthdateTestCase(unittest.TestCase):
     """US23: unique name and birthdays combinations"""

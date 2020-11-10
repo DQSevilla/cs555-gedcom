@@ -343,6 +343,17 @@ def US25_unique_first_name_and_birthdate(family, local_inds=None):
         if count > 1: return False
     return True
 
+# US28: Order Siblings by Age
+def US28_order_siblings(family):
+    #default case if 0 or 1 siblings
+    sorted_siblings = family['children']
+
+    if len(family['children']) > 1:
+        siblings = family['children']
+        sorted_siblings = sorted(siblings, key = lambda sibling: gedcom_date_to_datetime(find_individual(sibling)['birthday']))
+        
+    return sorted_siblings
+
 # US29: List deceased individuals
 def US29_verify_deceased(individual):
     return not individual['alive']
@@ -464,6 +475,8 @@ def verify():
             print(f"US25-ERR: Family {id} does not pass unique first name and birthdate test")
         if not US34_verify_large_age_differences_couples(family):
             print(f"US34-ERR: Family {id} has couples who are large age differences")
+        print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
+        #print(US28_order_siblings(family))
 
     for id, individual in individualsDict.items():
         # US27 Include person's current age when listing individuals
