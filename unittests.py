@@ -508,6 +508,14 @@ class US33AndUS34TestCases(unittest.TestCase):
     def test_large_age_differences_couples(self):
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
 
+<<<<<<< HEAD
+class US39UpcomingAnniversary(unittest.TestCase):
+    def upcomingAnniversary(self):
+        self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
+    def noUpcomingAnniversary(self):
+        self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
+
+=======
 class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -562,6 +570,7 @@ class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def test_different_ratio(self):
         self.individualsDict['@I4@']['gender'] = 'F'
         self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
+>>>>>>> a0a45cdfafcda7db9fb406fe9076a4c980674afa
 
 class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
     def setUp(self):
