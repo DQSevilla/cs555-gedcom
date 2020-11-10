@@ -958,3 +958,51 @@ exampleFamilyWithUniqueFirstNameAndBirth2 = {
     'wifeName': 'Alice /Trout/', #1970
     'children': ['@I2@', '@I4@', '@I5@', '@I6@', '@I7@', '@I19@', '@I21@']
 }
+
+exampleLivingAndSingle = {
+    'id': '@I30@',
+    'name': 'Nam /So-dan/',
+    'gender': 'M',
+    'birthday': '7 MAY 1995 ',
+    'age': 24,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': 'NA'
+}
+
+exampleLivingAndMarried = {
+    'id': '@I31@',
+    'name': 'Han /Jipyeong/',
+    'gender': 'M',
+    'birthday': '7 MAY 1990',
+    'age': 29,
+    'alive': True,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': '@F72@'
+}
+
+exampleDeadAndSingle = {
+    'id': '@I31@',
+    'name': 'John /Jipyeong/',
+    'gender': 'M',
+    'birthday': '7 MAY 1990',
+    'age': 29,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F73@',
+    'spouse': 'NA'
+}
+
+exampleDeadAndMarried = {
+    'id': '@I3@',
+    'name': 'George /Salmon/',
+    'gender': 'F',
+    'birthday': '2 DEC 1970',
+    'age': 49,
+    'alive': False,
+    'death': 'NA',
+    'child': '@F5@',
+    'spouse': '@F5'
+}

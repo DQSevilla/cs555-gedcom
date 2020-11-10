@@ -362,6 +362,16 @@ def US29_verify_deceased(individual):
 def US30_verify_living_married(individual):
     return individual['alive'] and individual['spouse'] != 'NA'
 
+# US31: List living single
+def US31_verify_living_single(individual):
+    # if local_fams == None: 
+    #     local_fams = familiesDict
+    # # # Search through families and check if the individual matches any 'husbandId'
+    # # def never_married(ind_id, fams):
+    # #     for _, fam in fams.items():
+    # #         if fam['husbandId'] == ind_id or fam['wifeId'] == ind_id: return False
+    # #     return True
+    return individual['alive'] and individual['spouse'] == 'NA'
 # US32 List multiple births
 def US32_get_multiple_births(family):
     births = {}
@@ -505,6 +515,8 @@ def verify():
             print(f"US29-INFO: Individual {id} is deceased")
         if US30_verify_living_married(individual):
             print(f"US30-INFO: Individual {id} is living and married")
+        if US31_verify_living_single(individual):
+            print(f"US31-INFO: Individual {id} is living and has never been married")
         if US33_verify_orphans(individual):
             print(f"US33-INFO: Individual {id} is an orphan")
         if US35_verify_birth_at_recent_30_days(individual):

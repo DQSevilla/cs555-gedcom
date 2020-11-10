@@ -653,6 +653,19 @@ class US25TestCases(unittest.TestCase):
     def test_unique2(self):
         self.assertTrue(verifier.US25_unique_first_name_and_birthdate(examples.exampleFamilyWithUniqueFirstNameAndBirth2, examples.exampleIndividualsDict))
 
+class US31TestCases(unittest.TestCase):
+    # US31: Living and single
+    def test_living_single(self):
+        self.assertTrue(verifier.US31_verify_living_single(examples.exampleLivingAndSingle))
+
+    def test_living_married(self):
+        self.assertFalse(verifier.US31_verify_living_single(examples.exampleLivingAndMarried))
+
+    def test_dead_single(self):
+        self.assertFalse(verifier.US31_verify_living_single(examples.exampleDeadAndSingle))
+
+    def test_dead_married(self):
+        self.assertFalse(verifier.US31_verify_living_single(examples.exampleDeadAndMarried))
 class TestMarriageCousin(unittest.TestCase):
     def test_allowed_marriage(self):
         self.assertTrue(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualAliveMarried))
