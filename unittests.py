@@ -691,6 +691,46 @@ class TestMarriageCousin(unittest.TestCase):
     def test_cousin_marriage(self):
         self.assertFalse(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualCousinMarriage))
 
+class AverageLifeSpanTestCase(unittest.TestCase):
+    # US55: Average lifespan of dead individuals
+    def test_average_arb(self):
+        dead_individuals = [
+            {'birthday': '10 MAR 1962',
+             'death': '10 MAR 1963',
+             'alive': False},
+            {'birthday': '25 FEB 1998',
+             'death': '25 FEB 2000',
+             'alive': False},
+            {'birthday': '2 DEC 1956',
+             'death': '2 DEC 1959',
+             'alive': False}]
+        self.assertEqual(verifier.US55_get_average_lifespan(dead_individuals), 2)
+
+    def test_average_ind(self):
+        dead_individuals = [
+            {'birthday': '2 DEC 1956',
+             'death': '2 DEC 1959',
+             'alive': False}]
+        self.assertEqual(verifier.US55_get_average_lifespan(dead_individuals), 3)
+        return
+
+    def test_average_none_dead(self):
+        dead_individuals = [
+            {'birthday': '10 MAR 1962',
+             'death': '10 MAR 1963',
+             'alive': True},
+            {'birthday': '25 FEB 1998',
+             'death': '25 FEB 2000',
+             'alive': True},
+            {'birthday': '2 DEC 1956',
+             'death': '2 DEC 1959',
+             'alive': True}]
+        self.assertEqual(verifier.US55_get_average_lifespan(dead_individuals), -1)
+
+    def test_average_empty_list(self):
+        dead_individuals = []
+        self.assertEqual(verifier.US55_get_average_lifespan(dead_individuals), -1)
+        return
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
