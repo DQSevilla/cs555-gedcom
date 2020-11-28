@@ -16,9 +16,13 @@ def print_individual(individual : Dict[str, str], keys: List[str]):
             ind_str += ", "
 
         if key == 'name':
+            # US44: underline if dead
+            if not individual["alive"]:
+                ind_str += "\u001b[4m"
             # blue for boy, red for girl
             ind_str += "\033[1;34;40m" if individual["gender"] == "M" else "\033[1;35;40m"
             ind_str += f"name = {individual['name']}\033[0;37;40m" # reset color
+            ind_str += "\u001b[0m" # reset text decoration
         else:
             ind_str += f"{key} = {individual[key]}"
 
