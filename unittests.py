@@ -457,6 +457,15 @@ class US28TestCases(unittest.TestCase):
             raised = True
         self.assertFalse(raised, "Exception raised unexpectedly")
 
+class US50TestCases(unittest.TestCase):
+    def runHalfSiblingListing(self):
+        raised = False
+        try:
+            verifier.US50_list_half_siblings()
+        except:
+            raised = True
+        self.assertFalse(raised, "Exception raised unexpectedly")
+
 class UniqueNameAndBirthdateTestCase(unittest.TestCase):
     """US23: unique name and birthdays combinations"""
     def test_all_unique(self):
@@ -525,7 +534,6 @@ class US39UpcomingAnniversary(unittest.TestCase):
         self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
     def noUpcomingAnniversary(self):
         self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
- 
 class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {

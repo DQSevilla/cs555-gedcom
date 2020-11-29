@@ -496,6 +496,34 @@ def US46_male_female_ratio(individualsDict=individualsDict):
 
     return 100 * Pmale, 100 * Pfemale
 
+
+def US50_list_half_siblings(individualsDict=individualsDict):
+    half_siblings = []
+    for ind_1 in individualsDict:
+        this_half_sibs = []
+        same_parents_count = 0
+        ind1_fam = find_family(ind_1['child'])
+        ind1_dad = ind1_fam['husbandId']
+        ind1_mom = ind1_fam['wifeId']
+        for ind_2 in individualsDict:
+            ind2_fam = find_family(ind_2['child'])
+            if ind2_fam['husbandId'] == ind1_dad:
+                same_parents_count +=1
+            if ind2_fam['wifeId'] == ind1_mom:
+                same_parents_count +=1
+            if same_parents_count == 1:
+                #add initial individual if half siblings exist
+                if len(this_half_sibs) == 0:
+                    this_half_sibs.append(ind_1['name'])
+                this_half_sibs.append(ind_2['name'])
+        half_siblings.append(this_half_sibs)
+    
+    if len(half_siblings) == 0:
+        print("None")
+    else:
+        print(half_siblings)
+    print()
+
 # US55: Print average lifespan
 def US55_get_average_lifespan(individuals):
     """
@@ -612,6 +640,9 @@ def verify():
     US45_print_large_families()
 
     US37_print_all_surviors()
+
+    print("Half siblings:")
+    US50_list_half_siblings()
 
     print("Average Lifespan: ", end="")
     avg_lifespan = US55_get_average_lifespan(dead_individuals)
