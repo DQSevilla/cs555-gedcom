@@ -564,7 +564,7 @@ def verify():
     dead_individuals = []
     for id, individual in individualsDict.items():
         # US27 Include person's current age when listing individuals
-        print_individual(individual, ['id', 'name', 'age'])
+        print_individual(individual, ['id', 'name', 'age'], individualsDict = individualsDict)
         if not US01_verify_date_before_current_date(individual['birthday']):
             print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date")
         if not US01_verify_date_before_current_date(individual['death']):
