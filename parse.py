@@ -11,7 +11,7 @@ import time
 VALID_TAGS = ['INDI', 'NAME', 'SEX', 'BIRT', 'DEAT',
               'FAMC', 'FAMS', 'FAM', 'MARR', 'HUSB', 'WIFE',
               'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
-IGNORE_TAGS = ['HEAD', 'TRLR', 'NOTE']
+IGNORE_TAGS = ['HEAD', 'TRLR']
 DATE_TAGS = ['BIRT', 'DEAT', 'DIV', 'MARR']
 IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS']
 FAM_TAGS = ['HUSB', 'WIFE','CHIL', 'DIV', 'DATE']
@@ -104,6 +104,7 @@ def parse_gedcom_file_03(file_path : str):
 
     ind = {}
     fam = {}
+    editingObj = None
     currentDate = ''
     for line in lines:
         line = line.replace('\n','')
@@ -136,10 +137,12 @@ def parse_gedcom_file_03(file_path : str):
                     'alive': True,
                     'death': 'NA',
                     'child': 'NA',
-                    'spouse': 'NA'
+                    'spouse': 'NA',
+                    'notes': ''
                 }
 
                 ind['id'] = fields[1]
+                editingObj = ind
             else:
                 # Skip if the current record is empty
                 if not not fam:
@@ -154,9 +157,11 @@ def parse_gedcom_file_03(file_path : str):
                     'husbandName': '',
                     'wifeId': '',
                     'wifeName': '',
-                    'children': []
+                    'children': [],
+                    'notes': ''
                 }
                 fam['id'] = fields[1]
+                editingObj = fam
         # The current line correlates to the most recent family or individual record
         elif tag not in IGNORE_TAGS:
             # Signifies that next line will be a date corresponding to the current tag
@@ -166,6 +171,14 @@ def parse_gedcom_file_03(file_path : str):
                 fields = fields[tag_index + 1:]
                 args = ' '.join(fields)
                 # Useable tags
+                if tag == 'NOTE': 
+                    print('note')
+                    if editingObj is None:
+                        print('Top Level Note Found: ', end='')
+                        print(' '.join(fields))
+                    else:
+                        print(editingObj)
+                        editingObj['notes'] += (' '.join(fields) + '|')
                 if tag == 'NAME': ind['name'] = args
                 elif tag == 'SEX': ind['gender'] = args
                 elif tag == 'DATE':
