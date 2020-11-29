@@ -28,6 +28,17 @@ def print_individual(individual : Dict[str, str], keys: List[str]):
 
     print(ind_str)
 
+def print_date(date : str):
+    """
+    Prints the date in eu format dd-mm-yyyy
+    """
+    splitDate = date.split()
+    if splitDate[0].isalpha():
+        splitDate[0],splitDate[1] = splitDate[1],splitDate[0]
+
+    ret = " ".join(splitDate)
+    
+    print(ret)
 
 def print_family(family : Dict[str, str], ind_keys : List[str], fam_keys : List[str]):
     """
