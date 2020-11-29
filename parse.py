@@ -21,6 +21,8 @@ MONTHS = {
     'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC':12
 }
 
+FIRST_DAY_OF_MONTH = 1
+
 individuals = []
 families = []
 
@@ -138,7 +140,7 @@ def parse_gedcom_file_03(file_path : str):
                     'death': 'NA',
                     'child': 'NA',
                     'spouse': 'NA',
-                    'notes': '', 
+                    'notes': '',
                     'line_num': -1
                 }
 
@@ -160,7 +162,7 @@ def parse_gedcom_file_03(file_path : str):
                     'wifeId': '',
                     'wifeName': '',
                     'children': [],
-                    'notes': '', 
+                    'notes': '',
                     'line_num': -1
                 }
                 fam['id'] = fields[1]
@@ -175,7 +177,7 @@ def parse_gedcom_file_03(file_path : str):
                 fields = fields[tag_index + 1:]
                 args = ' '.join(fields)
                 # Useable tags
-                if tag == 'NOTE': 
+                if tag == 'NOTE':
                     if editingObj is None:
                         print('Top Level Note Found: ', end='')
                         print(' '.join(fields))
@@ -184,14 +186,26 @@ def parse_gedcom_file_03(file_path : str):
                 if tag == 'NAME': ind['name'] = args
                 elif tag == 'SEX': ind['gender'] = args
                 elif tag == 'DATE':
-                    #Check if the date is invalid
-                    gedcom_date_to_datetime(args)
                     if currentDate == 'BIRT':
-                        ind['birthday'] = args
-                        # Compute age
-                        day = int(fields[0])
-                        month = MONTHS[fields[1]]
-                        year = int(fields[2])
+                        if len(fields) == 1:
+                            day = FIRST_DAY_OF_MONTH # haha clean code goes brrr
+                            month = MONTHS["JAN"]
+                            year = int(fields[0])
+                            ind["birthday"] = f"1 JAN {year}"
+                            gedcom_date_to_datetime(ind["birthday"])
+                        elif len(fields) == 2:
+                            day = FIRST_DAY_OF_MONTH
+                            month = MONTHS[fields[0]]
+                            year = int(fields[1])
+                            ind["birthday"] = f"1 {fields[0]} {year}"
+                            gedcom_date_to_datetime(ind["birthday"])
+                        else:
+                            ind['birthday'] = args
+                            # Compute age
+                            day = int(fields[0])
+                            month = MONTHS[fields[1]]
+                            year = int(fields[2])
+                            gedcom_date_to_datetime(ind["birthday"])
                         ind['age'] = computeAge(date(year, month, day))
                     elif currentDate == 'DEAT':
                         ind['death'] = args
