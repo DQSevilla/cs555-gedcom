@@ -106,7 +106,7 @@ def parse_gedcom_file_03(file_path : str):
     fam = {}
     editingObj = None
     currentDate = ''
-    for line in lines:
+    for line_num, line in enumerate(lines,1):
         line = line.replace('\n','')
 
         #Output Process
@@ -138,10 +138,12 @@ def parse_gedcom_file_03(file_path : str):
                     'death': 'NA',
                     'child': 'NA',
                     'spouse': 'NA',
-                    'notes': ''
+                    'notes': '', 
+                    'line_num': -1
                 }
 
                 ind['id'] = fields[1]
+                ind['line_num'] = line_num
                 editingObj = ind
             else:
                 # Skip if the current record is empty
@@ -158,9 +160,11 @@ def parse_gedcom_file_03(file_path : str):
                     'wifeId': '',
                     'wifeName': '',
                     'children': [],
-                    'notes': ''
+                    'notes': '', 
+                    'line_num': -1
                 }
                 fam['id'] = fields[1]
+                fam['line_num'] = line_num
                 editingObj = fam
         # The current line correlates to the most recent family or individual record
         elif tag not in IGNORE_TAGS:
@@ -172,12 +176,10 @@ def parse_gedcom_file_03(file_path : str):
                 args = ' '.join(fields)
                 # Useable tags
                 if tag == 'NOTE': 
-                    print('note')
                     if editingObj is None:
                         print('Top Level Note Found: ', end='')
                         print(' '.join(fields))
                     else:
-                        print(editingObj)
                         editingObj['notes'] += (' '.join(fields) + '|')
                 if tag == 'NAME': ind['name'] = args
                 elif tag == 'SEX': ind['gender'] = args
