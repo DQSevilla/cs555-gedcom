@@ -563,6 +563,16 @@ def US55_get_average_lifespan(individuals):
 
     return (sum(lifespans)/len(lifespans))/365
 
+def print_notes():
+    print('NOTES: ')
+    for id, individual in individualsDict.items():
+        if individual['notes'] != '':
+            print(f'Individual {id} has notes: ')
+            print(individual['notes'])
+    for id, family in familiesDict.items():
+        if family['notes'] != '':
+            print(f'Family {id} has notes: ')
+            print(family['notes'])
 
 def verify():
     for id, family in familiesDict.items():
