@@ -493,6 +493,29 @@ def US46_male_female_ratio(individualsDict=individualsDict):
 def US48_print_size_each_generation(family):
     pass
 
+# US55: Print average lifespan
+def US55_get_average_lifespan(individuals):
+    """
+    Returns the average lifespan of a list of dead individuals.
+    Skips individuals that are still alive.
+    Return -1 of no dead individuals are found in the list or if the list is empty
+    """
+    lifespans = []
+    for ind in individuals:
+        if ind['alive']:
+            continue
+
+        birth = gedcom_date_to_datetime(ind['birthday'])
+        death = gedcom_date_to_datetime(ind['death'])
+        lifespan = death - birth
+        lifespans += [lifespan.days]
+
+    if lifespans == []:
+        return -1
+
+    return (sum(lifespans)/len(lifespans))/365
+    
+    
 def verify():
     for id, family in familiesDict.items():
         multiple_births = US32_get_multiple_births(family)
@@ -535,6 +558,7 @@ def verify():
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
         #print(US28_order_siblings(family))
 
+    dead_individuals = []
     for id, individual in individualsDict.items():
         # US27 Include person's current age when listing individuals
         print_individual(individual, ['id', 'name', 'age'])
@@ -560,6 +584,7 @@ def verify():
             print(f"US20-ERR: Individual {id} is married to their niece of nephew")
         if US29_verify_deceased(individual):
             print(f"US29-INFO: Individual {id} is deceased")
+            dead_individuals += [individual]
         if US30_verify_living_married(individual):
             print(f"US30-INFO: Individual {id} is living and married")
         if US31_verify_living_single(individual):
@@ -584,3 +609,10 @@ def verify():
     US45_print_large_families()
 
     US37_print_all_surviors()
+
+    print("Average Lifespan: ", end="")
+    avg_lifespan = US55_get_average_lifespan(dead_individuals)
+    if avg_lifespan < 0:
+        print("NA")
+    else:
+        print(str(avg_lifespan) + " years")
