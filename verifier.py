@@ -499,6 +499,7 @@ def US46_male_female_ratio(individualsDict=individualsDict):
 
 def US50_list_half_siblings(individualsDict=individualsDict):
     half_siblings = []
+    
     for ind_1 in individualsDict:
         this_half_sibs = []
         same_parents_count = 0
