@@ -496,6 +496,33 @@ def US46_male_female_ratio(individualsDict=individualsDict):
 
     return 100 * Pmale, 100 * Pfemale
 
+# US51: Print out all people with the same first name
+def US51_print_same_first_names(individualsDict = individualsDict):
+
+    same_first_names_all = []
+    for ind1 in individualsDict:
+        same_first_names = []
+        first_name = ind1['name'].split()[0]
+        for ind2 in individualsDict:
+            #if they are the same person
+            if ind1['id'] == ind2['id']:
+                continue
+
+            if ind2['name'].split()[0] == first_name:
+                #add initial individual if same first name exists
+                if len(same_first_names) == 0:
+                    same_first_names.append(ind1['name'])
+                else:
+                    same_first_names.append(ind2['name'])
+        
+        if len(same_first_names) != 0:
+            same_first_names_all.append(same_first_names)
+    
+    if len(same_first_names_all) == 0:
+        print("None")
+    else:
+        print(same_first_names_all)
+
 # US55: Print average lifespan
 def US55_get_average_lifespan(individuals):
     """
@@ -612,6 +639,9 @@ def verify():
     US45_print_large_families()
 
     US37_print_all_surviors()
+
+    print("People with the same first names:")
+    US51_print_same_first_names()
 
     print("Average Lifespan: ", end="")
     avg_lifespan = US55_get_average_lifespan(dead_individuals)
