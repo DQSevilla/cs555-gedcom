@@ -364,14 +364,8 @@ def US30_verify_living_married(individual):
 
 # US31: List living single
 def US31_verify_living_single(individual):
-    # if local_fams == None: 
-    #     local_fams = familiesDict
-    # # # Search through families and check if the individual matches any 'husbandId'
-    # # def never_married(ind_id, fams):
-    # #     for _, fam in fams.items():
-    # #         if fam['husbandId'] == ind_id or fam['wifeId'] == ind_id: return False
-    # #     return True
     return individual['alive'] and individual['spouse'] == 'NA'
+
 # US32 List multiple births
 def US32_get_multiple_births(family):
     births = {}
@@ -495,7 +489,10 @@ def US46_male_female_ratio(individualsDict=individualsDict):
     Pfemale = 1 - Pmale
 
     return 100 * Pmale, 100 * Pfemale
-    
+
+def US48_print_size_each_generation(family):
+    pass
+
 def verify():
     for id, family in familiesDict.items():
         multiple_births = US32_get_multiple_births(family)
