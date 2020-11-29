@@ -517,7 +517,9 @@ def US50_list_half_siblings(individualsDict=individualsDict):
                 if len(this_half_sibs) == 0:
                     this_half_sibs.append(ind_1['name'])
                 this_half_sibs.append(ind_2['name'])
-        half_siblings.append(this_half_sibs)
+        #if this individual set is not empty and this set has not been added to the list already
+        if len(this_half_sibs) != 0 and this_half_sibs not in half_siblings:
+            half_siblings.append(this_half_sibs)
     
     if len(half_siblings) == 0:
         print("None")
