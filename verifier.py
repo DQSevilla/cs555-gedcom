@@ -512,10 +512,11 @@ def US51_print_same_first_names(individualsDict = individualsDict):
                 #add initial individual if same first name exists
                 if len(same_first_names) == 0:
                     same_first_names.append(ind1['name'])
-                else:
-                    same_first_names.append(ind2['name'])
-        
-        if len(same_first_names) != 0:
+                same_first_names.append(ind2['name'])
+                same_first_names.sort()
+                
+        #if individual first name has a match and it does not exist already
+        if len(same_first_names) != 0 and same_first_names not in same_first_names_all:
             same_first_names_all.append(same_first_names)
     
     if len(same_first_names_all) == 0:
