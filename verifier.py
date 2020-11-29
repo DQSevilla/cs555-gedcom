@@ -522,6 +522,7 @@ def US51_print_same_first_names(individualsDict = individualsDict):
         print("None")
     else:
         print(same_first_names_all)
+    print()
 
 # US55: Print average lifespan
 def US55_get_average_lifespan(individuals):
