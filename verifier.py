@@ -4,6 +4,7 @@ from utils import *
 
 from collections import defaultdict
 from collections import deque
+from copy import deepcopy
 
 individualsDict = {}
 familiesDict = {}
@@ -535,6 +536,14 @@ def US46_male_female_ratio(individualsDict=individualsDict):
     Pfemale = 1 - Pmale
 
     return 100 * Pmale, 100 * Pfemale
+
+def US48_print_sizes(family, sizes):
+    gen = 1
+    print(f"Generation sizes for family {family['id']} (from oldest generation to youngest)...")
+    for size in sizes:
+        print(f"Generation {gen}: {size}")
+        gen += 1
+    
 # US48: Print size of each generation in a family
 def US48_print_size_each_generation(family, localInds=None, localFams=None):
     # Given the root family, traverse through each generation.
@@ -549,40 +558,33 @@ def US48_print_size_each_generation(family, localInds=None, localFams=None):
     if localFams == None:
         localFams = familiesDict
     
-    currentInd = individualsDict[family['husbandId']]
+    currentInd = localInds[family['husbandId']]
     q = deque()
     q.append(currentInd)
+    q.append(None)
     visited = {}
-    visited[currentInd['id']] = currentInd
+    visited[currentInd['id']] = True
 
-    generation_size = len(family['children'])
-    sizes = [2]
+    sizes = []
     gen_count = 0
-    first_flag = True
     while q:
         # Current Ind
-        currentInd = q.pop()
+        currentInd = q.popleft()
         if currentInd == None:
             sizes.append(gen_count)
             gen_count = 0
-            if len(q) > 1:
+            if len(q) >= 1:
                 q.append(None)
         else:
             gen_count += 1
             if currentInd['spouse'] != 'NA':
                 gen_count += 1
-                # Stopped here
-                currentFamily = familiesDict[currentInd['spouse']]
-                print(currentFamily)
+                currentFamily = localFams[currentInd['spouse']]
                 for child in currentFamily['children']:
                     if child not in visited:
-                        q.append(individualsDict[child])
-                        visited[child] = individualsDict[child]
-               
-                if first_flag:
-                    first_flag = False
-                    q.append(None)
-    print(sizes)
+                        q.append(localInds[child])
+                        visited[child] = True
+    return sizes
 
 # US55: Print average lifespan
 def US55_get_average_lifespan(individuals):
@@ -660,8 +662,15 @@ def verify():
             print(f"US34-ERR: Family {id} has couples who are large age differences (Line {family['line_num']})")
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
         #print(US28_order_siblings(family))
-
+        current_gen_sizes = US48_print_size_each_generation(family)
+        US48_print_sizes(family, current_gen_sizes)
+    
+    # Print generation sizes starting from root family
+    # US48_print_size_each_generation(familiesDict['@F2@'])
+    
     dead_individuals = []
+    print()
+    # Somehow, familiesDict is changed after this loop
     for id, individual in individualsDict.items():
         # US27 Include person's current age when listing individuals
         print_individual(individual, ['id', 'name', 'age'])
@@ -721,6 +730,3 @@ def verify():
         print("NA")
     else:
         print(str(avg_lifespan) + " years")
-    US48_print_size_each_generation(familiesDict['@F2@'])
-    print(individualsDict)
-    print(familiesDict)
