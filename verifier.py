@@ -549,13 +549,6 @@ def US48_print_size_each_generation(family, localInds=None, localFams=None):
     if localInds == None: localInds = individualsDict
     if localFams == None: localFams = familiesDict
     
-    currentInd = localInds[family['husbandId']]
-    q = deque()
-    q.append(currentInd)
-    q.append(None)
-    visited = {}
-    visited[currentInd['id']] = True
-
     sizes = []
     gen_count = 0
     while q:
@@ -569,12 +562,53 @@ def US48_print_size_each_generation(family, localInds=None, localFams=None):
             gen_count += 1
             if currentInd['spouse'] != 'NA':
                 gen_count += 1
+     return sizes
+          
+def US49_print_props(family, props):
+    gen = 1
+    print(f"Generation gender proprotions for family {family['id']} (from oldest generation to youngest)...")
+    for prop in props:
+        print(f"Generation {gen}: {prop[0]}% males, {prop[1]}% females")
+        gen += 1
+    
+def US49_print_gender_proportion(family, localInds=None, localFams=None):
+    if localInds == None: localInds = individualsDict
+    if localFams == None: localFams = familiesDict
+
+    currentInd = localInds[family['husbandId']]
+    q = deque()
+    q.append(currentInd)
+    q.append(None)
+    visited = {}
+    visited[currentInd['id']] = True
+
+    males = 0
+    females = 0
+    props = []
+    while q:
+        currentInd = q.popleft()
+        if currentInd == None:
+            # Calculate male and females for this generation
+            total = males + females
+            tup = (males / total * 100, females / total * 100)
+            props.append(tup)
+            # Reset the count
+            males = 0
+            females = 0
+            if len(q) >= 1: q.append(None)
+        else:
+            indGender = currentInd['gender']
+            if indGender == 'M': males += 1
+            else: females += 1
+            if currentInd['spouse'] != 'NA':
+                if indGender == 'M': females += 1
+                else: males += 1
                 currentFamily = localFams[currentInd['spouse']]
                 for child in currentFamily['children']:
                     if child not in visited:
                         q.append(localInds[child])
                         visited[child] = True
-    return sizes
+    return props
 
 # US55: Print average lifespan
 def US55_get_average_lifespan(individuals):
@@ -652,12 +686,17 @@ def verify():
             print(f"US34-ERR: Family {id} has couples who are large age differences (Line {family['line_num']})")
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
         #print(US28_order_siblings(family))
+
         current_gen_sizes = US48_print_size_each_generation(family)
         US48_print_sizes(family, current_gen_sizes)
     
     # Print generation sizes starting from root family
     # US48_print_size_each_generation(familiesDict['@F2@'])
     
+
+        current_gender_props = US49_print_gender_proportion(family)
+        US49_print_props(family, current_gender_props)
+
     dead_individuals = []
     print()
     # Somehow, familiesDict is changed after this loop
