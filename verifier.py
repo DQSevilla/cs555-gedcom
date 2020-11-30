@@ -3,6 +3,8 @@ from datetime import date, datetime
 from utils import *
 
 from collections import defaultdict
+from collections import deque
+from copy import deepcopy
 
 individualsDict = {}
 familiesDict = {}
@@ -409,14 +411,8 @@ def US30_verify_living_married(individual):
 
 # US31: List living single
 def US31_verify_living_single(individual):
-    # if local_fams == None:
-    #     local_fams = familiesDict
-    # # # Search through families and check if the individual matches any 'husbandId'
-    # # def never_married(ind_id, fams):
-    # #     for _, fam in fams.items():
-    # #         if fam['husbandId'] == ind_id or fam['wifeId'] == ind_id: return False
-    # #     return True
     return individual['alive'] and individual['spouse'] == 'NA'
+
 # US32 List multiple births
 def US32_get_multiple_births(family):
     births = {}
@@ -575,6 +571,119 @@ def US54_list_lifespans(
     else:
         print(f'The family has not death')
 
+# US51: Print out all people with the same first name
+def US51_print_same_first_names(individualsDict = individualsDict):
+
+    same_first_names_all = []
+    for ind1 in individualsDict:
+        same_first_names = []
+        first_name = ind1['name'].split()[0]
+        for ind2 in individualsDict:
+            #if they are the same person
+            if ind1['id'] == ind2['id']:
+                continue
+
+            if ind2['name'].split()[0] == first_name:
+                #add initial individual if same first name exists
+                if len(same_first_names) == 0:
+                    same_first_names.append(ind1['name'])
+                same_first_names.append(ind2['name'])
+                same_first_names.sort()
+                
+        #if individual first name has a match and it does not exist already
+        if len(same_first_names) != 0 and same_first_names not in same_first_names_all:
+            same_first_names_all.append(same_first_names)
+    
+    if len(same_first_names_all) == 0:
+        print("None")
+    else:
+        print(same_first_names_all)
+    print()
+    
+def US48_print_sizes(family, sizes):
+    gen = 1
+    print(f"Generation sizes for family {family['id']} (from oldest generation to youngest)...")
+    for size in sizes:
+        print(f"Generation {gen}: {size}")
+        gen += 1
+
+# US48: Print size of each generation in a family
+def US48_print_size_each_generation(family, localInds=None, localFams=None):
+    if localInds == None: localInds = individualsDict
+    if localFams == None: localFams = familiesDict
+    
+    currentInd = localInds[family['husbandId']]
+    q = deque()
+    q.append(currentInd)
+    q.append(None)
+    visited = {}
+    visited[currentInd['id']] = True
+
+    sizes = []
+    gen_count = 0
+    while q:
+        # Current Ind
+        currentInd = q.popleft()
+        if currentInd == None:
+            sizes.append(gen_count)
+            gen_count = 0
+            if len(q) >= 1: q.append(None)
+        else:
+            gen_count += 1
+            if currentInd['spouse'] != 'NA':
+                gen_count += 1
+                currentFamily = localFams[currentInd['spouse']]
+                for child in currentFamily['children']:
+                    if child not in visited:
+                        q.append(localInds[child])
+    return sizes
+
+def US49_print_props(family, props):
+    gen = 1
+    print(f"Generation gender proprotions for family {family['id']} (from oldest generation to youngest)...")
+    for prop in props:
+        print(f"Generation {gen}: {prop[0]}% males, {prop[1]}% females")
+        gen += 1
+    
+def US49_print_gender_proportion(family, localInds=None, localFams=None):
+    if localInds == None: localInds = individualsDict
+    if localFams == None: localFams = familiesDict
+
+    currentInd = localInds[family['husbandId']]
+    q = deque()
+    q.append(currentInd)
+    q.append(None)
+    visited = {}
+    visited[currentInd['id']] = True
+    
+    males = 0
+    females = 0
+    props = []
+    while q:
+        currentInd = q.popleft()
+        if currentInd == None:
+            # Calculate male and females for this generation
+            total = males + females
+            tup = (males / total * 100, females / total * 100)
+            props.append(tup)
+            # Reset the count
+            males = 0
+            females = 0
+            if len(q) >= 1: q.append(None)
+        else:
+            indGender = currentInd['gender']
+            if indGender == 'M': males += 1
+            else: females += 1
+            if currentInd['spouse'] != 'NA':
+                if indGender == 'M': females += 1
+                else: males += 1
+                currentFamily = localFams[currentInd['spouse']]
+                for child in currentFamily['children']:
+                    if child not in visited:
+                        q.append(localInds[child])
+                        visited[child] = True
+    return props
+          
 # US55: Print average lifespan
 def US55_get_average_lifespan(individuals):
     """
@@ -650,12 +759,23 @@ def verify():
         if not US34_verify_large_age_differences_couples(family):
             print(f"US34-ERR: Family {id} has couples who are large age differences (Line {family['line_num']})")
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
+    
+        current_gender_props = US49_print_gender_proportion(family)
+        US49_print_props(family, current_gender_props)
+    
         #print(US28_order_siblings(family))
 
+        current_gen_sizes = US48_print_size_each_generation(family)
+        US48_print_sizes(family, current_gen_sizes)
+    # Print generation sizes starting from root family
+    # US48_print_size_each_generation(familiesDict['@F2@'])
+
     dead_individuals = []
+    print()
+    # Somehow, familiesDict is changed after this loop
     for id, individual in individualsDict.items():
         # US27 Include person's current age when listing individuals
-        print_individual(individual, ['id', 'name', 'age'])
+        print_individual(individual, ['id', 'name', 'age'], individualsDict = individualsDict)
         if not US01_verify_date_before_current_date(individual['birthday']):
             print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date (Line {individual['line_num']})")
         if not US01_verify_date_before_current_date(individual['death']):
@@ -708,6 +828,8 @@ def verify():
     US37_print_all_surviors()
 
     US54_list_lifespans()
+    print("People with the same first names:")
+    US51_print_same_first_names()
 
     print("Average Lifespan: ", end="")
     avg_lifespan = US55_get_average_lifespan(dead_individuals)
