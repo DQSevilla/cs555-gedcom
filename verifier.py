@@ -411,14 +411,8 @@ def US30_verify_living_married(individual):
 
 # US31: List living single
 def US31_verify_living_single(individual):
-    # if local_fams == None:
-    #     local_fams = familiesDict
-    # # # Search through families and check if the individual matches any 'husbandId'
-    # # def never_married(ind_id, fams):
-    # #     for _, fam in fams.items():
-    # #         if fam['husbandId'] == ind_id or fam['wifeId'] == ind_id: return False
-    # #     return True
     return individual['alive'] and individual['spouse'] == 'NA'
+
 # US32 List multiple births
 def US32_get_multiple_births(family):
     births = {}
@@ -543,6 +537,33 @@ def US46_male_female_ratio(individualsDict=individualsDict):
 
     return 100 * Pmale, 100 * Pfemale
 
+def US48_print_sizes(family, sizes):
+    gen = 1
+    print(f"Generation sizes for family {family['id']} (from oldest generation to youngest)...")
+    for size in sizes:
+        print(f"Generation {gen}: {size}")
+        gen += 1
+    
+# US48: Print size of each generation in a family
+def US48_print_size_each_generation(family, localInds=None, localFams=None):
+    if localInds == None: localInds = individualsDict
+    if localFams == None: localFams = familiesDict
+    
+    sizes = []
+    gen_count = 0
+    while q:
+        # Current Ind
+        currentInd = q.popleft()
+        if currentInd == None:
+            sizes.append(gen_count)
+            gen_count = 0
+            if len(q) >= 1: q.append(None)
+        else:
+            gen_count += 1
+            if currentInd['spouse'] != 'NA':
+                gen_count += 1
+     return sizes
+          
 def US49_print_props(family, props):
     gen = 1
     print(f"Generation gender proprotions for family {family['id']} (from oldest generation to youngest)...")
@@ -666,10 +687,19 @@ def verify():
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
         #print(US28_order_siblings(family))
 
+        current_gen_sizes = US48_print_size_each_generation(family)
+        US48_print_sizes(family, current_gen_sizes)
+    
+    # Print generation sizes starting from root family
+    # US48_print_size_each_generation(familiesDict['@F2@'])
+    
+
         current_gender_props = US49_print_gender_proportion(family)
         US49_print_props(family, current_gender_props)
 
     dead_individuals = []
+    print()
+    # Somehow, familiesDict is changed after this loop
     for id, individual in individualsDict.items():
         # US27 Include person's current age when listing individuals
         print_individual(individual, ['id', 'name', 'age'])
