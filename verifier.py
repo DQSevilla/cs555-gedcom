@@ -550,7 +550,6 @@ def US49_print_props(family, props):
         print(f"Generation {gen}: {prop[0]}% males, {prop[1]}% females")
         gen += 1
     
-# US49: Compute gender proportion per generation
 def US49_print_gender_proportion(family, localInds=None, localFams=None):
     if localInds == None: localInds = individualsDict
     if localFams == None: localFams = familiesDict
