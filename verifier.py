@@ -537,6 +537,40 @@ def US46_male_female_ratio(individualsDict=individualsDict):
 
     return 100 * Pmale, 100 * Pfemale
 
+# US53: Optionally print zodiac sign next to name
+def US53_add_zodiac_sign_next_to_name(individual):
+    month = gedcom_date_to_datetime(individual['birthday']).month
+    day = gedcom_date_to_datetime(individual['birthday']).day
+    n = (u'♑', u'♒', u'♓', u'♈',
+        u'♉', u'♊', u'♋', u'♌',
+         u'♍', u'♎', u'♏', u'♐')
+    d = ((1, 20), (2, 19), (3, 21), (4, 21), (5, 21), (6, 22),
+         (7, 23), (8, 23), (9, 23), (10, 23), (11, 23), (12, 23))
+    counter = 0
+    for i in d:
+        if((month, day) >= i):
+            counter = (counter + 1) % 12
+    return individual['name'] + ' ' + n[counter]
+
+# US54: List lifespans in descending order
+def US54_list_lifespans(
+        individualsDict=individualsDict,
+        familiesDict=familiesDict
+):
+    newIndividualsList = []
+    for id, individual in individualsDict.items():
+        if individual['alive'] == False:
+            newIndividualsList.append(individual)
+    lifespan = lambda individual: gedcom_date_to_datetime(individual['death']) - gedcom_date_to_datetime(individual['birthday'])
+    newIndividualsList.sort(key = lifespan , reverse = True)
+    if newIndividualsList != []:
+        for individual in newIndividualsList:
+            print(f'Lifespan of individual', individual['id'], individual['name'], ':')
+            print(lifespan(individual))
+        print()
+    else:
+        print(f'The family has not death')
+
 # US51: Print out all people with the same first name
 def US51_print_same_first_names(individualsDict = individualsDict):
 
@@ -781,6 +815,7 @@ def verify():
             print(f"US38-INFO: Individual {id} has birthday in the next 30 days (Line {individual['line_num']})")
         if US39_verify_upcoming_anniversaries_30_days(individual):
             print(f"US39-INFO: Individual {id}'s anniversary is within 30 days (Line {individual['line_num']})")
+        print(f"US53-INFO: Individual {id} is:", US53_add_zodiac_sign_next_to_name(individual))
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
 
@@ -792,6 +827,7 @@ def verify():
 
     US37_print_all_surviors()
 
+    US54_list_lifespans()
     print("People with the same first names:")
     US51_print_same_first_names()
 
