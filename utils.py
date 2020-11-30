@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Dict, List
 
 
-def print_individual(individual : Dict[str, str], keys: List[str]):
+def print_individual(individual : Dict[str, str], keys: List[str], individualsDict):
     """
     Prints an individual (color-coded by name) and any additional
     information along with it
@@ -16,6 +16,23 @@ def print_individual(individual : Dict[str, str], keys: List[str]):
             ind_str += ", "
 
         if key == 'name':
+
+            #US47 twins special symbol
+            twins = {}
+            for id, i in individualsDict.items():
+                family = i["child"]
+                birthday = i["birthday"]
+
+                if family+birthday in twins:
+                    twins[family+birthday] = twins[family+birthday].append(i['id'])
+                else:
+                    twins[family+birthday] = [i['id']]
+
+            flatList = []
+            for twin_lists in twins.values():
+                if len(twin_lists) > 1:
+                    flatList = flatList + twin_lists
+
             # US44: underline if dead
             if not individual["alive"]:
                 ind_str += "\u001b[4m"
@@ -23,11 +40,28 @@ def print_individual(individual : Dict[str, str], keys: List[str]):
             ind_str += "\033[1;34;40m" if individual["gender"] == "M" else "\033[1;35;40m"
             ind_str += f"name = {individual['name']}\033[0;37;40m" # reset color
             ind_str += "\u001b[0m" # reset text decoration
+            
+            if individual['id'] in flatList:
+                ind_str += u'\1071'
         else:
             ind_str += f"{key} = {individual[key]}"
 
+        if key == 'birthday':
+            ind_str += format_date(individual['birthday'])
+
     print(ind_str)
 
+def format_date(date : str):
+    """
+    Prints the date in eu format dd-mm-yyyy
+    """
+    splitDate = date.split()
+    if splitDate[0].isalpha():
+        splitDate[0],splitDate[1] = splitDate[1],splitDate[0]
+
+    ret = " ".join(splitDate)
+    
+    return ret
 
 def print_family(family : Dict[str, str], ind_keys : List[str], fam_keys : List[str]):
     """
