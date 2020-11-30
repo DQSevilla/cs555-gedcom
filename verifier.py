@@ -544,12 +544,18 @@ def US48_print_sizes(family, sizes):
         print(f"Generation {gen}: {size}")
         gen += 1
 
-'''    
 # US48: Print size of each generation in a family
 def US48_print_size_each_generation(family, localInds=None, localFams=None):
     if localInds == None: localInds = individualsDict
     if localFams == None: localFams = familiesDict
     
+    currentInd = localInds[family['husbandId']]
+    q = deque()
+    q.append(currentInd)
+    q.append(None)
+    visited = {}
+    visited[currentInd['id']] = True
+
     sizes = []
     gen_count = 0
     while q:
@@ -563,9 +569,12 @@ def US48_print_size_each_generation(family, localInds=None, localFams=None):
             gen_count += 1
             if currentInd['spouse'] != 'NA':
                 gen_count += 1
-    
+                currentFamily = localFams[currentInd['spouse']]
+                for child in currentFamily['children']:
+                    if child not in visited:
+                        q.append(localInds[child])
     return sizes
-'''          
+
 def US49_print_props(family, props):
     gen = 1
     print(f"Generation gender proprotions for family {family['id']} (from oldest generation to youngest)...")
@@ -587,7 +596,7 @@ def US49_print_gender_proportion(family, localInds=None, localFams=None):
     males = 0
     females = 0
     props = []
-    while True:
+    while q:
         currentInd = q.popleft()
         if currentInd == None:
             # Calculate male and females for this generation
@@ -687,15 +696,14 @@ def verify():
         if not US34_verify_large_age_differences_couples(family):
             print(f"US34-ERR: Family {id} has couples who are large age differences (Line {family['line_num']})")
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
-    ''' 
+    
         current_gender_props = US49_print_gender_proportion(family)
         US49_print_props(family, current_gender_props)
-    '''
+    
         #print(US28_order_siblings(family))
-    '''
-            current_gen_sizes = US48_print_size_each_generation(family)
-            US48_print_sizes(family, current_gen_sizes)
-    '''    
+
+        current_gen_sizes = US48_print_size_each_generation(family)
+        US48_print_sizes(family, current_gen_sizes)
     # Print generation sizes starting from root family
     # US48_print_size_each_generation(familiesDict['@F2@'])
 
