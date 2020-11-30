@@ -691,6 +691,10 @@ class TestMarriageCousin(unittest.TestCase):
     def test_cousin_marriage(self):
         self.assertFalse(verifier.US19_verify_no_first_cousin_marriage(examples.exampleIndividualCousinMarriage))
 
+class TestZodiacSignNextToName(unittest.TestCase):
+    def test_name_and_sign(self):
+        self.assertEqual(verifier.US53_add_zodiac_sign_next_to_name(examples.examplePersonSameBirthAndDeath), 'Gina /Koi/ ♒')
+
 class AverageLifeSpanTestCase(unittest.TestCase):
     # US55: Average lifespan of dead individuals
     def test_average_arb(self):
