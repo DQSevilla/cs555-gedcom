@@ -11,7 +11,7 @@ import time
 VALID_TAGS = ['INDI', 'NAME', 'SEX', 'BIRT', 'DEAT',
               'FAMC', 'FAMS', 'FAM', 'MARR', 'HUSB', 'WIFE',
               'CHIL', 'DIV', 'DATE', 'HEAD', 'TRLR', 'NOTE']
-IGNORE_TAGS = ['HEAD', 'TRLR', 'NOTE']
+IGNORE_TAGS = ['HEAD', 'TRLR']
 DATE_TAGS = ['BIRT', 'DEAT', 'DIV', 'MARR']
 IND_TAGS = ['NAME', 'SEX', 'BIRT', 'DEAT', 'FAMC', 'FAMS']
 FAM_TAGS = ['HUSB', 'WIFE','CHIL', 'DIV', 'DATE']
@@ -20,6 +20,8 @@ MONTHS = {
     'MAY': 5, 'JUN': 6, 'JUL': 7, 'AUG': 8,
     'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC':12
 }
+
+FIRST_DAY_OF_MONTH = 1
 
 individuals = []
 families = []
@@ -104,8 +106,9 @@ def parse_gedcom_file_03(file_path : str):
 
     ind = {}
     fam = {}
+    editingObj = None
     currentDate = ''
-    for line in lines:
+    for line_num, line in enumerate(lines,1):
         line = line.replace('\n','')
 
         #Output Process
@@ -136,10 +139,14 @@ def parse_gedcom_file_03(file_path : str):
                     'alive': True,
                     'death': 'NA',
                     'child': 'NA',
-                    'spouse': 'NA'
+                    'spouse': 'NA',
+                    'notes': '',
+                    'line_num': -1
                 }
 
                 ind['id'] = fields[1]
+                ind['line_num'] = line_num
+                editingObj = ind
             else:
                 # Skip if the current record is empty
                 if not not fam:
@@ -154,9 +161,13 @@ def parse_gedcom_file_03(file_path : str):
                     'husbandName': '',
                     'wifeId': '',
                     'wifeName': '',
-                    'children': []
+                    'children': [],
+                    'notes': '',
+                    'line_num': -1
                 }
                 fam['id'] = fields[1]
+                fam['line_num'] = line_num
+                editingObj = fam
         # The current line correlates to the most recent family or individual record
         elif tag not in IGNORE_TAGS:
             # Signifies that next line will be a date corresponding to the current tag
@@ -166,17 +177,35 @@ def parse_gedcom_file_03(file_path : str):
                 fields = fields[tag_index + 1:]
                 args = ' '.join(fields)
                 # Useable tags
+                if tag == 'NOTE':
+                    if editingObj is None:
+                        print('Top Level Note Found: ', end='')
+                        print(' '.join(fields))
+                    else:
+                        editingObj['notes'] += (' '.join(fields) + '|')
                 if tag == 'NAME': ind['name'] = args
                 elif tag == 'SEX': ind['gender'] = args
                 elif tag == 'DATE':
-                    #Check if the date is invalid
-                    gedcom_date_to_datetime(args)
                     if currentDate == 'BIRT':
-                        ind['birthday'] = args
-                        # Compute age
-                        day = int(fields[0])
-                        month = MONTHS[fields[1]]
-                        year = int(fields[2])
+                        if len(fields) == 1:
+                            day = FIRST_DAY_OF_MONTH # haha clean code goes brrr
+                            month = MONTHS["JAN"]
+                            year = int(fields[0])
+                            ind["birthday"] = f"1 JAN {year}"
+                            gedcom_date_to_datetime(ind["birthday"])
+                        elif len(fields) == 2:
+                            day = FIRST_DAY_OF_MONTH
+                            month = MONTHS[fields[0]]
+                            year = int(fields[1])
+                            ind["birthday"] = f"1 {fields[0]} {year}"
+                            gedcom_date_to_datetime(ind["birthday"])
+                        else:
+                            ind['birthday'] = args
+                            # Compute age
+                            day = int(fields[0])
+                            month = MONTHS[fields[1]]
+                            year = int(fields[2])
+                            gedcom_date_to_datetime(ind["birthday"])
                         ind['age'] = computeAge(date(year, month, day))
                     elif currentDate == 'DEAT':
                         ind['death'] = args

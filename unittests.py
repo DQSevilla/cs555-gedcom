@@ -513,19 +513,19 @@ class US33AndUS34TestCases(unittest.TestCase):
         mock_individual.side_effect = iter([examples.exampleFatherOfOrphan,
                                             examples.exampleMatherOfOrphan])
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
- 
+
 class US38PersonBirthdayInNext30DaysTestCases(unittest.TestCase):
     def test_birthday(self):
         self.assertTrue(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonBirthdayInNext30Days))
     def test_not_recent_birthday(self):
         self.assertFalse(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonRecentDeath))
- 
+
 class US39UpcomingAnniversary(unittest.TestCase):
     def upcomingAnniversary(self):
         self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
     def noUpcomingAnniversary(self):
         self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
- 
+
 class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -576,7 +576,7 @@ class US46MaleFemaleRatioTestCase(unittest.TestCase):
         }
     def test_equal_ratio(self):
         self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (50.0, 50.0))
-    
+
     def test_different_ratio(self):
         self.individualsDict['@I4@']['gender'] = 'F'
         self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
@@ -622,7 +622,7 @@ class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
             ),
             True,
         )
-        
+
 class US43ColorCodeGendersTestCases(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -659,7 +659,6 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
         print()
         print("Girls names are pink:")
         utils.print_individual(self.individualsDict['@I1@'], ['name'], self.individualsDict)
-        
 
 class US25TestCases(unittest.TestCase):
     def test_unique1(self):
@@ -731,6 +730,117 @@ class AverageLifeSpanTestCase(unittest.TestCase):
         dead_individuals = []
         self.assertEqual(verifier.US55_get_average_lifespan(dead_individuals), -1)
         return
+
+class US26TestCase(unittest.TestCase):
+    def test_consistent(self):
+        individualsDict = {
+            "I1": {
+                "id": "I1",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I2": {
+                "id": "I2",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I3": {
+                "id": "I3",
+                "child": "F1",
+                "spouse": "NA",
+            },
+        }
+
+        familiesDict = {
+            "F1": {
+                "id": "F1",
+                "husbandId": "I1",
+                "wifeId": "I2",
+                "children": ["I3"],
+            },
+        }
+
+        for _, individual in individualsDict.items():
+            self.assertTrue(
+                verifier.US26_corresponding_entities_individuals(
+                    individual,
+                    familiesDict=familiesDict,
+                ),
+            )
+
+        for _, family in familiesDict.items():
+            self.assertTrue(
+                verifier.US26_corresponding_entities_families(
+                    family,
+                    individualsDict=individualsDict,
+                ),
+            )
+
+    def test_incogsistent_family(self):
+        individualsDict = {
+            "I1": {
+                "id": "I1",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I3": {
+                "id": "I3",
+                "child": "F1",
+                "spouse": "NA",
+            },
+        }
+
+        familiesDict = {
+            "F1": {
+                "id": "F1",
+                "husbandId": "I1",
+                "wifeId": "I2",
+                "children": ["I3"],
+            },
+        }
+
+        for _, family in familiesDict.items():
+            self.assertFalse(
+                verifier.US26_corresponding_entities_families(
+                    family,
+                    individualsDict=individualsDict,
+                ),
+            )
+
+    def test_consistent_individual(self):
+        individualsDict = {
+            "I1": {
+                "id": "I1",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I2": {
+                "id": "I2",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I3": {
+                "id": "I3",
+                "child": "F1",
+                "spouse": "NA",
+            },
+        }
+
+        familiesDict = {
+            "F1": {
+                "id": "F1",
+                "husbandId": "I1",
+                "wifeId": "I2",
+                "children": "NA",
+            },
+        }
+
+        self.assertFalse(
+            verifier.US26_corresponding_entities_individuals(
+                individualsDict["I3"],
+                familiesDict=familiesDict,
+            ),
+        )
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
