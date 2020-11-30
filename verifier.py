@@ -534,8 +534,10 @@ def US46_male_female_ratio(individualsDict=individualsDict):
     Pfemale = 1 - Pmale
 
     return 100 * Pmale, 100 * Pfemale
-
+# US48: Print size of each generation in a family
 def US48_print_size_each_generation(family):
+    # Given the root family, traverse through each generation.
+    # Husband/Wife is one generation and their children are the next generation
     pass
 
 # US55: Print average lifespan
