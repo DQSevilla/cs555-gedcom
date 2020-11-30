@@ -158,7 +158,7 @@ def US13_verify_sibling_spacing(family, local_inds = None):
             if dates_within(local_inds[child1]['birthday'], local_inds[child2]['birthday'], 8, 'months'):
                 return False
     return True
-    
+
 def US14_verify_multiple_births(family, local_inds=None):
     # Check if there are more than 5 siblings birthed on the same day for each family
     birthdays = defaultdict(int)
@@ -328,7 +328,7 @@ def US24_unique_families_by_spouse(familiesDict=familiesDict):
             wives[(wife, marriage_date)] = id
 
     return all_unique
-    
+
 def US25_unique_first_name_and_birthdate(family, local_inds=None):
     if local_inds == None:
         local_inds = individualsDict
@@ -338,9 +338,54 @@ def US25_unique_first_name_and_birthdate(family, local_inds=None):
         first_name = child['name'].split()[0]
         birthday = child['birthday']
         names_births[(first_name, birthday)] += 1
-    
+
     for _,count in names_births.items():
         if count > 1: return False
+    return True
+
+
+def US26_corresponding_entities_families(family, individualsDict=individualsDict):
+    """Validate that family IDs match up to spouse and husband IDs
+       and vice-versa"""
+    family_id = family["id"]
+    husband, wife = family["husbandId"], family["wifeId"]
+    if husband not in individualsDict or wife not in individualsDict:
+        return False
+
+    if (
+        individualsDict[husband]["spouse"] != family_id or
+        individualsDict[wife]["spouse"] != family_id
+    ):
+        return False
+
+    for child in family["children"]:
+        if (
+            child not in individualsDict or
+            individualsDict[child]["child"] != family_id
+        ):
+            return False
+
+    return True
+
+def US26_corresponding_entities_individuals(individual, familiesDict=familiesDict):
+    individual_id = individual["id"]
+    if individual["child"] != "NA":
+        family_id = individual["child"]
+        if (
+            family_id not in familiesDict or
+            individual_id not in familiesDict[family_id]["children"]
+        ):
+            return False
+
+    if individual["spouse"] != "NA":
+        family_id = individual["spouse"]
+        if (
+            family_id not in familiesDict or
+            (familiesDict[family_id]["husbandId"] != individual_id and
+             familiesDict[family_id]["wifeId"] != individual_id)
+        ):
+            return False
+
     return True
 
 # US28: Order Siblings by Age
@@ -351,7 +396,7 @@ def US28_order_siblings(family):
     if len(family['children']) > 1:
         siblings = family['children']
         sorted_siblings = sorted(siblings, key = lambda sibling: gedcom_date_to_datetime(find_individual(sibling)['birthday']))
-        
+
     return sorted_siblings
 
 # US29: List deceased individuals
@@ -364,7 +409,7 @@ def US30_verify_living_married(individual):
 
 # US31: List living single
 def US31_verify_living_single(individual):
-    # if local_fams == None: 
+    # if local_fams == None:
     #     local_fams = familiesDict
     # # # Search through families and check if the individual matches any 'husbandId'
     # # def never_married(ind_id, fams):
@@ -447,10 +492,10 @@ def US38_verify_birthday_in_the_next_30_days(individual):
         today = datetime_to_gedcom_date(today_datetime)
         this_year_birthday = datetime_to_gedcom_date(this_year_birthday_datetime)
         return dates_within(this_year_birthday, today, 30, 'days')
- 
+
 #US39: List upcoming anniversaries
 def US39_verify_upcoming_anniversaries_30_days(individual, familiesDict = familiesDict):
-    if individual['spouse'] == "NA": 
+    if individual['spouse'] == "NA":
         return False
     family = find_family(individual['spouse'])
     datetime_today = datetime.now()
@@ -458,7 +503,7 @@ def US39_verify_upcoming_anniversaries_30_days(individual, familiesDict = famili
     old_married = gedcom_date_to_datetime(family['married'])
     #set married year
     new_married = old_married.replace(year = datetime_today.year)
-    
+
     return dates_within(datetime_to_gedcom_date(new_married), today, 30, 'days')
 
 # US45: List families with large families
@@ -476,7 +521,7 @@ def US45_print_large_families(
         print("None")
 
     print()
-    
+
 # US46: Count the percentage of males and females
 def US46_male_female_ratio(individualsDict=individualsDict):
     male_num = 0
@@ -517,47 +562,59 @@ def US55_get_average_lifespan(individuals):
         return -1
 
     return (sum(lifespans)/len(lifespans))/365
-    
-    
+
+def print_notes():
+    print('NOTES: ')
+    for id, individual in individualsDict.items():
+        if individual['notes'] != '':
+            print(f'Individual {id} has notes: ')
+            print(individual['notes'])
+    for id, family in familiesDict.items():
+        if family['notes'] != '':
+            print(f'Family {id} has notes: ')
+            print(family['notes'])
+
 def verify():
     for id, family in familiesDict.items():
         multiple_births = US32_get_multiple_births(family)
         if multiple_births != []:
-            print(f"US32-INFO: Family {id} has multiple_births:")
+            print(f"US32-INFO: Family {id} has multiple_births: (Line {family['line_num']})")
             for group in multiple_births:
-                print(f"\t{group}")
+                print(f"\t{group} (Line {family['line_num']})")
         if not US01_verify_date_before_current_date(family['married']):
-            print(f"US01-ERR: Family {id} has a marriage date that is after, or equal to, the current date")
+            print(f"US01-ERR: Family {id} has a marriage date that is after, or equal to, the current date (Line {family['line_num']})")
         if not US01_verify_date_before_current_date(family['divorced']):
-            print(f"US01-ERR: Family {id} has a divorced date that is after, or equal to, the current date")
+            print(f"US01-ERR: Family {id} has a divorced date that is after, or equal to, the current date (Line {family['line_num']})")
         if not US04_verify_marriage_before_divorce(family):
-            print(f"US04-ERR: Family {id} fails marriage before divorce check")
+            print(f"US04-ERR: Family {id} fails marriage before divorce check (Line {family['line_num']})")
         if not US05_verify_marriage_before_death(family):
-            print(f"US05-ERR: Family {id} fails marriage before death check")
+            print(f"US05-ERR: Family {id} fails marriage before death check (Line {family['line_num']})")
         if not US06_verify_divorce_before_death(family):
-            print(f"US06-ERR: Family {id} fails divorce before death check")
+            print(f"US06-ERR: Family {id} fails divorce before death check (Line {family['line_num']})")
         if not US10_verify_marriage_after_14(family):
-            print(f"US10-ERR: Family {id} fails marriage after 14 check")
+            print(f"US10-ERR: Family {id} fails marriage after 14 check (Line {family['line_num']})")
         if not US11_verify_no_bigamy(family):
-            print(f"US11-ERR: Family {id} fails bigamy check")
+            print(f"US11-ERR: Family {id} fails bigamy check (Line {family['line_num']})")
         if not US12_verify_parents_not_too_old(family):
-            print(f"US12-ERR: Family {id} had children with parents who are too old")
+            print(f"US12-ERR: Family {id} had children with parents who are too old (Line {family['line_num']})")
         if not US13_verify_sibling_spacing(family):
-            print(f"US13-ERR: Family {id} has children whose birthdays are not properly spaced")
+            print(f"US13-ERR: Family {id} has children whose birthdays are not properly spaced (Line {family['line_num']})")
         if not US14_verify_multiple_births(family):
-            print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day")
+            print(f"US14-ERR: Family {id} has more than 5 siblings born on the same day (Line {family['line_num']})")
         if not US15_verify_fewer_than_15_siblings(family):
-            print(f"US15-ERR: Family {id} has more than 14 siblings")
+            print(f"US15-ERR: Family {id} has more than 14 siblings (Line {family['line_num']})")
         if not US16_verify_male_last_names(family):
-            print(f"US16-ERR: Family {id} has males with different last names")
+            print(f"US16-ERR: Family {id} has males with different last names (Line {family['line_num']})")
         if not US18_verify_marriage_not_siblings(family):
-            print(f"US18-ERR: Family {id} fails marriage between siblings check")
+            print(f"US18-ERR: Family {id} fails marriage between siblings check (Line {family['line_num']})")
         if not US21_verify_marriage_gender_roles(family):
-            print(f"US21-ERR: Family {id} does not pass gender roles test")
+            print(f"US21-ERR: Family {id} does not pass gender roles test (Line {family['line_num']})")
+        if not US26_corresponding_entities_families(family):
+            print(f"US26-ERR: Family {id} is inconsidtent with individuals (Line {family['line_num']})")
         if not US25_unique_first_name_and_birthdate(family):
-            print(f"US25-ERR: Family {id} does not pass unique first name and birthdate test")
+            print(f"US25-ERR: Family {id} does not pass unique first name and birthdate test (Line {family['line_num']})")
         if not US34_verify_large_age_differences_couples(family):
-            print(f"US34-ERR: Family {id} has couples who are large age differences")
+            print(f"US34-ERR: Family {id} has couples who are large age differences (Line {family['line_num']})")
         print(f"US28-INFO: Family {id} siblings ordered:", US28_order_siblings(family))
         #print(US28_order_siblings(family))
 
@@ -566,42 +623,44 @@ def verify():
         # US27 Include person's current age when listing individuals
         print_individual(individual, ['id', 'name', 'age'])
         if not US01_verify_date_before_current_date(individual['birthday']):
-            print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date")
+            print(f"US01-ERR: Individual {id} has a birthday that is after, or equal to, the current date (Line {individual['line_num']})")
         if not US01_verify_date_before_current_date(individual['death']):
-            print(f"US01-ERR: Individual {id} has a death date that is after, or equal to, the current date")
+            print(f"US01-ERR: Individual {id} has a death date that is after, or equal to, the current date (Line {individual['line_num']})")
         if not US02_verify_birth_before_marriage(individual):
-            print(f"US02-ERR: Individual {id} was married before they were born")
+            print(f"US02-ERR: Individual {id} was married before they were born (Line {individual['line_num']})")
         if not US03_verify_birth_before_death(individual):
-            print(f"US03-ERR: Individual {id} was born after they died")
+            print(f"US03-ERR: Individual {id} was born after they died (Line {individual['line_num']})")
         if not US07_verify_death_before_150_years_old(individual):
-            print(f"US07-ERR: Individual {id} is over 150 years old or lived to be over 150")
+            print(f"US07-ERR: Individual {id} is over 150 years old or lived to be over 150 (Line {individual['line_num']})")
         if not US08_verify_birth_after_parents_marriage(individual):
-            print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce")
+            print(f"US08-ERR: Individual {id} was born before marriage of parents or too late after divorce (Line {individual['line_num']})")
         if not US09_verify_birth_before_parents_death(individual):
-            print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died")
+            print(f"US09-ERR: Individual {id} was born after their mother died, or too long after their father died (Line {individual['line_num']})")
         if not US17_verify_no_marriage_to_descendants(individual):
-            print(f"US29-INFO: Individual {id} is married to one of their decendants")
+            print(f"US29-INFO: Individual {id} is married to one of their decendants (Line {individual['line_num']})")
         if not US19_verify_no_first_cousin_marriage(individual):
-            print(f"US19-ERR: Individual {id} is married to their first cousin")
+            print(f"US19-ERR: Individual {id} is married to their first cousin (Line {individual['line_num']})")
         if not US20_verify_aunts_and_uncles(individual):
-            print(f"US20-ERR: Individual {id} is married to their niece of nephew")
+            print(f"US20-ERR: Individual {id} is married to their niece of nephew (Line {individual['line_num']})")
+        if not US26_corresponding_entities_individuals(individual):
+            print(f"US26-ERR: Individual {id} is inconsistent with families (Line {individual['line_num']})")
         if US29_verify_deceased(individual):
-            print(f"US29-INFO: Individual {id} is deceased")
+            print(f"US29-INFO: Individual {id} is deceased (Line {individual['line_num']})")
             dead_individuals += [individual]
         if US30_verify_living_married(individual):
-            print(f"US30-INFO: Individual {id} is living and married")
+            print(f"US30-INFO: Individual {id} is living and married (Line {individual['line_num']})")
         if US31_verify_living_single(individual):
-            print(f"US31-INFO: Individual {id} is living and has never been married")
+            print(f"US31-INFO: Individual {id} is living and has never been married (Line {individual['line_num']})")
         if US33_verify_orphans(individual):
-            print(f"US33-INFO: Individual {id} is an orphan")
+            print(f"US33-INFO: Individual {id} is an orphan (Line {individual['line_num']})")
         if US35_verify_birth_at_recent_30_days(individual):
-            print(f"US35-INFO: Individual {id} was born within 30 days")
+            print(f"US35-INFO: Individual {id} was born within 30 days (Line {individual['line_num']})")
         if US36_verify_death_at_recent_30_days(individual):
-            print(f"US36-INFO: Individual {id} has died within 30 days")
+            print(f"US36-INFO: Individual {id} has died within 30 days (Line {individual['line_num']})")
         if US38_verify_birthday_in_the_next_30_days(individual):
-            print(f"US38-INFO: Individual {id} has birthday in the next 30 days")
+            print(f"US38-INFO: Individual {id} has birthday in the next 30 days (Line {individual['line_num']})")
         if US39_verify_upcoming_anniversaries_30_days(individual):
-            print(f"US39-INFO: Individual {id}'s anniversary is within 30 days")
+            print(f"US39-INFO: Individual {id}'s anniversary is within 30 days (Line {individual['line_num']})")
 
     US23_unique_name_and_birthdate()  # operate on all individuals at once
 
