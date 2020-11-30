@@ -653,13 +653,12 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
     def test_boy(self):
         print()
         print("Boys names are blue:")
-        utils.print_individual(self.individualsDict['@I2@'], ['name'])
+        utils.print_individual(self.individualsDict['@I2@'], ['name'], self.individualsDict)
 
     def test_girl(self):
         print()
         print("Girls names are pink:")
-        utils.print_individual(self.individualsDict['@I1@'], ['name'])
-
+        utils.print_individual(self.individualsDict['@I1@'], ['name'], self.individualsDict)
 
 class US25TestCases(unittest.TestCase):
     def test_unique1(self):
