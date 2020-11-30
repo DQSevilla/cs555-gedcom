@@ -457,6 +457,14 @@ class US28TestCases(unittest.TestCase):
             raised = True
         self.assertFalse(raised, "Exception raised unexpectedly")
 
+class US51TestCases(unittest.TestCase):
+    def runPrintSameFirstNames(self):
+        raised = False
+        try:
+            verifier.US51_print_same_first_names()
+        except:
+            raised = True
+        self.assertFalse(raised, "Exception raised unexpectedly")
 class UniqueNameAndBirthdateTestCase(unittest.TestCase):
     """US23: unique name and birthdays combinations"""
     def test_all_unique(self):
