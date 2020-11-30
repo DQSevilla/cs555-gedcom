@@ -521,19 +521,19 @@ class US33AndUS34TestCases(unittest.TestCase):
         mock_individual.side_effect = iter([examples.exampleFatherOfOrphan,
                                             examples.exampleMatherOfOrphan])
         self.assertFalse(verifier.US34_verify_large_age_differences_couples(examples.exampleOrphanFamily))
- 
+
 class US38PersonBirthdayInNext30DaysTestCases(unittest.TestCase):
     def test_birthday(self):
         self.assertTrue(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonBirthdayInNext30Days))
     def test_not_recent_birthday(self):
         self.assertFalse(verifier.US38_verify_birthday_in_the_next_30_days(examples.examplePersonRecentDeath))
- 
+
 class US39UpcomingAnniversary(unittest.TestCase):
     def upcomingAnniversary(self):
         self.assertTrue(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleIncomingAnniversary, examples.exampleAnniversaryDict))
     def noUpcomingAnniversary(self):
         self.assertFalse(verifier.US39_verify_upcoming_anniversaries_30_days(examples.exampleFarAnniversary, examples.exampleAnniversaryDict))
- 
+
 class US46MaleFemaleRatioTestCase(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -584,7 +584,7 @@ class US46MaleFemaleRatioTestCase(unittest.TestCase):
         }
     def test_equal_ratio(self):
         self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (50.0, 50.0))
-    
+
     def test_different_ratio(self):
         self.individualsDict['@I4@']['gender'] = 'F'
         self.assertEqual(verifier.US46_male_female_ratio(self.individualsDict), (25.0, 75.0))
@@ -630,7 +630,7 @@ class US24UniqueFamiliesBySpouseTestCase(unittest.TestCase):
             ),
             True,
         )
-        
+
 class US43ColorCodeGendersTestCases(unittest.TestCase):
     def setUp(self):
         self.individualsDict = {
@@ -661,13 +661,12 @@ class US43ColorCodeGendersTestCases(unittest.TestCase):
     def test_boy(self):
         print()
         print("Boys names are blue:")
-        utils.print_individual(self.individualsDict['@I2@'], ['name'])
+        utils.print_individual(self.individualsDict['@I2@'], ['name'], self.individualsDict)
 
     def test_girl(self):
         print()
         print("Girls names are pink:")
-        utils.print_individual(self.individualsDict['@I1@'], ['name'])
-        
+        utils.print_individual(self.individualsDict['@I1@'], ['name'], self.individualsDict)
 
 class US25TestCases(unittest.TestCase):
     def test_unique1(self):
@@ -739,6 +738,412 @@ class AverageLifeSpanTestCase(unittest.TestCase):
         dead_individuals = []
         self.assertEqual(verifier.US55_get_average_lifespan(dead_individuals), -1)
         return
+
+class US26TestCase(unittest.TestCase):
+    def test_consistent(self):
+        individualsDict = {
+            "I1": {
+                "id": "I1",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I2": {
+                "id": "I2",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I3": {
+                "id": "I3",
+                "child": "F1",
+                "spouse": "NA",
+            },
+        }
+
+        familiesDict = {
+            "F1": {
+                "id": "F1",
+                "husbandId": "I1",
+                "wifeId": "I2",
+                "children": ["I3"],
+            },
+        }
+
+        for _, individual in individualsDict.items():
+            self.assertTrue(
+                verifier.US26_corresponding_entities_individuals(
+                    individual,
+                    familiesDict=familiesDict,
+                ),
+            )
+
+        for _, family in familiesDict.items():
+            self.assertTrue(
+                verifier.US26_corresponding_entities_families(
+                    family,
+                    individualsDict=individualsDict,
+                ),
+            )
+
+    def test_incogsistent_family(self):
+        individualsDict = {
+            "I1": {
+                "id": "I1",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I3": {
+                "id": "I3",
+                "child": "F1",
+                "spouse": "NA",
+            },
+        }
+
+        familiesDict = {
+            "F1": {
+                "id": "F1",
+                "husbandId": "I1",
+                "wifeId": "I2",
+                "children": ["I3"],
+            },
+        }
+
+        for _, family in familiesDict.items():
+            self.assertFalse(
+                verifier.US26_corresponding_entities_families(
+                    family,
+                    individualsDict=individualsDict,
+                ),
+            )
+
+    def test_consistent_individual(self):
+        individualsDict = {
+            "I1": {
+                "id": "I1",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I2": {
+                "id": "I2",
+                "child": "NA",
+                "spouse": "F1",
+            },
+            "I3": {
+                "id": "I3",
+                "child": "F1",
+                "spouse": "NA",
+            },
+        }
+
+        familiesDict = {
+            "F1": {
+                "id": "F1",
+                "husbandId": "I1",
+                "wifeId": "I2",
+                "children": "NA",
+            },
+        }
+
+        self.assertFalse(
+            verifier.US26_corresponding_entities_individuals(
+                individualsDict["I3"],
+                familiesDict=familiesDict,
+            ),
+        )
+# US48: Print size of each generation in a family
+class US48TestCases(unittest.TestCase):
+    def test_only_one_gen(self):
+        individuals = {
+            'I1': {
+                'id': 'I1',
+                'spouse': 'F1'
+            },
+            'I2': {
+                'id': 'I2',
+                'spouse': 'F1'
+            }
+        }
+        families = {
+            # Root family
+            'F1': {
+                'husbandId': 'I1',
+                'children': []
+            }
+        }
+        self.assertEqual(verifier.US48_print_size_each_generation(families['F1'], individuals, families), [2])
+
+    def test_depth_gen(self):
+        individuals = {
+            'I1': {
+                'id': 'I1',
+                'spouse': 'F1'
+            },
+            'I2': {
+                'id': 'I2',
+                'spouse': 'F1'
+            },
+            'I3': {
+                'id': 'I3',
+                'spouse': 'F2'
+            },
+            'I4': {
+                'id': 'I4',
+                'spouse': 'NA'
+            },
+            'I5': {
+                'id': 'I5',
+                'spouse': 'F3'
+            },
+            'I6': {
+                'id': 'I6',
+                'spouse': 'F4'
+            },
+            'I7': {
+                'id': 'I7',
+                'spouse': 'NA',
+            },
+            'I8': { 
+                'id': 'I8',
+                'spouse': 'NA'
+            },
+            'I9': {
+                'id': 'I9',
+                'spouse':'F5'
+            },
+            'I10': {
+                'id': 'I10',
+                'spouse': 'F2'
+            },
+            'I11': {
+                'id': 'I11',
+                'spouse': 'NA'
+            },
+            'I12': {
+                'id': 'I12',
+                'spouse': 'NA'
+            },
+            'I13': {
+                'id': 'I13',
+                'spouse': 'NA'
+            },
+            'I14': {
+                'id': 'I14',
+                'spouse': 'F5'
+            },
+            'I15': {
+                'id': 'I15',
+                'spouse': 'F4'
+            },
+            'I16': {
+                'id': 'I16',
+                'spouse': 'F3'
+            }
+        }
+        families = {
+            # Root family
+            'F1': {
+                'husbandId': 'I1',
+                'children': ['I3', 'I4', 'I5']
+            },
+            'F2': {
+                'husbandId': 'I3',
+                'children': ['I6', 'I7', 'I8', 'I9']
+            },
+            'F3': {
+                'husbandId': 'I5',
+                'children': ['I11']
+            }, 
+            'F4': {
+                'husbandId': 'I6',
+                'children': ['I12', 'I13']
+            },
+            'F5': {
+                'husbandId': 'I9',
+                'children': []
+            }
+        }
+        self.assertEqual(verifier.US48_print_size_each_generation(families['F1'], individuals, families), [2,5,7,2])
+    def test_two_gen(self):
+        individuals = {
+            'I1': {
+                'id': 'I1',
+                'spouse': 'F1'
+            },
+            'I2': {
+                'id': 'I2',
+                'spouse': 'F1'
+            },
+            'I3': {
+                'id': 'I3',
+                'spouse': 'NA'
+            }
+        }
+
+        families = {
+            # Root family
+            'F1': {
+                'husbandId': 'I1',
+                'children': ['I3']
+            }
+        }
+        self.assertEqual(verifier.US48_print_size_each_generation(families['F1'], individuals, families), [2, 1])
+
+# US49: Compute gender proportion per generation
+class US49TestCases(unittest.TestCase):
+    def test_single_gen(self):
+        individuals = {
+            'I1': {
+                'id': 'I1',
+                'gender': 'M',
+                'spouse': 'F1'
+            },
+            'I2': {
+                'id': 'I2',
+                'gender': 'F',
+                'spouse': 'F1'
+            }
+        }
+        families = {
+            # Root family
+            'F1': {
+                'husbandId': 'I1',
+                'children': []
+            }
+        }
+        self.assertEqual(verifier.US49_print_gender_proportion(families['F1'], individuals, families), [(50.0, 50.0)])
+    def test_depth_gen(self):
+        individuals = {
+            'I1': {
+                'id': 'I1',
+                'gender': 'M',
+                'spouse': 'F1'
+            },
+            'I2': {
+                'id': 'I2',
+                'gender': 'F',
+                'spouse': 'F1'
+            },
+            'I3': {
+                'id': 'I3',
+                'gender': 'M',
+                'spouse': 'F2'
+            },
+            'I4': {
+                'id': 'I4',
+                'gender': 'F',
+                'spouse': 'NA'
+            },
+            'I5': {
+                'id': 'I5',
+                'gender': 'M',
+                'spouse': 'F3'
+            },
+            'I6': {
+                'id': 'I6',
+                'gender': 'M',
+                'spouse': 'F4'
+            },
+            'I7': {
+                'id': 'I7',
+                'gender': 'M',
+                'spouse': 'NA',
+            },
+            'I8': { 
+                'id': 'I8',
+                'gender': 'F',
+                'spouse': 'NA'
+            },
+            'I9': {
+                'id': 'I9',
+                'gender': 'M',
+                'spouse':'F5'
+            },
+            'I10': {
+                'id': 'I10',
+                'gender': 'F',
+                'spouse': 'F2'
+            },
+            'I11': {
+                'id': 'I11',
+                'gender': 'M',
+                'spouse': 'NA'
+            },
+            'I12': {
+                'id': 'I12',
+                'gender': 'F',
+                'spouse': 'NA'
+            },
+            'I13': {
+                'id': 'I13',
+                'gender': 'F',
+                'spouse': 'NA'
+            },
+            'I14': {
+                'id': 'I14',
+                'gender': 'F',
+                'spouse': 'F5'
+            },
+            'I15': {
+                'id': 'I15',
+                'gender': 'F',
+                'spouse': 'F4'
+            },
+            'I16': {
+                'id': 'I16',
+                'gender': 'F',
+                'spouse': 'F3'
+            }
+        }
+        families = {
+            # Root family
+            'F1': {
+                'husbandId': 'I1',
+                'children': ['I3', 'I4', 'I5']
+            },
+            'F2': {
+                'husbandId': 'I3',
+                'children': ['I6', 'I7', 'I8', 'I9']
+            },
+            'F3': {
+                'husbandId': 'I5',
+                'children': ['I11']
+            }, 
+            'F4': {
+                'husbandId': 'I6',
+                'children': ['I12', 'I13']
+            },
+            'F5': {
+                'husbandId': 'I9',
+                'children': []
+            }
+        }
+        self.assertEqual(verifier.US49_print_gender_proportion(families['F1'], individuals, families), [(50.0, 50.0), (40.0, 60.0), (4/7*100, 3/7*100), (0, 100)])
+    def test_two_gen(self):
+        individuals = {
+            'I1': {
+                'id': 'I1',
+                'gender': 'M',
+                'spouse': 'F1'
+            },
+            'I2': {
+                'id': 'I2',
+                'gender': 'F',
+                'spouse': 'F1'
+            },
+            'I3': {
+                'id': 'I3',
+                'gender': 'M',
+                'spouse': 'NA'
+            }
+        }
+
+        families = {
+            # Root family
+            'F1': {
+                'husbandId': 'I1',
+                'children': ['I3']
+            }
+        }
+        self.assertEqual(verifier.US49_print_gender_proportion(families['F1'], individuals, families), [(50, 50), (100, 0)])
 
 if __name__ == '__main__':
     gedcom_file = 'cs555project03.ged'
