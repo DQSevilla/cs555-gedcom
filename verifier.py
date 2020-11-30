@@ -546,17 +546,8 @@ def US48_print_sizes(family, sizes):
     
 # US48: Print size of each generation in a family
 def US48_print_size_each_generation(family, localInds=None, localFams=None):
-    # Given the root family, traverse through each generation.
-    # Husband/Wife is one generation and their children are the next generation
-
-    # The family passed in will always have a count of 2 for the 1st generation
-    # The following generations will be dependent on the children count
-
-    # Find family based off on Spouse in ind
-    if localInds == None:
-        localInds = individualsDict
-    if localFams == None:
-        localFams = familiesDict
+    if localInds == None: localInds = individualsDict
+    if localFams == None: localFams = familiesDict
     
     currentInd = localInds[family['husbandId']]
     q = deque()
@@ -573,8 +564,7 @@ def US48_print_size_each_generation(family, localInds=None, localFams=None):
         if currentInd == None:
             sizes.append(gen_count)
             gen_count = 0
-            if len(q) >= 1:
-                q.append(None)
+            if len(q) >= 1: q.append(None)
         else:
             gen_count += 1
             if currentInd['spouse'] != 'NA':
